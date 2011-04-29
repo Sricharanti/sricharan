@@ -55,5 +55,7 @@
 
 0022 set -x; handlerAndroidMonkey.sh run 1 $UTILS_DIR_MONKEY/set.max.screen.timeout.value
 0023 set -x; handlerInputSubsystem.sh "keypad" "KeyCodeHome" 1 1 1
+0024 set -x; rm /mnt/sdcard/DCIM/Camera/*.3gp
+
 
 # End L_DD_POWER_0004_0030

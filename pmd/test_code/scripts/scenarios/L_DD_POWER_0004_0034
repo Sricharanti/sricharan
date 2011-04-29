@@ -52,4 +52,6 @@
 0019 set -x; handlerPowerTransitionStats.sh compare "core_pwrdm" "RET-LOGIC-OFF" "before" "after"
 0020 set -x; handlerPowerTransitionStats.sh compare "DEVICE-OFF" "DEVICE-OFF" "before" "after"
 
+0021 set -x; rm /mnt/sdcard/DCIM/Camera/*.jpg
+
 # End L_DD_POWER_0004_0034
