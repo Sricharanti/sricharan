@@ -170,6 +170,7 @@ static void gpio_test7(void)
 {
 	int ret, request_status[32], i, j;
 	u32 *bank_base_addr[6], mod_status, bank_status;
+	int bank_count;
 
 	if (cpu_is_omap34xx()) {
 		/* Initialise base addresses for each bank */
@@ -186,13 +187,27 @@ static void gpio_test7(void)
 		bank_base_addr[3] = OMAP2_L4_IO_ADDRESS(0x48059000);
 		bank_base_addr[4] = OMAP2_L4_IO_ADDRESS(0x4805B000);
 		bank_base_addr[5] = OMAP2_L4_IO_ADDRESS(0x4805D000);
+	} else if (cpu_is_omap54xx()) {
+		bank_base_addr[0] = OMAP2_L4_IO_ADDRESS(0x4ae10000);
+		bank_base_addr[1] = OMAP2_L4_IO_ADDRESS(0x48055000);
+		bank_base_addr[2] = OMAP2_L4_IO_ADDRESS(0x48057000);
+		bank_base_addr[3] = OMAP2_L4_IO_ADDRESS(0x48059000);
+		bank_base_addr[4] = OMAP2_L4_IO_ADDRESS(0x4805B000);
+		bank_base_addr[5] = OMAP2_L4_IO_ADDRESS(0x4805D000);
+		bank_base_addr[6] = OMAP2_L4_IO_ADDRESS(0x48051000);
+		bank_base_addr[7] = OMAP2_L4_IO_ADDRESS(0x48053000);
 	} else {
 		printk(KERN_ERR "This GPIO test case not supported"
 				" for this architecture\n");
 		return;
 	}
 
-	for (i = 0; i < 6; i++) {
+	if (cpu_is_omap54xx())
+		bank_count = 8;
+	else
+		bank_count = 6;
+
+	for (i = 0; i < bank_count; i++) {
 		bank_status = 0;
 		for (j = 0; j < 32; j++) {
 			ret = gpio_request(j+i*32, "titan_test");
@@ -212,7 +227,7 @@ static void gpio_test7(void)
 		if (cpu_is_omap34xx())
 			mod_status = __raw_readl(bank_base_addr[i] + 0xc)
 						& 0x1;
-		else if (cpu_is_omap44xx())
+		else if (cpu_is_omap44xx() || cpu_is_omap54xx())
 			mod_status = __raw_readl(bank_base_addr[i] + 0x4c)
 						& 0x1;
 		if (mod_status)
@@ -280,7 +295,7 @@ static void gpio_test(void)
 			}
 			break;
 
-#ifdef CONFIG_ARCH_OMAP4
+#if defined(CONFIG_ARCH_OMAP4) || defined(CONFIG_ARCH_OMAP5)
 		case 6: /* GPIO read */
 			for (loop = 0; loop < iterations; loop++) {
 				gpio_test_request();
