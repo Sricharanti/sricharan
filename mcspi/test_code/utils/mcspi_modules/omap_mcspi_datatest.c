@@ -42,7 +42,6 @@
 #include <linux/errno.h>
 #include <linux/mutex.h>
 #include <linux/slab.h>
-#include <linux/smp_lock.h>
 #include <linux/wait.h>
 #include <linux/sched.h>
 #include <linux/kthread.h>
@@ -138,7 +137,6 @@ long int tx_sec1 = 0, tx_usec1 = 0;
 long int tx_sec2 = 0, tx_usec2 = 0;
 struct spi_message	m, msg;
 struct spi_transfer	t1, t2;
-static int flag = 1;
 
 #if (LINUX_VERSION_CODE <= KERNEL_VERSION(2, 6, 00))
 	MODULE_PARM(buffer_size, "i");
@@ -214,8 +212,6 @@ write_proc_entry(struct file *file, const char *buffer,
 {
 	int len, i;
 	char val[10];
-	int trans2 = 1;
-	int trans1 = 1;
 
 	if (!buffer || (count == 0))
 		return 0;
@@ -363,7 +359,7 @@ static int spitst_trans1()
 	return status;
 }
 
-static int spitst_trans2()
+static int spitst_trans2(void)
 {
 	int status;
 
@@ -385,8 +381,8 @@ static int spitst_trans2()
 
 	printk(KERN_INFO "Receive Buf %s\n", (char *)spi2_rx_buf_dma_virt2);
 	printk(KERN_INFO "Transmisstion status %s\n",
-	strcmp(spi2_tx_buf_dma_virt2, spi2_rx_buf_dma_virt2) ? "FAIL" :
-				"SUCCESS");
+			strcmp(spi2_tx_buf_dma_virt2, spi2_rx_buf_dma_virt2) ?
+				"FAIL" : "SUCCESS");
 	return status;
 }
 
@@ -460,9 +456,9 @@ static int spitst_trans(int mode)
 			t2.len		= buffer_size;
 		}
 			printk("\n spitst_trans\n");
-			printk(KERN_INFO "Transmit Buf1 %s\n Buf2 = %s \n ",
+			printk(KERN_INFO "Transmit Buf1 %s\n",
 						(char *) spi2_tx_buf_dma_virt);
-			printk(KERN_INFO "Transmit Buf2 %s\n Buf2 = %s \n ",
+			printk(KERN_INFO "Transmit Buf2 %s\n",
 						(char *) spi2_tx_buf_dma_virt2);
 			printk("\n spitst_trans\n");
 	} else if (mode == 2) {
@@ -523,8 +519,7 @@ static struct spi_driver spitst_spi2 = {
 
 };
 
-static
-int  omap2_mcspi_test1()
+int omap2_mcspi_test1(void)
 {
 	int status;
 
@@ -544,8 +539,7 @@ int  omap2_mcspi_test1()
 	}
 }
 
-static
-int  omap2_mcspi_test2()
+int omap2_mcspi_test2(void)
 {
 	int status;
 
@@ -612,8 +606,8 @@ int __init test_mcspi_init(void)
 
 	if (test_mcspi_smp) {
 		spitst_trans(0);
-		p1 = kthread_create(omap2_mcspi_test1, NULL, "mcspitest/0");
-		p2 = kthread_create(omap2_mcspi_test2, NULL, "mcspitest/1");
+		p1 = kthread_create((void *)(omap2_mcspi_test1), NULL, "mcspitest/0");
+		p2 = kthread_create((void *)(omap2_mcspi_test2), NULL, "mcspitest/1");
 
 		kthread_bind(p1, 0);
 		kthread_bind(p2, 1);
