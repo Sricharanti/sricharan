@@ -126,7 +126,7 @@ static void gpio_test_irq(void)
 				"type: FALLING\n", irq, gpio);
 	}
 
-	ret = irq_set_irq_type(irq, IRQ_TYPE_EDGE_FALLING);
+	ret = irq_set_irq_type(irq, IRQ_TYPE_EDGE_RISING);
 	if (!ret)
 		printk(KERN_INFO "Succesfull in Setting IRQ %i for GPIO "
 				"Line %i type: RISING\n", irq, gpio);
