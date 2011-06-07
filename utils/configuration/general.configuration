@@ -62,6 +62,30 @@ else
 	echo "FATAL: Handlers configuration file with errors"
 fi
 
+
+#-----------------------------------------------------------------------------------
+# GPIO Driver Specific
+#-----------------------------------------------------------------------------------
+
+if [ `cat /proc/cpuinfo| grep -ic OMAP4` ]; then
+	export GPIO_MAX_LINES=191
+else
+	export GPIO_MAX_LINES=209
+fi
+
+export GPIO_FIRST_LINE=0
+export GPIO_INVALID_RANGE_INITIAL=-5
+export GPIO_INVALID_RANGE_FINAL=-1
+export GPIO_SMP_TEST_ITERATIONS=20
+export GPIO_TEST_MODULE_NAME=gpio_test.ko
+export GPIO_TEST_MODULE=$MODDIR/$GPIO_TEST_MODULE_NAME
+export GPIO_TEST_MODULE_PROCFS_RESULT=/proc/driver/gpio_test_result
+export DEV_GPIOTEST=/dev/gpiotest
+export MAIN_TEST=$TESTBIN/main_test
+# export GPIO_PREEMPT=gpio.ko
+# export PREEMPT_MODULE=$MODDIR/$GPIO_PREEMPT
+# [ -f  "$DEV_GPIOTEST" ] && mknod /dev/gpiotest c 241 0
+
 # Remove all existing references for handlerError.sh
 handlerError.sh "clean"
 
