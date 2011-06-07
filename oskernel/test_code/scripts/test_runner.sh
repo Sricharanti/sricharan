@@ -5,6 +5,9 @@
 # Copyright remains
 #-----------------------
 
+# Global configuration file
+TS_CONF="../../utils/configuration/general.configuration"
+
 # Give standard error message and die
 die()
 {
@@ -40,19 +43,19 @@ setup()
 	}
 
 	# Load config file
-	if [ -f "./conf.sh" ]; then
-		. ./conf.sh
+	if [ -f "$TS_CONF" ]; then
+		. $TS_CONF
 		if [ $? -eq 0 ]; then
-			echo "INFO: Requested tests will be started"
+			echo "INFO: General configuration completed"
 		else
-			echo "FATAL: Configuration file with errors"
+			echo "FATAL: General configuration file with errors"
 		fi
 	else
-		die "FATAL: Configuration file not found"
+		die "FATAL: Testsuite configuration file not found"
 	fi
 
 	# scenario less tests?? have the user organize it properly at least..
-	[ -d $OSKERNEL_DIR_SCENARIOS ] ||
+	[ -d $TC_SCENARIO ] ||
 	{
 		die "Test suite not installed correctly - no scenarios"
 	}
@@ -67,29 +70,29 @@ setup()
 usage()
 {
 	# Human redable please
-	local PP=` if [ -z "$OSKERNEL_PRETTY_PRT" ]; then echo "off"; else echo "on"; fi`
-	local VV=` if [ -z "$OSKERNEL_VERBOSE" ]; then echo "off"; else echo "on"; fi`
+	local PP=` if [ -z "$PRETTY_PRT" ]; then echo "off"; else echo "on"; fi`
+	local VV=` if [ -z "$VERBOSE" ]; then echo "off"; else echo "on"; fi`
 
 	# Give the gyan
 	cat <<-EOF >&2
-	usage: ./${0##*/} [-z] [-h] [-v] [-d OSKERNEL_DIR_TEST] [-o OSKERNEL_FILE_OUTPUT] [-l OSKERNEL_FILE_LOG]
-	[-n OSKERNEL_DURATION ] [-t TMPDIR] [OSKERNEL_SCENARIO_NAMES..]
+	usage: ./${0##*/} [-z] [-h] [-v] [-d TESTDIR] [-o OUTPUTFILE] [-l LOGFILE]
+	[-n DURATION ] [-t TMPDIR] [SCENARIO_NAMES..]
 
-	-d OSKERNEL_DIR_TEST      Run LTP to test the filesystem mounted here. [Current - $OSKERNEL_DIR_TEST]
+	-d TESTDIR      Run LTP to test the filesystem mounted here. [Current - $TESTDIR]
 			At the end of test, the testdir gets cleaned out
-	-s OSKERNEL_DIR_SCENARIOS  Test scenarios are located here. [Current - $OSKERNEL_DIR_SCENARIOS]
-	-o OSKERNEL_FILE_OUTPUT   Redirect test output to a file. [Current- $OSKERNEL_FILE_OUTPUT {psid}]
+	-s TC_SCENARIO  Test scenarios are located here. [Current - $TC_SCENARIO]
+	-o OUTPUTFILE   Redirect test output to a file. [Current- $OUTPUTFILE {psid}]
 	-p              Human readable(dont laugh too much) format logfiles. [Current - ($PP)]
 	-z              Dont Merge the Scenario Name with tcid to create final tc id
 	-E              Use Extended Test cases also - these are painful and can take real long time
-	-l OSKERNEL_FILE_LOG      Log results of test in a logfile. [Current- $OSKERNEL_FILE_LOG {psid}]
-	-t TMPDIR       Run LTP using tmp dir [Current - $OSKERNEL_DIR_TMP]
-	-n OSKERNEL_DURATION     Execute the testsuite for given duration. Examples:
+	-l LOGFILE      Log results of test in a logfile. [Current- $LOGFILE {psid}]
+	-t TMPDIR       Run LTP using tmp dir [Current - $TMPBASE]
+	-n DURATION     Execute the testsuite for given duration. Examples:
 			-n 60s = 60 seconds
 			-n 45m = 45 minutes
 			-n 24h = 24 hours
 			-n 2d  = 2 days
-			[Current - $OSKERNEL_DURATION]
+			[Current - $DURATION]
 
 	-v              Print more verbose output to screen.[Current - ($VV)]
 	-q              No messages from this script. no info too - Brave eh??
@@ -99,11 +102,11 @@ usage()
 			List to appear here
 	-S              Run in Stress mode
 
-	OSKERNEL_SCENARIO_NAMES  List of scenarios to test.. else, take all scenarios
-			[Current - These are all filenames from $OSKERNEL_DIR_SCENARIOS]
+	SCENARIO_NAMES  List of scenarios to test.. else, take all scenarios
+			[Current - These are all filenames from $TC_SCENARIO]
 
 	Good News: Ctrl+c stops and cleans up for you :)
-	More help: Read the $OSKERNEL_ROOT/README
+	More help: Read the $TESTROOT/README
 
 	EOF
 	exit 0
@@ -115,57 +118,57 @@ sanity_check()
     # Check the current values...
     # Just ensure that pan can run with a bit of peace of mind...
 
-    [ ! -d "$OSKERNEL_DIR_TMP" -o ! -w "$OSKERNEL_DIR_TMP" ] && die "$OSKERNEL_DIR_TMP - cannot work as temporary directory"
-    [ ! -d "$OSKERNEL_DIR_TEST" -o ! -w "$OSKERNEL_DIR_TEST" ] && die "$OSKERNEL_DIR_TEST - cannot work as test directory"
-    [ ! -d "$OSKERNEL_DIR_SCENARIOS" ] && die "$OSKERNEL_DIR_SCENARIOS - No such directories"
-    [ -z "$OSKERNEL_SCENARIO_NAMES" ] && die "No Scenarios"
-		[ ! -z "$OSKERNEL_VERBOSE" -a ! -z "$OSKERNEL_QUIET_MODE" ] && die "Make up your mind - verbose or quiet??"
+    [ ! -d "$TMPBASE" -o ! -w "$TMPBASE" ] && die "$TMPBASE - cannot work as temporary directory"
+    [ ! -d "$TESTDIR" -o ! -w "$TESTDIR" ] && die "$TESTDIR - cannot work as test directory"
+    [ ! -d "$TC_SCENARIO" ] && die "$TC_SCENARIO - No such directories"
+    [ -z "$SCENARIO_NAMES" ] && die "No Scenarios"
+		[ ! -z "$VERBOSE" -a ! -z "$QUIET_MODE" ] && die "Make up your mind - verbose or quiet??"
 
-    export OSKERNEL_FILE_CMD=$OSKERNEL_DIR_TMP/$OSKERNEL_FILE_CMD
-    rm -f $OSKERNEL_FILE_CMD
+    export CMDFILE=$TMPBASE/$CMDFILE
+    rm -f $CMDFILE
 
-		for SCEN in $OSKERNEL_SCENARIO_NAMES
+		for SCEN in $SCENARIO_NAMES
     do
-		  [ ! -f "$OSKERNEL_DIR_SCENARIOS/$SCEN" -o ! -r "$OSKERNEL_DIR_SCENARIOS/$SCEN" ] && die "$OSKERNEL_DIR_SCENARIOS/$SCEN - not a scenario file"
-			cat $OSKERNEL_DIR_SCENARIOS/$SCEN|grep -v "#"|sed -e "s/^[  ]*$//g"|sed -e "/^$/d">$OSKERNEL_FILE_TMP|| die "Count not create tmp file $OSKERNEL_FILE_TMP"
+		  [ ! -f "$TC_SCENARIO/$SCEN" -o ! -r "$TC_SCENARIO/$SCEN" ] && die "$TC_SCENARIO/$SCEN - not a scenario file"
+			cat $TC_SCENARIO/$SCEN|grep -v "#"|sed -e "s/^[  ]*$//g"|sed -e "/^$/d">$TMPFILE|| die "Count not create tmp file $TMPFILE"
 			if [ -z "$DONT" ]; then
-				cat $OSKERNEL_FILE_TMP|sed -e "s/^/$SCEN-/g"|sed -e "s/-/_/" >>$OSKERNEL_FILE_CMD || die "Count not create command file $OSKERNEL_FILE_CMD"
+				cat $TMPFILE|sed -e "s/^/$SCEN-/g"|sed -e "s/-/_/" >>$CMDFILE || die "Count not create command file $CMDFILE"
 				else
-				cat $OSKERNEL_FILE_TMP>>$OSKERNEL_FILE_CMD || die "Count not create command file $OSKERNEL_FILE_CMD"
+				cat $TMPFILE>>$CMDFILE || die "Count not create command file $CMDFILE"
 			fi
 
 			# Remove the extended test cases
 			if [ -z "$EXTENDED_TEST" ]; then
 
-				cat $OSKERNEL_FILE_CMD|grep -v "^[_A-Za-z0-9]*_EXT ">$OSKERNEL_FILE_TMP || die "intermediate file gen failed"
-				cat $OSKERNEL_FILE_TMP>$OSKERNEL_FILE_CMD || die "Second intermediate creation failed"
+				cat $CMDFILE|grep -v "^[_A-Za-z0-9]*_EXT ">$TMPFILE || die "intermediate file gen failed"
+				cat $TMPFILE>$CMDFILE || die "Second intermediate creation failed"
 			fi
 
-			rm -f $OSKERNEL_FILE_TMP
+			rm -f $TMPFILE
 
     done
 
-		local PP=` if [ -z "$OSKERNEL_PRETTY_PRT" ]; then echo "off"; else echo "on"; fi`
-    local VV=` if [ -z "$OSKERNEL_VERBOSE" ]; then echo "off"; else echo "on"; fi`
-    export TMPDIR=${OSKERNEL_DIR_TEST}
+		local PP=` if [ -z "$PRETTY_PRT" ]; then echo "off"; else echo "on"; fi`
+    local VV=` if [ -z "$VERBOSE" ]; then echo "off"; else echo "on"; fi`
+    export TMPDIR=${TESTDIR}
 
 		# Print some nice info
-    if [ ! -z "$OSKERNEL_VERBOSE" ]; then
-        debug "OSKERNEL_POSTFIX        $OSKERNEL_POSTFIX       "
-        info  "OSKERNEL_ROOT       $OSKERNEL_ROOT      "
-        info  "OSKERNEL_DIR_TMP        $OSKERNEL_DIR_TMP       "
-        info  "OSKERNEL_FILE_TMP        $OSKERNEL_FILE_TMP       "
-        debug "OSKERNEL_FILE_CMD        $OSKERNEL_FILE_CMD       "
-        info  "OSKERNEL_DIR_TEST        $OSKERNEL_DIR_TEST       "
-        info  "OSKERNEL_PRETTY_PRT     $PP            "
-        info  "OSKERNEL_VERBOSE        $VV            "
-        info  "OSKERNEL_FILE_OUTPUT     $OSKERNEL_FILE_OUTPUT    "
-        info  "OSKERNEL_FILE_LOG        $OSKERNEL_FILE_LOG       "
-        info  "OSKERNEL_DURATION       $OSKERNEL_DURATION      "
+    if [ ! -z "$VERBOSE" ]; then
+        debug "POSTFIX        $POSTFIX       "
+        info  "TESTROOT       $TESTROOT      "
+        info  "TMPBASE        $TMPBASE       "
+        info  "TMPFILE        $TMPFILE       "
+        debug "CMDFILE        $CMDFILE       "
+        info  "TESTDIR        $TESTDIR       "
+        info  "PRETTY_PRT     $PP            "
+        info  "VERBOSE        $VV            "
+        info  "OUTPUTFILE     $OUTPUTFILE    "
+        info  "LOGFILE        $LOGFILE       "
+        info  "DURATION       $DURATION      "
         debug "PATH           $PATH          "
-        info  "OSKERNEL_DIR_SCENARIOS    $OSKERNEL_DIR_SCENARIOS   "
+        info  "TC_SCENARIO    $TC_SCENARIO   "
         info  "TMPDIR         $TMPDIR        "
-        info  "OSKERNEL_SCENARIO_NAMES $OSKERNEL_SCENARIO_NAMES"
+        info  "SCENARIO_NAMES $SCENARIO_NAMES"
     fi
 }
 
@@ -175,25 +178,25 @@ main()
 	while getopts zx:Sd:qt:po:l:vn:hs:E:I arg
 	do  case $arg in
 		d)
-			OSKERNEL_DIR_TEST=${OSKERNEL_OPTARG} ;;
+			TESTDIR=${OPTARG} ;;
 		t)
-			OSKERNEL_DIR_TMP=${OSKERNEL_OPTARG} ;;
+			TMPBASE=${OPTARG} ;;
 		E)
 			EXTENDED_TEST=y ;;
 	        q)
-			OSKERNEL_QUIET_MODE=" -q " ;;
+			QUIET_MODE=" -q " ;;
 	        z)
 			DONT=" " ;;
 		p)
-			OSKERNEL_PRETTY_PRT=" -p " ;;
+			PRETTY_PRT=" -p " ;;
 		o)
-			OSKERNEL_FILE_OUTPUT=${OSKERNEL_OPTARG};OO_LOG=1 ;;
+			OUTPUTFILE=${OPTARG};OO_LOG=1 ;;
 		l)
-			OSKERNEL_FILE_LOG=${OSKERNEL_OPTARG} ;;
+			LOGFILE=${OPTARG} ;;
 		v)
-			OSKERNEL_VERBOSE="-v" ;;
+			VERBOSE="-v" ;;
 		n)
-			OSKERNEL_DURATION=" -t ${OSKERNEL_OPTARG}" ;;
+			DURATION=" -t ${OPTARG}" ;;
 		h)
 			usage ;;
 		x)  # number of ltp's to run
@@ -205,19 +208,19 @@ main()
 			Pausing for 10 seconds...Last chance to hit that ctrl+c
 			EOF
 					sleep 10
-			OSKERNEL_INSTANCES="-x $OSKERNEL_OPTARG -O ${TMP}" ;;
+			INSTANCES="-x $OPTARG -O ${TMP}" ;;
 		s)
-			OSKERNEL_DIR_SCENARIOS=${OSKERNEL_OPTARG} ;;
+			TC_SCENARIO=${OPTARG} ;;
 		S)
-			OSKERNEL_STRESS=y
-			OSKERNEL_STRESSARG="-S";;
+			STRESS=y
+			STRESSARG="-S";;
 
 		\?) # Handle illegals
 			usage ;;
 
 	esac
 
-	if [ ! -z "${OSKERNEL_OPTARG}" ]; then
+	if [ ! -z "${OPTARG}" ]; then
 		count=" $count + 2"
 	else
 		count=" $count + 1"
@@ -232,27 +235,29 @@ main()
 		count=$(($count - 1))
 	done
 
-	OSKERNEL_SCENARIO_NAMES=$@
+	SCENARIO_NAMES=$@
 
 	sanity_check
 
 	# Test start
 
-	[ -z "$OSKERNEL_QUIET_MODE" ] && { info "Test start time: $(date)" ; }
+	[ -z "$QUIET_MODE" ] && { info "Test start time: $(date)" ; }
+	# run pan
+	# $PAN_COMMAND #Duplicated code here, because otherwise if we fail, only "PAN_COMMAND" gets output
+	#Usage: pan -n name [ -SyAehp ] [ -s starts ] [-t time[s|m|h|d] [ -x nactive ] [
+	#-l logfile ]
+	#[ -a active-file ] [ -f command-file ] [ -d debug-level ]
+	#[-o output-file] [-O output-buffer-directory] [cmd]
 
-	# Usage: pan -n name [ -SyAehp ] [ -s starts ] [-t time[s|m|h|d] [ -x nactive ] [-l logfile ]
-	# [ -a active-file ] [ -f command-file ] [ -d debug-level ]
-	# [-o output-file] [-O output-buffer-directory] [cmd]
+	cd $TESTDIR
+	PAN_COMMAND="${UTILS_DIR_BIN}/pan $QUIET_MODE -e -S $INSTANCES $DURATION -a $$ -n $$ $PRETTY_PRT -f ${CMDFILE} -l $LOGFILE"
 
-	cd $OSKERNEL_DIR_TEST
-	PAN_COMMAND="${UTILS_DIR_BIN}/pan $OSKERNEL_QUIET_MODE -e -S $OSKERNEL_INSTANCES $OSKERNEL_DURATION -a $$ -n $$ $OSKERNEL_PRETTY_PRT -f ${OSKERNEL_FILE_CMD} -l $OSKERNEL_FILE_LOG"
-
-	[ ! -z "$OSKERNEL_VERBOSE" ] && { info "PAN_COMMAND=$PAN_COMMAND"; }
+	[ ! -z "$VERBOSE" ] && { info "PAN_COMMAND=$PAN_COMMAND"; }
 
 	if [ -z "$OO_LOG" ]; then
 		$PAN_COMMAND
 	else
-		$PAN_COMMAND|tee $OSKERNEL_FILE_OUTPUT
+		$PAN_COMMAND|tee $OUTPUTFILE
 	fi
 
 	if [ $? -eq 0 ]; then
@@ -264,18 +269,18 @@ main()
 	fi
 
 	# Test end
-	[ -z "$OSKERNEL_QUIET_MODE" ] && { info "Test end time: $(date)" ; }
-	[ -z "$OSKERNEL_QUIET_MODE" ] && {
+	[ -z "$QUIET_MODE" ] && { info "Test end time: $(date)" ; }
+	[ -z "$QUIET_MODE" ] && {
 
 	cat <<-EOF >&1
 
 	###############################################################"
 		Done executing testcases."
-		Result log is in the $OSKERNEL_FILE_LOG "
+		Result log is in the $LOGFILE "
 	###############################################################"
 
 	EOF
-	cat $OSKERNEL_FILE_LOG
+	cat $LOGFILE
 
 	}
 	cleanup
@@ -285,14 +290,14 @@ main()
 
 cleanup()
 {
-	[  -z "$OSKERNEL_QUIET_MODE" ] && echo -n "INFO: Cleaning up..."
-	if [ -n "${OSKERNEL_FILE_TMP}" -a -n "${OSKERNEL_FILE_CMD}" -a -n "${OSKERNEL_DIR_TEST}" -a -n "${OSKERNEL_DIR_TMP}" ]; then
-		rm -rf ${OSKERNEL_FILE_TMP} ${OSKERNEL_FILE_CMD} ${OSKERNEL_DIR_TEST}/* ${OSKERNEL_DIR_TMP}/*
+	[  -z "$QUIET_MODE" ] && echo -n "INFO: Cleaning up..."
+	if [ -n "${TMPFILE}" -a -n "${CMDFILE}" -a -n "${TESTDIR}" -a -n "${TMPBASE}" ]; then
+		rm -rf ${TMPFILE} ${CMDFILE} ${TESTDIR}/* ${TMPBASE}/*
 	else
 		echo "INFO: Clean up process won't be executed because variables for directories to be removed are not set..."
 	fi
 
-	[  -z "$OSKERNEL_QUIET_MODE" ] && echo "done."
+	[  -z "$QUIET_MODE" ] && echo "done."
 }
 
 
