@@ -1,0 +1,364 @@
+#!/bin/sh
+
+###############################################################################
+# Handler configuration script
+# Author: Leed Aguilar
+# Date: Tue Jun  7 10:58:31 CDT 2011
+# Description: Configuration setup for all handlers scripts
+###############################################################################
+
+#-------------------------------------------------------------
+# handlerCpuAffinity.sh && handlerCpuAffinityExecutor.sh
+#-------------------------------------------------------------
+
+export HCA_LIST_CMDS_TOTALS=$UTILS_DIR_TMP/hca.list.cmds.totals
+export HCA_LIST_CMDS_PASSED=$UTILS_DIR_TMP/hca.list.cmds.passed
+export HCA_LIST_CMDS_FAILED=$UTILS_DIR_TMP/hca.list.cmds.failed
+export HCA_LIST_PIDS_TOTALS=$UTILS_DIR_TMP/hca.list.pids.totals
+
+#-------------------------------------------------------------
+# handlerIrqAffinity.sh
+#-------------------------------------------------------------
+
+if [ `cat /proc/cpuinfo | grep -ic OMAP4` -gt 0 ]; then
+	export INT_GPIO_BANK1=61
+	export INT_GPIO_BANK2=62
+	export INT_GPIO_BANK3=63
+	export INT_GPIO_BANK4=64
+	export INT_GPIO_BANK5=65
+	export INT_GPIO_BANK6=66
+fi
+
+#-------------------------------------------------------------
+# handlerProcessParallelism.sh
+# handlerProcessParallelismExecutor.sh
+#-------------------------------------------------------------
+
+export HPPA_LIST_CMDS_TOTALS=$UTILS_DIR_TMP/hppa.list.cmds.totals
+export HPPA_LIST_CMDS_PASSED=$UTILS_DIR_TMP/hppa.list.cmds.passed
+export HPPA_LIST_CMDS_FAILED=$UTILS_DIR_TMP/hppa.list.cmds.failed
+export HPPA_LIST_PIDS_TOTALS=$UTILS_DIR_TMP/hppa.list.pids.totals
+
+#-------------------------------------------------------------
+# handlerProcessPriority.sh
+# handlerProcessPriorityExecutor.sh
+#-------------------------------------------------------------
+
+export HPPR_LIST_CMDS_TOTALS=$UTILS_DIR_TMP/hppr.list.cmds.totals
+export HPPR_LIST_CMDS_PASSED=$UTILS_DIR_TMP/hppr.list.cmds.passed
+export HPPR_LIST_CMDS_FAILED=$UTILS_DIR_TMP/hppr.list.cmds.failed
+export HPPR_LIST_PIDS_TOTALS=$UTILS_DIR_TMP/hppr.list.pids.totals
+export HPPR_PROCFS_PID_SCHED_START=$UTILS_DIR_TMP/hppr.procfs.pid.sched.start
+export HPPR_PROCFS_PID_SCHED_CURRENT=$UTILS_DIR_TMP/hppr.procfs.pid.sched.current
+export HPPR_COMMAND_LINE=$UTILS_DIR_TMP/hppr.command.line
+export HPPR_COMMAND_PRIORITY=$UTILS_DIR_TMP/hppr.command.priority
+export HPPR_COMMAND_PRIORITY_HIGHER=$UTILS_DIR_TMP/hppr.command.priority.higher
+export HPPR_OPERATION_CURRENT=$UTILS_DIR_TMP/hppr.current.operation
+
+#-------------------------------------------------------------
+# handlerAppTop2.sh
+#-------------------------------------------------------------
+
+export HAT_TOP2_PATH=/usr/bin/top
+export HAT_TOP2_SLEEP_TIME=5
+export HAT_TOP2_DATA_LOG=$UTILS_DIR_TMP/hat.top2.data.log
+export HAT_TOP2_DATA_RAW=$UTILS_DIR_TMP/hat.top2.data.raw
+export HAT_TOP2_DATA_TEMPORAL=$UTILS_DIR_TMP/hat.top2.data.temporal
+export HAT_CPU_USAGE_VALUE_AVR=$UTILS_DIR_TMP/hat.cpu.usage.value.avr
+export HAT_CPU_USAGE_VALUE_MAX=$UTILS_DIR_TMP/hat.cpu.usage.value.max
+export HAT_CPU_USAGE_VALUE_MIN=$UTILS_DIR_TMP/hat.cpu.usage.value.min
+
+#-------------------------------------------------------------
+# handlerAppTime.sh
+#-------------------------------------------------------------
+
+export HATI_TIME=$UTILS_DIR_TMP/hati.time
+export HATI_TIME_FINAL=$UTILS_DIR_TMP/hati.time.final
+
+#-------------------------------------------------------------
+# handlerCmdDd.sh
+#-------------------------------------------------------------
+
+export HCDD_DD_BS="1M"
+export HCDD_DD_LOG=$UTILS_DIR_TMP/hcdd.dd.log
+export HCDD_EXECUTION_TIME_DD=$UTILS_DIR_TMP/hcdd.execution.time.dd
+export HCDD_EXECUTION_TIME_SYNC=$UTILS_DIR_TMP/hcdd.execution.time.sync
+
+#-------------------------------------------------------------
+# handlerCmdCp.sh
+#-------------------------------------------------------------
+
+export HCCP_CP_LOG=$UTILS_DIR_TMP/hccp.log.file
+export HCCP_EXECUTION_TIME_CP=$UTILS_DIR_TMP/hccp.execution.time.cp
+export HCCP_EXECUTION_TIME_SYNC=$UTILS_DIR_TMP/hccp.execution.time.sync
+
+#-------------------------------------------------------------
+# handlerFileThroughput.sh
+#-------------------------------------------------------------
+export HFT_THROUGHPUT_REAL_FILE_SIZE=$UTILS_DIR_TMP/hft.throughput.real.file.size
+export HFT_THROUGHPUT_MBps=$UTILS_DIR_TMP/hft.throughput.mbs
+export HFT_THROUGHPUT_Mbps=$UTILS_DIR_TMP/hft.throughput.mbps
+
+#-------------------------------------------------------------
+# handlerStatistics.sh
+#-------------------------------------------------------------
+export HS_STATISTICS_GENERAL_FILE=$UTILS_DIR_TMP/hs.statistics.general.file
+
+#-------------------------------------------------------------
+# handlerError.sh
+#-------------------------------------------------------------
+
+export HE_ERROR_FILE_HALT=$UTILS_DIR_TMP/he.error.file.halt
+export HE_ERROR_FILE_CONTINUE=$UTILS_DIR_TMP/he.error.file.continue
+
+#-------------------------------------------------------------
+# handlerFile.sh
+#-------------------------------------------------------------
+
+export HF_TEXT_PATTERN=$UTILS_DIR_SCRIPTS/text.pattern
+
+#-------------------------------------------------------------
+# handlerDebugFileSystem.sh
+#-------------------------------------------------------------
+
+export HDFS_DEBUG_FILESYSTEM_DIRECTORY=/sys/kernel/debug
+export PM_ENABLE=1
+export PM_DISABLE=0
+export PM_WAKEUP_TIMER_DEFAULT=1
+export PM_RETENTION_TIMER_DEFAULT=30
+export PM_DEBUGFS_DIRECTORY=$HDFS_DEBUG_FILESYSTEM_DIRECTORY
+export PM_DEBUG=$PM_DEBUGFS_DIRECTORY/pm_debug/
+
+if [ `cat /proc/cpuinfo | grep -ic OMAP4` -gt 0 ]; then
+	export PM_COUNT=$PM_DEBUG/count
+	export PM_ENABLED_OFF_MODE=$PM_DEBUG/enable_off_mode
+	export PM_ENABLE_SR_VP_DEBUG=$PM_DEBUG/enable_sr_vp_debug
+	export PM_SLEEP_WHILE_IDLE=$PM_DEBUG/sleep_while_idle
+	export PM_VOLTAGE_OFF_WHILE_IDLE=$PM_DEBUG/voltage_off_while_idle
+	export PM_WAKEUP_TIMER_SECONDS=$PM_DEBUG/wakeup_timer_seconds
+	export PM_WAKEUP_TIMER_MILLISECONDS=$PM_DEBUG/wakeup_timer_milliseconds
+fi
+
+#-------------------------------------------------------------
+# handlerSmartReflex.sh
+#-------------------------------------------------------------
+
+if [ `cat /proc/cpuinfo | grep -ic OMAP4` -gt 0 ]; then
+		export SR_CORE_AUTOCOMP=$PM_DEBUG/smartreflex/sr_core/autocomp
+		export SR_IVA_AUTOCOMP=$PM_DEBUG/smartreflex/sr_iva/autocomp
+		export SR_MPU_AUTOCOMP=$PM_DEBUG/smartreflex/sr_mpu/autocomp
+
+	elif [ `cat /proc/cpuinfo | grep -ic Zoom3` -gt 0 ]; then
+		export SR_VDD1_AUTOCOMP=$PM_SYS_PWR/sr_vdd1_autocomp
+		export SR_VDD2_AUTOCOMP=$PM_SYS_PWR/sr_vdd2_autocomp
+fi
+
+#-------------------------------------------------------------
+# handlerSuspendResume.sh
+# handlerAndroidPM.sh
+#-------------------------------------------------------------
+
+export HSR_SUSPEND_RESUME_MESSAGE_SUCCESS="PM: resume of devices complete"
+
+#-------------------------------------------------------------
+# handlerCpuFreqScalFrequencies.sh
+#-------------------------------------------------------------
+
+export HCFSF_FREQUENCIES_LIST_OK=$UTILS_DIR_TMP/hcfsg.frequencies.list.ok
+export HCFSF_FREQUENCIES_LIST_ERROR=$UTILS_DIR_TMP/hcfsg.frequencies.list.error
+export HCFSF_FREQUENCIES_LIST_AVAILABILITY=$UTILS_DIR_TMP/hcfsg.frequencies.list.availability
+
+#-------------------------------------------------------------
+# handlerCpuFreqScalGovernors.sh
+#-------------------------------------------------------------
+
+export HCFSG_GOVERNORS_LIST_OK=$UTILS_DIR_TMP/hcfsg.governors.list.ok
+export HCFSG_GOVERNORS_LIST_ERROR=$UTILS_DIR_TMP/hcfsg.governors.list.error
+export HCFSG_CURRENT_GOVERNOR_FILE=$UTILS_DIR_TMP/hcfsg.governors.file.current
+export GOVERNOR_CONSERVATIVE=conservative
+export GOVERNOR_ONDEMAND=ondemand
+export GOVERNOR_POWERSAVE=powersave
+export GOVERNOR_USERSPACE=userspace
+export GOVERNOR_PERFORMANCE=performance
+export GOVERNOR_HOTPLUG=hotplug
+
+#-------------------------------------------------------------
+# handlerFstab.sh
+#-------------------------------------------------------------
+
+export HFST_FSTAB_NAME=/etc/fstab
+export HFST_FSTAB_ORIGINAL=$UTILS_DIR_TMP/hfst.fstab.original
+export HFST_FSTAB_ENTRY=$UTILS_DIR_TMP/hfst.fstab.entry
+
+#-------------------------------------------------------------
+# handlerFilesystem.sh
+#-------------------------------------------------------------
+
+export HFS_FS_TYPE=$UTILS_DIR_TMP/hfs.fs.type
+
+#-------------------------------------------------------------
+# handlerSysFs.sh
+#-------------------------------------------------------------
+
+export HSF_SYSFS_ENTRY_NAME=$UTILS_DIR_TMP/hsf.sysfs.entry.name
+
+#-------------------------------------------------------------
+# handlerMemTester.sh
+#-------------------------------------------------------------
+
+export HMT_MEMTESTER_LOG_FILE=$UTILS_DIR_TMP/hmt.memtester.log.file
+export HMT_MEMTESTER_FIELDS_FILE=$UTILS_DIR_TMP/hmt.memtester.fields.file
+
+#-------------------------------------------------------------
+# handlerActivityManager.sh
+#-------------------------------------------------------------
+
+export MP3_FILE="song.mp3"
+export MP4_FILE="video.mp4"
+export JPEG_FILE="img.jpeg"
+
+#-------------------------------------------------------------
+# handlerAndroidMonkey.sh
+#-------------------------------------------------------------
+
+export KeyMonkeySoftLeft=1
+export KeyMonkeySoftRight=2
+export KeyMonkeyHome=3
+export KeyMonkeyBack=4
+export KeyMonkeyCall=5
+export KeyMonkeyEndCall=6
+export KeyMonkey0=7
+export KeyMonkey1=8
+export KeyMonkey2=9
+export KeyMonkey3=10
+export KeyMonkey4=11
+export KeyMonkey5=12
+export KeyMonkey6=13
+export KeyMonkey7=14
+export KeyMonkey8=15
+export KeyMonkey9=16
+export KeyMonkeyStar=17
+export KeyMonkeyPound=18
+export KeyMonkeyDpadUp=19
+export KeyMonkeyDpadDown=20
+export KeyMonkeyDpadLeft=21
+export KeyMonkeyDpadRight=22
+export KeyMonkeyDpadCenter=23
+export KeyMonkeyVolumeUp=24
+export KeyMonkeyVolumeDown=25
+export KeyMonkeyPower=26
+export KeyMonkeyCamera=27
+export KeyMonkeyClear=28
+export KeyMonkeyA=29
+export KeyMonkeyB=30
+export KeyMonkeyC=31
+export KeyMonkeyD=32
+export KeyMonkeyE=33
+export KeyMonkeyF3=34
+export KeyMonkeyG=35
+export KeyMonkeyH=36
+export KeyMonkeyI=37
+export KeyMonkeyJ=38
+export KeyMonkeyK=39
+export KeyMonkeyL=40
+export KeyMonkeyM=41
+export KeyMonkeyN=42
+export KeyMonkeyO=43
+export KeyMonkeyP=44
+export KeyMonkeyQ=45
+export KeyMonkeyR=46
+export KeyMonkeyS=47
+export KeyMonkeyT=48
+export KeyMonkeyU=49
+export KeyMonkeyV=50
+export KeyMonkeyW=51
+export KeyMonkeyX=52
+export KeyMonkeyY=53
+export KeyMonkeyZ=54
+export KeyMonkeyComma=55
+export KeyMonkeyPeriod=56
+export KeyMonkeyAltLeft=57
+export KeyMonkeyAltRight=58
+export KeyMonkeyShiftLeft=59
+export KeyMonkeyShiftRight=60
+export KeyMonkeyTab=61
+export KeyMonkeySpace=62
+export KeyMonkeySym=63
+export KeyMonkeyExplorer=64
+export KeyMonkeyEnvelope=65
+export KeyMonkeyNewline=66
+export KeyMonkeyDel=67
+export KeyMonkeyGrave=68
+export KeyMonkeyMinus=69
+export KeyMonkeyEquals=70
+export KeyMonkeyLeftBracket=71
+export KeyMonkeyRightBracket=72
+export KeyMonkeyBackslash=73
+export KeyMonkeySemicolon=74
+export KeyMonkeyApostrophe=75
+export KeyMonkeySlash=76
+export KeyMonkeyAt=77
+export KeyMonkeyNum=78
+export KeyMonkeyHeadSetHook=79
+export KeyMonkeyFocus=80
+export KeyMonkeyPlus=81
+export KeyMonkeyMenu=82
+export KeyMonkeyNotification=83
+export KeyMonkeySearch=84
+export KeyMonkeyPlayPause=85
+export KeyMonkeyStop=86
+export KeyMonkeyNextSong=87
+export KeyMonkeyPreviousSong=88
+export KeyMonkeyRewind=89
+export KeyMonkeyForward=90
+export KeyMonkeyMute=91
+
+#-------------------------------------------------------------
+# handlerInputSubsystem.sh
+#-------------------------------------------------------------
+
+# Sensors
+export sensorsEvent="/dev/input/event9"
+
+# Pressure Sensor: BMP085
+export pressureEvent="/dev/input/event7"
+
+# Digital Compass Sensor: HMC5843
+export digitalCompassEvent="/dev/input/event6"
+
+# Ambient Light sensor:  BH1780GLI
+export ambientLightEvent="/dev/input/event5"
+
+# Accelerometer sensor: cma3000
+export accelerometerEvent="/dev/input/event3"
+
+# Headset Jack for SDP4430
+export headsetJackEvent="/dev/input/event8"
+
+# Omap Keypad for SDP4430
+export omapKeypadEvent="/dev/input/event0"
+
+# Proximity Sensor: SFH7741
+export proximityEvent="/dev/input/event2"
+
+# Synaptics Touchscreen:TM12XX
+export touchPoint1Event="/dev/input/event1"
+export touchPoint2Event="/dev/input/event4"
+
+# TODO: Export all the available key codes
+
+export KeyCodeHome=102
+export KeyCodeBack=158
+export KeyCodeCall=231
+export KeyCodeEndCall=107
+export KeyCodeDpadUp=103
+export KeyCodeDpadDown=108
+export KeyCodeDpadLeft=105
+export KeyCodeDpadRight=106
+export KeyCodeDpadCenter=352
+export KeyCodeVolumeUp=115
+export KeyCodeVolumeDown=114
+export KeyCodeF1=59
+export KeyCodeDLP=67
+
+# End of file
