@@ -27,7 +27,7 @@ module() {
 	then
 		LOCAL_ERROR=`expr $LOCAL_ERROR + 1`
 	fi
-	rmmod $GPIO_TEST_MODULE
+	rmmod $GPIO_TEST_MODULE_NAME
 }
 
 
