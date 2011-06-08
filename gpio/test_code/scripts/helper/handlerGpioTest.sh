@@ -20,14 +20,25 @@ LOCAL_COUNT=$GPIO_FIRST_LINE
 module() {
 
 	LOCAL_EXTRA_ARGUMENTS=$1
-
 	insmod $GPIO_TEST_MODULE test=$LOCAL_TEST $LOCAL_EXTRA_ARGUMENTS
-	cat $GPIO_TEST_MODULE_PROCFS_RESULT | grep FAILED
-	if [ $? -eq 0 ]
-	then
-		LOCAL_ERROR=`expr $LOCAL_ERROR + 1`
+	# Verify module was properly loaded
+	if [ $? -ne 0 ]; then
+		echo "FATAL: $GPIO_TEST_MODULE_NAME failed to be loaded"
+		echo "FATAL: test can not continue"
+		exit 1
+	else
+		# Verify the test status on gpio_test procfs and record the failure
+		cat $GPIO_TEST_MODULE_PROCFS_RESULT | grep FAILED
+		if [ $? -eq 0 ]; then
+			LOCAL_ERROR=`expr $LOCAL_ERROR + 1`
+		fi
 	fi
 	rmmod $GPIO_TEST_MODULE_NAME
+	if [ $? -ne 0 ]; then
+		echo "FATAL: $GPIO_TEST_MODULE_NAME failed to be removed"
+		echo "FATAL: test can not continue"
+		exit 1
+	fi
 }
 
 
