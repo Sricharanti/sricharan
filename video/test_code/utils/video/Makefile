@@ -5,10 +5,6 @@ setbgcolor settransck enablecolkey setcolorconv setdefcolcon streaming_process \
 tv_detect_app createRGB streaming_usrptr v4l2_rolling_bars streaming_tear v4l2_ramdomcolorblocks \
 streaming_repeat \
 
-ifeq ($(TARGET_PLATFORM), OMAP_4430)
-	OBJS += streaming_wb
-endif
-
 
 all: $(OBJS)
 
@@ -56,9 +52,6 @@ setdefcolcon: setdefcolcon.c
 
 streaming_process: streaming_process.c
 	$(CC) $(CFLAGS) -g streaming_process.c -o streaming_process
-
-streaming_wb: streaming_wb.c
-	$(CC) $(CFLAGS) -g streaming_wb.c lib.c -o streaming_wb
 
 v4l2_rolling_bars: v4l2_rolling_bars.c
 	$(CC) $(CFLAGS) -g v4l2_rolling_bars.c lib.c -o v4l2_rolling_bars
