@@ -50,7 +50,7 @@ do
 	fi
 	
 	# Get data from i2c bus
-	data_read=`i2cdump -f -y $OPTIONS $BUS $REG b | cut -d ' ' -f $COL | head $HEAD_OPTION $ROW | tail $TAIL_OPTION 1`
+	data_read=`i2cdump -f -y $OPTIONS $BUS $REG b | cut -d ' ' -f $COL | head $I2C_HEAD_OPTION $ROW | tail $I2C_TAIL_OPTION 1`
 	
 	if [ $? -ne 0 ]; then
 		echo "Failed in i2cdump"

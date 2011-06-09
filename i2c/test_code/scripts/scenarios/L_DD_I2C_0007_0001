@@ -9,7 +9,7 @@
 
 0001  set -x; handlerProcessParallelism.sh "clean"
 0002  set -x; handlerProcessParallelism.sh "add" "$UTILS_DIR_SCRIPTS/dvfs.opp.sh"
-0003  set -x; handlerProcessParallelism.sh "add" "runtestcase.sh $EXISTING_DEVICES $STANDARD_MODE "
+0003  set -x; handlerProcessParallelism.sh "add" "runtestcase.sh $I2C_EXISTING_DEVICES $I2C_STANDARD_MODE "
 0004  set -x; handlerProcessParallelism.sh "execute"
 
 # End L_DD_I2C_0007_0001

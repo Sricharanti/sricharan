@@ -37,6 +37,7 @@ export PATH="$PATH:$UTILS_DIR_BIN:$UTILS_DIR_HANDLERS:$UTILS_DIR_SCRIPTS"
 
 # Check if procfs is mounted, if not set it up
 test -d /proc/1/ || mount -t proc proc /proc
+export PROCFS_INTERRUPTS=/proc/interrupts
 
 # Check if sysfs is mounted, if not set it up
 test -d /sys/kernel/ || mount -t sysfs sysfs /sys
@@ -62,7 +63,6 @@ else
 	echo "FATAL: Handlers configuration file with errors"
 fi
 
-
 #-----------------------------------------------------------------------------------
 # GPIO Driver Specific
 #-----------------------------------------------------------------------------------
@@ -87,7 +87,60 @@ export MAIN_TEST=$TESTBIN/main_test
 # export PREEMPT_MODULE=$MODDIR/$GPIO_PREEMPT
 # [ -f  "$DEV_GPIOTEST" ] && mknod /dev/gpiotest c 241 0
 
-# Remove all existing references for handlerError.sh
+#-----------------------------------------------------------------------------------
+# I2C Driver Specific
+#-----------------------------------------------------------------------------------
+
+# Adapters
+export I2C_ADAPTERS="1 2 3 4"
+export I2C_ADAPTER_1=1
+export I2C_ADAPTER_2=2
+export I2C_ADAPTER_3=3
+export I2C_ADAPTER_4=4
+# Operating mode
+export I2C_STANDARD_MODE=100
+export I2C_FAST_MODE=400
+# Test case IDs for runtestcase.sh script
+export I2C_EXISTING_DEVICES=1
+export I2C_MULTIPLE_DEVICES=2
+export I2C_NON_EXISTING_DEVICES=3
+export I2C_TRANSFER_CANCELLATION=4
+export I2C_INTERRUPT_MODE=5
+# General variables
+export I2C_INTERRUPT_PREFIX=i2c_omap
+export I2C_TEMP_FILE_1=${TMPBASE}/i2c.test.file.1
+export I2C_TEMP_FILE_2=${TMPBASE}/i2c.test.file.2
+export I2C_HEAD_OPTION="-n "
+export I2C_TAIL_OPTION="-n "
+export I2C_ADAPTER_INFO=None
+export I2C_MODE=None
+export I2C_REG_INVALID=0x2D
+# Speed, Addresses, Registers, IRQs
+if [ `cat /proc/cpuinfo| grep -ic OMAP4` -ne 0 ];then
+	export I2C_HIGH_SPEED_MODE=2100
+	export I2C_ADDRESSES="0x48 0x49 0x4A"
+	export I2C_REG_1=0x48
+	export I2C_REG_1_VALUE_INITIAL=0x17
+	export I2C_REG_2=0x48
+	export I2C_REG_2_VALUE_INITIAL=0x17
+	export INT_24XX_I2C1_IRQ=88
+	export INT_24XX_I2C2_IRQ=89
+	export INT_34XX_I2C3_IRQ=93
+	export INT_44XX_I2C4_IRQ=94
+
+else
+	export I2C_HIGH_SPEED_MODE=2600
+	export I2C_ADDRESSES="0x48 0x49 0x4A 0x4B"
+	export I2C_REG_1=0x49
+	export I2C_REG_1_VALUE_INITIAL=0x01
+	export I2C_REG_2=0x4A
+	export I2C_REG_2_VALUE_INITIAL=0xD4
+	export INT_24XX_I2C1_IRQ=56
+	export INT_24XX_I2C2_IRQ=57
+	export INT_34XX_I2C3_IRQ=61
+fi
+
+# Remove all existing references for handlerError.shz
 handlerError.sh "clean"
 
 # End of file

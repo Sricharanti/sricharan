@@ -7,6 +7,6 @@
 
 # Begin L_DD_I2C_0004_0003
 
-0001 set -x; runtestcase.sh $NON_EXISTING_DEVICES $STANDARD_MODE && exit 0 || exit 1
+0001 set -x; runtestcase.sh $I2C_NON_EXISTING_DEVICES $I2C_STANDARD_MODE && exit 0 || exit 1
 
 # End L_DD_I2C_0004_0003

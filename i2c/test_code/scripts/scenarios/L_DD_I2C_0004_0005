@@ -7,6 +7,6 @@
 
 # Begin L_DD_I2C_0004_0005
 
-0001 set -x; runtestcase.sh $INTERRUPT_MODE $STANDARD_MODE && exit 0 || exit 1
+0001 set -x; runtestcase.sh $I2C_INTERRUPT_MODE $I2C_STANDARD_MODE && exit 0 || exit 1
 
 # End L_DD_I2C_0004_0005

@@ -7,6 +7,6 @@
 
 # Begin L_DD_I2C_0005_0002
 
-0001 set -x; runtestcase.sh $MULTIPLE_DEVICES $FAST_MODE && exit 0 || exit 1
+0001 set -x; runtestcase.sh $I2C_MULTIPLE_DEVICES $I2C_FAST_MODE && exit 0 || exit 1
 
 # End L_DD_I2C_0005_0002
