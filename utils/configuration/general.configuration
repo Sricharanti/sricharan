@@ -166,6 +166,32 @@ export RESERVED_GPTIMER=`echo $GPTIMER | awk '{print $4}'| cut -c '8'`
 export MAXGPTIMERS=12
 
 #-----------------------------------------------------------------------------------
+# Audio-ALSA Driver Specific
+#-----------------------------------------------------------------------------------
+
+export SAMPLESDIR="/sdcard/audio-samples"
+if ! [ -f "/bin/aplay" ]; then
+       if [ -f "/system/bin/alsa_aplay" ]; then
+               echo "INFO: Creating softlink for 'aplay'"
+               ln -s "/system/bin/alsa_aplay" "/bin/aplay"
+       fi
+fi
+if ! [ -f "/bin/arecord" ]; then
+       if [ -f "/system/bin/alsa_aplay" ]; then
+               echo "INFO: Creating softlink for 'arecord'"
+               ln -s "/system/bin/alsa_aplay" "/bin/arecord"
+       fi
+fi
+if ! [ -f "/bin/amixer" ]; then
+       if [ -f "/system/bin/alsa_amixer" ]; then
+               echo "INFO: Creating softlink for 'amixer'"
+               ln -s "/system/bin/alsa_amixer" "/bin/amixer"
+       fi
+fi
+
+
+
+#-----------------------------------------------------------------------------------
 # HSUART Driver Specific
 #-----------------------------------------------------------------------------------
 
