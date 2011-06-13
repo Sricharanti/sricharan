@@ -9,8 +9,8 @@
 
 #This test case verifies SMP readiness of the GPADC driver
 
-0001 set -x; insmod $GPADC_SMP_MODULE iterations=10 && exit 0 || exit 1
-0002 set -x; rmmod $GPADC_SMP_MODULE
+0001 set -x; $MODDIR/insmod omap_gpadc_smp_test.ko iterations=10 && exit 0 || exit 1
+0002 set -x; rmmod omap_gpadc_smp_test && exit 0 || exit 1
 
 # End L_DD_GPADC_0003_0001
 

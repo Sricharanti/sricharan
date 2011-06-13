@@ -8,7 +8,7 @@
 # Begin L_DD_GPADC_0002_0001
 
 #This test case verifies if the GPADC driver supports SW Conversion IRQ method
-0001 set -x; insmod $GPADC_IRQ_MODULE  && exit 0 || exit 1
-0002 set -x; rmmod $GPADC_IRQ_MODULE
+0001 set -x; insmod $MODDIR/omap_gpadc_sw_irq_test.ko && exit 0 || exit 1
+0002 set -x; rmmod omap_gpadc_sw_irq_test && exit 0 || exit 1
 
 # End L_DD_GPADC_0002_0001
