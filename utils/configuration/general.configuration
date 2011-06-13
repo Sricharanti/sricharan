@@ -165,6 +165,15 @@ export RESERVED_GPTIMER=`echo $GPTIMER | awk '{print $4}'| cut -c '8'`
 export MAXGPTIMERS=12
 
 #-----------------------------------------------------------------------------------
+# HSUART Driver Specific
+#-----------------------------------------------------------------------------------
+
+export UART_TEST_PORT1="ttyO0"
+export UART_TEST_PORT2="ttyO1"
+export UART_TEST_PORT3="ttyO2"
+export UART_TEST_PORT4="ttyO3"
+
+#-----------------------------------------------------------------------------------
 
 # Remove all existing references for handlerError.shz
 handlerError.sh "clean"

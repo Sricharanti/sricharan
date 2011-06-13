@@ -12,47 +12,47 @@
 # Begin L_DD_UART_SERIAL_0011_0001
 # The test passes if both files match
 
-01  set -x; handlerCpuAffinity.sh "switch" "handlerHsuart.sh $UART_TEST_PORT1 115200 0" "10" "300"
+01  set -x; handlerCpuAffinity.sh "switch" "$TESTSCRIPT/handlerHsuart.sh $UART_TEST_PORT1 115200 0" "10" "300"
 02  set -x; diff uart_tx_file_$UART_TEST_PORT1 uart_rx_file_$UART_TEST_PORT1 && exit 0 || exit 1
 
 03  set -x; sleep 10
 
-04  set -x; handlerCpuAffinity.sh "switch" "handlerHsuart.sh $UART_TEST_PORT1 115200 1" "10" "300"
+04  set -x; handlerCpuAffinity.sh "switch" "$TESTSCRIPT/handlerHsuart.sh $UART_TEST_PORT1 115200 1" "10" "300"
 05  set -x; diff uart_tx_file_$UART_TEST_PORT1 uart_rx_file_$UART_TEST_PORT1 && exit 0 || exit 1
 
 06  set -x; sleep 10
 
-07  set -x; handlerCpuAffinity.sh "switch" "handlerHsuart.sh $UART_TEST_PORT1 115200 2" "10" "300"
+07  set -x; handlerCpuAffinity.sh "switch" "$TESTSCRIPT/handlerHsuart.sh $UART_TEST_PORT1 115200 2" "10" "300"
 08  set -x; diff uart_tx_file_$UART_TEST_PORT1 uart_rx_file_$UART_TEST_PORT1 && exit 0 || exit 1
 
 09  set -x; sleep 10
 
-10  set -x; handlerCpuAffinity.sh "switch" "handlerHsuart.sh $UART_TEST_PORT1 921600 0" "10" "300"
+10  set -x; handlerCpuAffinity.sh "switch" "$TESTSCRIPT/handlerHsuart.sh $UART_TEST_PORT1 921600 0" "10" "300"
 11  set -x; diff uart_tx_file_$UART_TEST_PORT1 uart_rx_file_$UART_TEST_PORT1 && exit 0 || exit 1
 
 12  set -x; sleep 10
 
-13  set -x; handlerCpuAffinity.sh "switch" "handlerHsuart.sh $UART_TEST_PORT1 921600 1" "10" "300"
+13  set -x; handlerCpuAffinity.sh "switch" "$TESTSCRIPT/handlerHsuart.sh $UART_TEST_PORT1 921600 1" "10" "300"
 14  set -x; diff uart_tx_file_$UART_TEST_PORT1 uart_rx_file_$UART_TEST_PORT1 && exit 0 || exit 1
 
 15  set -x; sleep 10
 
-16  set -x; handlerCpuAffinity.sh "switch" "handlerHsuart.sh $UART_TEST_PORT1 921600 2" "10" "300"
+16  set -x; handlerCpuAffinity.sh "switch" "$TESTSCRIPT/handlerHsuart.sh $UART_TEST_PORT1 921600 2" "10" "300"
 17  set -x; diff uart_tx_file_$UART_TEST_PORT1 uart_rx_file_$UART_TEST_PORT1 && exit 0 || exit 1
 
 18  set -x; sleep 10
 
-19  set -x; handlerCpuAffinity.sh "switch" "handlerHsuart.sh $UART_TEST_PORT1 3500000 0" "10" "300"
+19  set -x; handlerCpuAffinity.sh "switch" "$TESTSCRIPT/handlerHsuart.sh $UART_TEST_PORT1 3500000 0" "10" "300"
 20  set -x; diff uart_tx_file_$UART_TEST_PORT1 uart_rx_file_$UART_TEST_PORT1 && exit 0 || exit 1
 
 21  set -x; sleep 10
 
-22  set -x; handlerCpuAffinity.sh "switch" "handlerHsuart.sh $UART_TEST_PORT1 3500000 1" "10" "300"
+22  set -x; handlerCpuAffinity.sh "switch" "$TESTSCRIPT/handlerHsuart.sh $UART_TEST_PORT1 3500000 1" "10" "300"
 23  set -x; diff uart_tx_file_$UART_TEST_PORT1 uart_rx_file_$UART_TEST_PORT1 && exit 0 || exit 1
 
 24  set -x; sleep 10
 
-25  set -x; handlerCpuAffinity.sh "switch" "handlerHsuart.sh $UART_TEST_PORT1 3500000 2" "10" "300"
+25  set -x; handlerCpuAffinity.sh "switch" "$TESTSCRIPT/handlerHsuart.sh $UART_TEST_PORT1 3500000 2" "10" "300"
 26  set -x; diff uart_tx_file_$UART_TEST_PORT1 uart_rx_file_$UART_TEST_PORT1 && exit 0 || exit 1
 
 # End L_DD_UART_SERIAL_0011_0001
