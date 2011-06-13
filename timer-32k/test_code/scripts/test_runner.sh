@@ -5,6 +5,9 @@
 # Copyright remains
 #-----------------------
 
+# Global configuration file
+TS_CONF="../../utils/configuration/general.configuration"
+
 # Give standard error message and die
 die()
 {
@@ -40,19 +43,19 @@ setup()
 	}
 
 	# Load config file
-	if [ -f "./conf.sh" ]; then
-		. ./conf.sh
+	if [ -f "$TS_CONF" ]; then
+		. $TS_CONF
 		if [ $? -eq 0 ]; then
-			echo "INFO: Requested tests will be started"
+			echo "INFO: General configuration completed"
 		else
-			echo "FATAL: Configuration file with errors"
+			echo "FATAL: General configuration file with errors"
 		fi
 	else
-		die "FATAL: Configuration file not found"
+		die "FATAL: Testsuite configuration file not found"
 	fi
 
 	# scenario less tests?? have the user organize it properly at least..
-	[ -d $TIMER_DIR_SCENARIOS ] ||
+	[ -d $TC_SCENARIO ] ||
 	{
 		die "Test suite not installed correctly - no scenarios"
 	}
@@ -67,29 +70,29 @@ setup()
 usage()
 {
 	# Human redable please
-	local PP=` if [ -z "$TIMER_PRETTY_PRT" ]; then echo "off"; else echo "on"; fi`
-	local VV=` if [ -z "$TIMER_VERBOSE" ]; then echo "off"; else echo "on"; fi`
+	local PP=` if [ -z "$PRETTY_PRT" ]; then echo "off"; else echo "on"; fi`
+	local VV=` if [ -z "$VERBOSE" ]; then echo "off"; else echo "on"; fi`
 
 	# Give the gyan
 	cat <<-EOF >&2
-	usage: ./${0##*/} [-z] [-h] [-v] [-d TIMER_DIR_TEST] [-o TIMER_FILE_OUTPUT] [-l TIMER_FILE_LOG]
-	[-n TIMER_DURATION ] [-t TMPDIR] [TIMER_SCENARIO_NAMES..]
+	usage: ./${0##*/} [-z] [-h] [-v] [-d TESTDIR] [-o OUTPUTFILE] [-l LOGFILE]
+	[-n DURATION ] [-t TMPDIR] [SCENARIO_NAMES..]
 
-	-d TIMER_DIR_TEST      Run LTP to test the filesystem mounted here. [Current - $TIMER_DIR_TEST]
+	-d TESTDIR      Run LTP to test the filesystem mounted here. [Current - $TESTDIR]
 			At the end of test, the testdir gets cleaned out
-	-s TIMER_DIR_SCENARIOS  Test scenarios are located here. [Current - $TIMER_DIR_SCENARIOS]
-	-o TIMER_FILE_OUTPUT   Redirect test output to a file. [Current- $TIMER_FILE_OUTPUT {psid}]
+	-s TC_SCENARIO  Test scenarios are located here. [Current - $TC_SCENARIO]
+	-o OUTPUTFILE   Redirect test output to a file. [Current- $OUTPUTFILE {psid}]
 	-p              Human readable(dont laugh too much) format logfiles. [Current - ($PP)]
 	-z              Dont Merge the Scenario Name with tcid to create final tc id
 	-E              Use Extended Test cases also - these are painful and can take real long time
-	-l TIMER_FILE_LOG      Log results of test in a logfile. [Current- $TIMER_FILE_LOG {psid}]
-	-t TMPDIR       Run LTP using tmp dir [Current - $TIMER_DIR_TMP]
-	-n TIMER_DURATION     Execute the testsuite for given duration. Examples:
+	-l LOGFILE      Log results of test in a logfile. [Current- $LOGFILE {psid}]
+	-t TMPDIR       Run LTP using tmp dir [Current - $TMPBASE]
+	-n DURATION     Execute the testsuite for given duration. Examples:
 			-n 60s = 60 seconds
 			-n 45m = 45 minutes
 			-n 24h = 24 hours
 			-n 2d  = 2 days
-			[Current - $TIMER_DURATION]
+			[Current - $DURATION]
 
 	-v              Print more verbose output to screen.[Current - ($VV)]
 	-q              No messages from this script. no info too - Brave eh??
@@ -99,11 +102,11 @@ usage()
 			List to appear here
 	-S              Run in Stress mode
 
-	TIMER_SCENARIO_NAMES  List of scenarios to test.. else, take all scenarios
-			[Current - These are all filenames from $TIMER_DIR_SCENARIOS]
+	SCENARIO_NAMES  List of scenarios to test.. else, take all scenarios
+			[Current - These are all filenames from $TC_SCENARIO]
 
 	Good News: Ctrl+c stops and cleans up for you :)
-	More help: Read the $TIMER_ROOT/README
+	More help: Read the $TESTROOT/README
 
 	EOF
 	exit 0
@@ -115,57 +118,57 @@ sanity_check()
     # Check the current values...
     # Just ensure that pan can run with a bit of peace of mind...
 
-    [ ! -d "$TIMER_DIR_TMP" -o ! -w "$TIMER_DIR_TMP" ] && die "$TIMER_DIR_TMP - cannot work as temporary directory"
-    [ ! -d "$TIMER_DIR_TEST" -o ! -w "$TIMER_DIR_TEST" ] && die "$TIMER_DIR_TEST - cannot work as test directory"
-    [ ! -d "$TIMER_DIR_SCENARIOS" ] && die "$TIMER_DIR_SCENARIOS - No such directories"
-    [ -z "$TIMER_SCENARIO_NAMES" ] && die "No Scenarios"
-		[ ! -z "$TIMER_VERBOSE" -a ! -z "$TIMER_QUIET_MODE" ] && die "Make up your mind - verbose or quiet??"
+    [ ! -d "$TMPBASE" -o ! -w "$TMPBASE" ] && die "$TMPBASE - cannot work as temporary directory"
+    [ ! -d "$TESTDIR" -o ! -w "$TESTDIR" ] && die "$TESTDIR - cannot work as test directory"
+    [ ! -d "$TC_SCENARIO" ] && die "$TC_SCENARIO - No such directories"
+    [ -z "$SCENARIO_NAMES" ] && die "No Scenarios"
+		[ ! -z "$VERBOSE" -a ! -z "$QUIET_MODE" ] && die "Make up your mind - verbose or quiet??"
 
-    export TIMER_FILE_CMD=$TIMER_DIR_TMP/$TIMER_FILE_CMD
-    rm -f $TIMER_FILE_CMD
+    export CMDFILE=$TMPBASE/$CMDFILE
+    rm -f $CMDFILE
 
-		for SCEN in $TIMER_SCENARIO_NAMES
+		for SCEN in $SCENARIO_NAMES
     do
-		  [ ! -f "$TIMER_DIR_SCENARIOS/$SCEN" -o ! -r "$TIMER_DIR_SCENARIOS/$SCEN" ] && die "$TIMER_DIR_SCENARIOS/$SCEN - not a scenario file"
-			cat $TIMER_DIR_SCENARIOS/$SCEN|grep -v "#"|sed -e "s/^[  ]*$//g"|sed -e "/^$/d">$TIMER_FILE_TMP|| die "Count not create tmp file $TIMER_FILE_TMP"
+		  [ ! -f "$TC_SCENARIO/$SCEN" -o ! -r "$TC_SCENARIO/$SCEN" ] && die "$TC_SCENARIO/$SCEN - not a scenario file"
+			cat $TC_SCENARIO/$SCEN|grep -v "#"|sed -e "s/^[  ]*$//g"|sed -e "/^$/d">$TMPFILE|| die "Count not create tmp file $TMPFILE"
 			if [ -z "$DONT" ]; then
-				cat $TIMER_FILE_TMP|sed -e "s/^/$SCEN-/g"|sed -e "s/-/_/" >>$TIMER_FILE_CMD || die "Count not create command file $TIMER_FILE_CMD"
+				cat $TMPFILE|sed -e "s/^/$SCEN-/g"|sed -e "s/-/_/" >>$CMDFILE || die "Count not create command file $CMDFILE"
 				else
-				cat $TIMER_FILE_TMP>>$TIMER_FILE_CMD || die "Count not create command file $TIMER_FILE_CMD"
+				cat $TMPFILE>>$CMDFILE || die "Count not create command file $CMDFILE"
 			fi
 
 			# Remove the extended test cases
 			if [ -z "$EXTENDED_TEST" ]; then
 
-				cat $TIMER_FILE_CMD|grep -v "^[_A-Za-z0-9]*_EXT ">$TIMER_FILE_TMP || die "intermediate file gen failed"
-				cat $TIMER_FILE_TMP>$TIMER_FILE_CMD || die "Second intermediate creation failed"
+				cat $CMDFILE|grep -v "^[_A-Za-z0-9]*_EXT ">$TMPFILE || die "intermediate file gen failed"
+				cat $TMPFILE>$CMDFILE || die "Second intermediate creation failed"
 			fi
 
-			rm -f $TIMER_FILE_TMP
+			rm -f $TMPFILE
 
     done
 
-		local PP=` if [ -z "$TIMER_PRETTY_PRT" ]; then echo "off"; else echo "on"; fi`
-    local VV=` if [ -z "$TIMER_VERBOSE" ]; then echo "off"; else echo "on"; fi`
-    export TMPDIR=${TIMER_DIR_TEST}
+		local PP=` if [ -z "$PRETTY_PRT" ]; then echo "off"; else echo "on"; fi`
+    local VV=` if [ -z "$VERBOSE" ]; then echo "off"; else echo "on"; fi`
+    export TMPDIR=${TESTDIR}
 
 		# Print some nice info
-    if [ ! -z "$TIMER_VERBOSE" ]; then
-        debug "TIMER_POSTFIX        $TIMER_POSTFIX       "
-        info  "TIMER_ROOT       $TIMER_ROOT      "
-        info  "TIMER_DIR_TMP        $TIMER_DIR_TMP       "
-        info  "TIMER_FILE_TMP        $TIMER_FILE_TMP       "
-        debug "TIMER_FILE_CMD        $TIMER_FILE_CMD       "
-        info  "TIMER_DIR_TEST        $TIMER_DIR_TEST       "
-        info  "TIMER_PRETTY_PRT     $PP            "
-        info  "TIMER_VERBOSE        $VV            "
-        info  "TIMER_FILE_OUTPUT     $TIMER_FILE_OUTPUT    "
-        info  "TIMER_FILE_LOG        $TIMER_FILE_LOG       "
-        info  "TIMER_DURATION       $TIMER_DURATION      "
+    if [ ! -z "$VERBOSE" ]; then
+        debug "POSTFIX        $POSTFIX       "
+        info  "TESTROOT       $TESTROOT      "
+        info  "TMPBASE        $TMPBASE       "
+        info  "TMPFILE        $TMPFILE       "
+        debug "CMDFILE        $CMDFILE       "
+        info  "TESTDIR        $TESTDIR       "
+        info  "PRETTY_PRT     $PP            "
+        info  "VERBOSE        $VV            "
+        info  "OUTPUTFILE     $OUTPUTFILE    "
+        info  "LOGFILE        $LOGFILE       "
+        info  "DURATION       $DURATION      "
         debug "PATH           $PATH          "
-        info  "TIMER_DIR_SCENARIOS    $TIMER_DIR_SCENARIOS   "
+        info  "TC_SCENARIO    $TC_SCENARIO   "
         info  "TMPDIR         $TMPDIR        "
-        info  "TIMER_SCENARIO_NAMES $TIMER_SCENARIO_NAMES"
+        info  "SCENARIO_NAMES $SCENARIO_NAMES"
     fi
 }
 
@@ -175,25 +178,25 @@ main()
 	while getopts zx:Sd:qt:po:l:vn:hs:E:I arg
 	do  case $arg in
 		d)
-			TIMER_DIR_TEST=${TIMER_OPTARG} ;;
+			TESTDIR=${OPTARG} ;;
 		t)
-			TIMER_DIR_TMP=${TIMER_OPTARG} ;;
+			TMPBASE=${OPTARG} ;;
 		E)
 			EXTENDED_TEST=y ;;
 	        q)
-			TIMER_QUIET_MODE=" -q " ;;
+			QUIET_MODE=" -q " ;;
 	        z)
 			DONT=" " ;;
 		p)
-			TIMER_PRETTY_PRT=" -p " ;;
+			PRETTY_PRT=" -p " ;;
 		o)
-			TIMER_FILE_OUTPUT=${TIMER_OPTARG};OO_LOG=1 ;;
+			OUTPUTFILE=${OPTARG};OO_LOG=1 ;;
 		l)
-			TIMER_FILE_LOG=${TIMER_OPTARG} ;;
+			LOGFILE=${OPTARG} ;;
 		v)
-			TIMER_VERBOSE="-v" ;;
+			VERBOSE="-v" ;;
 		n)
-			TIMER_DURATION=" -t ${TIMER_OPTARG}" ;;
+			DURATION=" -t ${OPTARG}" ;;
 		h)
 			usage ;;
 		x)  # number of ltp's to run
@@ -205,19 +208,19 @@ main()
 			Pausing for 10 seconds...Last chance to hit that ctrl+c
 			EOF
 					sleep 10
-			TIMER_INSTANCES="-x $TIMER_OPTARG -O ${TMP}" ;;
+			INSTANCES="-x $OPTARG -O ${TMP}" ;;
 		s)
-			TIMER_DIR_SCENARIOS=${TIMER_OPTARG} ;;
+			TC_SCENARIO=${OPTARG} ;;
 		S)
-			TIMER_STRESS=y
-			TIMER_STRESSARG="-S";;
+			STRESS=y
+			STRESSARG="-S";;
 
 		\?) # Handle illegals
 			usage ;;
 
 	esac
 
-	if [ ! -z "${TIMER_OPTARG}" ]; then
+	if [ ! -z "${OPTARG}" ]; then
 		count=" $count + 2"
 	else
 		count=" $count + 1"
@@ -232,27 +235,29 @@ main()
 		count=$(($count - 1))
 	done
 
-	TIMER_SCENARIO_NAMES=$@
+	SCENARIO_NAMES=$@
 
 	sanity_check
 
 	# Test start
 
-	[ -z "$TIMER_QUIET_MODE" ] && { info "Test start time: $(date)" ; }
+	[ -z "$QUIET_MODE" ] && { info "Test start time: $(date)" ; }
+	# run pan
+	# $PAN_COMMAND #Duplicated code here, because otherwise if we fail, only "PAN_COMMAND" gets output
+	#Usage: pan -n name [ -SyAehp ] [ -s starts ] [-t time[s|m|h|d] [ -x nactive ] [
+	#-l logfile ]
+	#[ -a active-file ] [ -f command-file ] [ -d debug-level ]
+	#[-o output-file] [-O output-buffer-directory] [cmd]
 
-	# Usage: pan -n name [ -SyAehp ] [ -s starts ] [-t time[s|m|h|d] [ -x nactive ] [-l logfile ]
-	# [ -a active-file ] [ -f command-file ] [ -d debug-level ]
-	# [-o output-file] [-O output-buffer-directory] [cmd]
+	cd $TESTDIR
+	PAN_COMMAND="${UTILS_DIR_BIN}/pan $QUIET_MODE -e -S $INSTANCES $DURATION -a $$ -n $$ $PRETTY_PRT -f ${CMDFILE} -l $LOGFILE"
 
-	cd $TIMER_DIR_TEST
-	PAN_COMMAND="${UTILS_DIR_BIN}/pan $TIMER_QUIET_MODE -e -S $TIMER_INSTANCES $TIMER_DURATION -a $$ -n $$ $TIMER_PRETTY_PRT -f ${TIMER_FILE_CMD} -l $TIMER_FILE_LOG"
-
-	[ ! -z "$TIMER_VERBOSE" ] && { info "PAN_COMMAND=$PAN_COMMAND"; }
+	[ ! -z "$VERBOSE" ] && { info "PAN_COMMAND=$PAN_COMMAND"; }
 
 	if [ -z "$OO_LOG" ]; then
 		$PAN_COMMAND
 	else
-		$PAN_COMMAND|tee $TIMER_FILE_OUTPUT
+		$PAN_COMMAND|tee $OUTPUTFILE
 	fi
 
 	if [ $? -eq 0 ]; then
@@ -264,18 +269,18 @@ main()
 	fi
 
 	# Test end
-	[ -z "$TIMER_QUIET_MODE" ] && { info "Test end time: $(date)" ; }
-	[ -z "$TIMER_QUIET_MODE" ] && {
+	[ -z "$QUIET_MODE" ] && { info "Test end time: $(date)" ; }
+	[ -z "$QUIET_MODE" ] && {
 
 	cat <<-EOF >&1
 
 	###############################################################"
 		Done executing testcases."
-		Result log is in the $TIMER_FILE_LOG "
+		Result log is in the $LOGFILE "
 	###############################################################"
 
 	EOF
-	cat $TIMER_FILE_LOG
+	cat $LOGFILE
 
 	}
 	cleanup
@@ -285,14 +290,14 @@ main()
 
 cleanup()
 {
-	[  -z "$TIMER_QUIET_MODE" ] && echo -n "INFO: Cleaning up..."
-	if [ -n "${TIMER_FILE_TMP}" -a -n "${TIMER_FILE_CMD}" -a -n "${TIMER_DIR_TEST}" -a -n "${TIMER_DIR_TMP}" ]; then
-		rm -rf ${TIMER_FILE_TMP} ${TIMER_FILE_CMD} ${TIMER_DIR_TEST}/* ${TIMER_DIR_TMP}/*
+	[  -z "$QUIET_MODE" ] && echo -n "INFO: Cleaning up..."
+	if [ -n "${TMPFILE}" -a -n "${CMDFILE}" -a -n "${TESTDIR}" -a -n "${TMPBASE}" ]; then
+		rm -rf ${TMPFILE} ${CMDFILE} ${TESTDIR}/* ${TMPBASE}/*
 	else
 		echo "INFO: Clean up process won't be executed because variables for directories to be removed are not set..."
 	fi
 
-	[  -z "$TIMER_QUIET_MODE" ] && echo "done."
+	[  -z "$QUIET_MODE" ] && echo "done."
 }
 
 

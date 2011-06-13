@@ -7,10 +7,10 @@ if [ "$REQUESTED_GPTIMER" -eq "$RESERVED_GPTIMER" ]; then
 	exit 0
 fi
 
-`insmod $TIMER_DIR_MODULES/gptimer_request_specific.ko gptimer_id=$REQUESTED_GPTIMER`
-RET=$?
+`insmod $MODDIR/gptimer_request_specific.ko gptimer_id=$REQUESTED_GPTIMER`
 
-if [ "$RET" -eq "1" ]; then
+if [ $? -ne 0 ]; then
+	echo "FATAL: timer module not loaded"
 	exit 1
 else
 	`rmmod gptimer_request_specific`

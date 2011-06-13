@@ -63,6 +63,10 @@ else
 	echo "FATAL: Handlers configuration file with errors"
 fi
 
+if [ -f /var/log/dmesg ]; then
+	alias dmesg='cat /var/log/dmesg'
+fi
+
 #-----------------------------------------------------------------------------------
 # GPIO Driver Specific
 #-----------------------------------------------------------------------------------
@@ -151,6 +155,14 @@ export VDD1_OPP3_FREQ=800000
 export VDD1_OPP4_FREQ=1000000
 export DSP_FREQ_TMP=$PM_DEBUGFS_DIRECTORY/clock/virt_26m_ck/osc_sys_ck/sys_ck
 export DSP_FREQ=$DSP_FREQ_TMP/dpll2_ck/dpll2_m2_ck/iva2_ck/rate
+
+#-----------------------------------------------------------------------------------
+# Timer Driver Specific
+#-----------------------------------------------------------------------------------`
+
+GPTIMER=`dmesg | grep -i gptimer`
+export RESERVED_GPTIMER=`echo $GPTIMER | awk '{print $4}'| cut -c '8'`
+export MAXGPTIMERS=12
 
 #-----------------------------------------------------------------------------------
 

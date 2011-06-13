@@ -1,9 +1,9 @@
 #!/bin/sh
 
-`insmod $TIMER_DIR_MODULES/dmtimer_test_all.ko`
-RET=$?
+`insmod $MODDIR/dmtimer_test_all.ko`
 
-if [ "$RET" = "1" ]; then
+if [ $? -ne 0 ]; then
+	echo "FATAL: timer module not loaded"
 	exit 1
 else
 	`rmmod dmtimer_test_all`

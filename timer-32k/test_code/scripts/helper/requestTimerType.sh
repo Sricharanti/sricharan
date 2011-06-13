@@ -2,10 +2,10 @@
 
 REQUESTED_TYPE=$1
 
-`insmod $TIMER_DIR_MODULES/gptimer_request.ko clock_type=$REQUESTED_TYPE`
-RET=$?
+`insmod $MODDIR/gptimer_request.ko clock_type=$REQUESTED_TYPE`
 
-if [ "$RET" = "1" ]; then
+if [ $? -ne 0 ]; then
+	echo "FATAL: timer module not loaded"
 	exit 1
 else
 	`rmmod gptimer_request`

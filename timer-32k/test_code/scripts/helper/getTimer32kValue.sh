@@ -2,10 +2,10 @@
 
 QUERY_DELAY=$1
 
-`insmod $TIMER_DIR_MODULES/timer32value.ko delay=$QUERY_DELAY`
-RET=$?
+`insmod $MODDIR/timer32value.ko delay=$QUERY_DELAY`
 
-if [ "$RET" = "1" ]; then
+if [ $? -ne 0 ]; then
+	echo "FATAL: timer module not loaded"
 	exit 1
 else
 	`rmmod timer32value`
