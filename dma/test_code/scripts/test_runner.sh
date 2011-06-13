@@ -1,13 +1,16 @@
 #!/bin/sh
 #-----------------------
-# Based on runltp script from LTP 
+# Based on runltp script from LTP
 # Much of the functions are copied over from there
 # Copyright remains
 #-----------------------
 
+# Global configuration file
+TS_CONF="../../utils/configuration/general.configuration"
+
 # Give standard error message and die
 die()
-{	
+{
 	echo "FATAL: $*"
 	usage
 	exit 1
@@ -38,12 +41,17 @@ setup()
 	{
 		die "unable to change directory to $(dirname $0)"
 	}
-	
-	# Load config file 
-	if [ -f "./conf.sh" ]; then
-		. ./conf.sh
+
+	# Load config file
+	if [ -f "$TS_CONF" ]; then
+		. $TS_CONF
+		if [ $? -eq 0 ]; then
+			echo "INFO: General configuration completed"
+		else
+			echo "FATAL: General configuration file with errors"
+		fi
 	else
-		die "FATAL: Configuration file not found"
+		die "FATAL: Testsuite configuration file not found"
 	fi
 
 	# scenario less tests?? have the user organize it properly at least..
@@ -53,7 +61,7 @@ setup()
 	}
 
 	# we'd need the reporting tool ofcourse..
-	[ -e $UTILBIN/pan ] ||
+	[ -e $UTILS_DIR_BIN/pan ] ||
 	{
 		die "FATAL: Test suite driver 'pan' not found"
 	}
@@ -64,10 +72,10 @@ usage()
 	# Human redable please
 	local PP=` if [ -z "$PRETTY_PRT" ]; then echo "off"; else echo "on"; fi`
 	local VV=` if [ -z "$VERBOSE" ]; then echo "off"; else echo "on"; fi`
-	
+
 	# Give the gyan
 	cat <<-EOF >&2
-	usage: ./${0##*/} [-z] [-h] [-v] [-d TESTDIR] [-o OUTPUTFILE] [-l LOGFILE] 
+	usage: ./${0##*/} [-z] [-h] [-v] [-d TESTDIR] [-o OUTPUTFILE] [-l LOGFILE]
 	[-n DURATION ] [-t TMPDIR] [SCENARIO_NAMES..]
 
 	-d TESTDIR      Run LTP to test the filesystem mounted here. [Current - $TESTDIR]
@@ -93,13 +101,13 @@ usage()
 	-r PRE_DEF      Run predefined set of scenarios[Not Implemented yet]
 			List to appear here
 	-S              Run in Stress mode
-	
-	SCENARIO_NAMES  List of scenarios to test.. else, take all scenarios 
+
+	SCENARIO_NAMES  List of scenarios to test.. else, take all scenarios
 			[Current - These are all filenames from $TC_SCENARIO]
-    
+
 	Good News: Ctrl+c stops and cleans up for you :)
 	More help: Read the $TESTROOT/README
-		
+
 	EOF
 	exit 0
 }
@@ -109,16 +117,16 @@ sanity_check()
 {
     # Check the current values...
     # Just ensure that pan can run with a bit of peace of mind...
-    
+
     [ ! -d "$TMPBASE" -o ! -w "$TMPBASE" ] && die "$TMPBASE - cannot work as temporary directory"
     [ ! -d "$TESTDIR" -o ! -w "$TESTDIR" ] && die "$TESTDIR - cannot work as test directory"
     [ ! -d "$TC_SCENARIO" ] && die "$TC_SCENARIO - No such directories"
     [ -z "$SCENARIO_NAMES" ] && die "No Scenarios"
 		[ ! -z "$VERBOSE" -a ! -z "$QUIET_MODE" ] && die "Make up your mind - verbose or quiet??"
-		
+
     export CMDFILE=$TMPBASE/$CMDFILE
     rm -f $CMDFILE
-    
+
 		for SCEN in $SCENARIO_NAMES
     do
 		  [ ! -f "$TC_SCENARIO/$SCEN" -o ! -r "$TC_SCENARIO/$SCEN" ] && die "$TC_SCENARIO/$SCEN - not a scenario file"
@@ -131,19 +139,19 @@ sanity_check()
 
 			# Remove the extended test cases
 			if [ -z "$EXTENDED_TEST" ]; then
-				
+
 				cat $CMDFILE|grep -v "^[_A-Za-z0-9]*_EXT ">$TMPFILE || die "intermediate file gen failed"
 				cat $TMPFILE>$CMDFILE || die "Second intermediate creation failed"
 			fi
-	
+
 			rm -f $TMPFILE
-			
+
     done
-    
+
 		local PP=` if [ -z "$PRETTY_PRT" ]; then echo "off"; else echo "on"; fi`
     local VV=` if [ -z "$VERBOSE" ]; then echo "off"; else echo "on"; fi`
     export TMPDIR=${TESTDIR}
-		
+
 		# Print some nice info
     if [ ! -z "$VERBOSE" ]; then
         debug "POSTFIX        $POSTFIX       "
@@ -162,7 +170,7 @@ sanity_check()
         info  "TMPDIR         $TMPDIR        "
         info  "SCENARIO_NAMES $SCENARIO_NAMES"
     fi
-} 
+}
 
 main()
 {
@@ -187,7 +195,7 @@ main()
 			LOGFILE=${OPTARG} ;;
 		v)
 			VERBOSE="-v" ;;
-		n) 
+		n)
 			DURATION=" -t ${OPTARG}" ;;
 		h)
 			usage ;;
@@ -199,19 +207,19 @@ main()
 			to be ran exclusively.
 			Pausing for 10 seconds...Last chance to hit that ctrl+c
 			EOF
-            				sleep 10
+					sleep 10
 			INSTANCES="-x $OPTARG -O ${TMP}" ;;
 		s)
 			TC_SCENARIO=${OPTARG} ;;
 		S)
 			STRESS=y
 			STRESSARG="-S";;
-		
+
 		\?) # Handle illegals
 			usage ;;
-        
+
 	esac
-	
+
 	if [ ! -z "${OPTARG}" ]; then
 		count=" $count + 2"
 	else
@@ -219,20 +227,20 @@ main()
 	fi
 
 	done
-	
+
 	count=$(( $count ))
-	while [ $count -ne 0 ] 
+	while [ $count -ne 0 ]
 	do
 		shift;
 		count=$(($count - 1))
 	done
-	
+
 	SCENARIO_NAMES=$@
 
 	sanity_check
-	
+
 	# Test start
-	
+
 	[ -z "$QUIET_MODE" ] && { info "Test start time: $(date)" ; }
 	# run pan
 	# $PAN_COMMAND #Duplicated code here, because otherwise if we fail, only "PAN_COMMAND" gets output
@@ -242,16 +250,16 @@ main()
 	#[-o output-file] [-O output-buffer-directory] [cmd]
 
 	cd $TESTDIR
-	PAN_COMMAND="${UTILBIN}/pan $QUIET_MODE -e -S $INSTANCES $DURATION -a $$ -n $$ $PRETTY_PRT -f ${CMDFILE} -l $LOGFILE"
-    
+	PAN_COMMAND="${UTILS_DIR_BIN}/pan $QUIET_MODE -e -S $INSTANCES $DURATION -a $$ -n $$ $PRETTY_PRT -f ${CMDFILE} -l $LOGFILE"
+
 	[ ! -z "$VERBOSE" ] && { info "PAN_COMMAND=$PAN_COMMAND"; }
-    	
+
 	if [ -z "$OO_LOG" ]; then
 		$PAN_COMMAND
 	else
 		$PAN_COMMAND|tee $OUTPUTFILE
 	fi
-    
+
 	if [ $? -eq 0 ]; then
 		echo "INFO: pan reported all tests PASS"
 		VALUE=0
@@ -259,10 +267,10 @@ main()
 		echo "INFO: pan reported some tests FAIL"
 		VALUE=1
 	fi
-    
+
 	# Test end
 	[ -z "$QUIET_MODE" ] && { info "Test end time: $(date)" ; }
-	[ -z "$QUIET_MODE" ] && { 
+	[ -z "$QUIET_MODE" ] && {
 
 	cat <<-EOF >&1
 
@@ -270,10 +278,10 @@ main()
 		Done executing testcases."
 		Result log is in the $LOGFILE "
 	###############################################################"
-       
+
 	EOF
 	cat $LOGFILE
-	
+
 	}
 	cleanup
 	exit $VALUE

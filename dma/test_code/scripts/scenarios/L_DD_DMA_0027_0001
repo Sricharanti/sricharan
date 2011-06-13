@@ -8,6 +8,6 @@
 
 # Begin L_DD_DMA_0027_0001
 
-0001	set -x; insmod $TESTMODS/dma_dload_bad_descriptor.ko && exit 1 || exit 0;
+0001	set -x; insmod $MODDIR/dma_dload_bad_descriptor.ko && exit 1 || exit 0;
 
 # End L_DD_DMA_0027_0001
