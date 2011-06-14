@@ -10,7 +10,7 @@
 0002 set -x; cat "system.log" | grep i2c && exit 0 || exit 1
 
 # Detect i2c buses
-0003 set -x; for i in $I2C_ADAPTERS; do cat "system.log" | grep -E "bus[ \t]1" || exit 1; done && exit 0
+0003 set -x; for i in $I2C_ADAPTERS; do cat "system.log" | grep -E "bus[ \t]$i" || exit 1; done && exit 0
 
 # Detect i2c controllers
 0004 set -x; for i in $I2C_ADAPTERS; do cat "system.log" | grep -E i2c[[:punct:][:alnum:]]*$i || exit 1; done && exit 0
