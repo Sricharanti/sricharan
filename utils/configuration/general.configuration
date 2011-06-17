@@ -111,7 +111,7 @@ export I2C_NON_EXISTING_DEVICES=3
 export I2C_TRANSFER_CANCELLATION=4
 export I2C_INTERRUPT_MODE=5
 # General variables
-export I2C_INTERRUPT_PREFIX=i2c_omap
+export I2C_INTERRUPT_PREFIX=omap_i2c
 export I2C_TEMP_FILE_1=${TMPBASE}/i2c.test.file.1
 export I2C_TEMP_FILE_2=${TMPBASE}/i2c.test.file.2
 export I2C_HEAD_OPTION="-n "
