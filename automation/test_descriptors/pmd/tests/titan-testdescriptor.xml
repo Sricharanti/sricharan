@@ -1024,6 +1024,40 @@
 		</fail>
 
 </test>
+<test id="L_DD_POWER_0004_0028v2">
+
+		<information>
+			<autor> Leed Aguilar </autor>
+			<description>Execute AV Record usecase and perform suspend/resume (press F2) in the middle of the record operation: Boot the platform, release wakelocks, press power key to suspend, then resume to ensure that system works properly</description>
+			<dateofcreation> 06/20/2011</dateofcreation>
+		</information>
+
+		<run>
+			<action>
+				 <deviceundertest>reboot</deviceundertest>
+			</action>
+			<action>
+				<command>/testsuites/pmd/scripts/test_runner.sh L_DD_POWER_0004_0028v2</command>
+			</action>
+			<action>
+				<command>rm log.*</command>
+			</action>
+		</run>
+
+		<pass>
+			<output>
+				<value>stat=0</value>
+			</output>
+		</pass>
+
+		<fail>
+			<timeout time="360"/>
+			<output>
+				<regularexpression>stat=[^0]\d*</regularexpression>
+			</output>
+		</fail>
+
+</test>
 <test id="L_DD_POWER_0004_0029">
 
 		<information>
@@ -1038,6 +1072,40 @@
 			</action>
 			<action>
 				<command>/testsuites/pmd/scripts/test_runner.sh L_DD_POWER_0004_0029</command>
+			</action>
+			<action>
+				<command>rm log.*</command>
+			</action>
+		</run>
+
+		<pass>
+			<output>
+				<value>stat=0</value>
+			</output>
+		</pass>
+
+		<fail>
+			<timeout time="20400"/>
+			<output>
+				<regularexpression>stat=[^0]\d*</regularexpression>
+			</output>
+		</fail>
+
+</test>
+<test id="L_DD_POWER_0004_0029v2">
+
+		<information>
+			<autor> Leed Aguilar </autor>
+			<description>Execute AV Record usecase and perform suspend/resume (press F2) in the middle of the record operation: Boot the platform, release wakelocks, press power key to suspend, then resume to ensure that system works properly. Repeat this process 200 times</description>
+			<dateofcreation> 06/20/2011</dateofcreation>
+		</information>
+
+		<run>
+			<action>
+				 <deviceundertest>reboot</deviceundertest>
+			</action>
+			<action>
+				<command>/testsuites/pmd/scripts/test_runner.sh L_DD_POWER_0004_0029v2</command>
 			</action>
 			<action>
 				<command>rm log.*</command>
