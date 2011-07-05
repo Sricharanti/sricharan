@@ -61,3 +61,10 @@ cd /fb_testsuites/framebuffer/scripts
  ./test_runner.sh  -S scenario_name
 #Example
 ./test_runner.sh -S L_DD_FB_0001 
+
+--------------------------------------
+Packages needed for compilation.
+(Ubuntu)
+
+sudo apt-get install flex textinfo
+-------------------------------------
