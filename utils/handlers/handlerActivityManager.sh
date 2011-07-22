@@ -148,9 +148,9 @@ usage() {
 # @ Return: Error flag value
 detectSdCard() {
 	if [ `df | grep -ic sdcard` -gt 0 ]; then
-		showInfo "DEBUG: SDCARD is mounted"
+		showInfo "DEBUG: media storage is mounted"
 	else
-		showInfo "ERROR: SDCARD is not mounted" 1>&2
+		showInfo "ERROR: media storage not mounted" 1>&2
 		error_val=1
 	fi
 }
