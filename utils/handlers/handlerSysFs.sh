@@ -1,10 +1,34 @@
 #!/bin/sh
 
+# This script performs four different tasks: set, get, compare and verify
+# These different commands allow the user to interact with any syfs entry
+# The error validation for compare/verify functions helps to validate the read
+# and write operations of this script.
+
+#  Copyright (c) 2010 Texas Instruments
+#
+#  This program is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU General Public License as
+#  published by the Free Software Foundation; either version 2 of the
+#  License, or (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
+#  USA
+
 # =============================================================================
 # Variables
 # =============================================================================
 
-LOCAL_COMMAND=$1
+command=$1
+sysfs_entry_name=$2
+sysfs_entry_value=$3
 
 # =============================================================================
 # Functions
@@ -21,39 +45,39 @@ if [ $? -eq 1 ]; then
 	exit 1
 fi
 
-LOCAL_SYSFS_ENTRY_NAME=$2
-test -f $LOCAL_SYSFS_ENTRY_NAME
+# Validate sysfs entry
+test -f $sysfs_entry_name
 if [ $? != 0 ]; then
+	echo "[ handlerSysFs ] Error: < $sysfs_entry_name > does not exist"
 	handlerError.sh "log" "1" "halt" "handlerSysFs.sh"
 	exit 1
 fi
 
-if [ "$LOCAL_COMMAND" = "set" ]; then
+# Set a value to a specific sysfs entry. Don't check for errors here
+if [ "$command" = "set" ]; then
 
-	LOCAL_SYSFS_ENTRY_VALUE=$3
+	echo -n "$sysfs_entry_name"  > $HSF_SYSFS_ENTRY_NAME
+	echo -n "$sysfs_entry_value" > $sysfs_entry_name
 
-	echo $LOCAL_SYSFS_ENTRY_NAME > $HSF_SYSFS_ENTRY_NAME
-	echo $LOCAL_SYSFS_ENTRY_VALUE > $LOCAL_SYSFS_ENTRY_NAME
+# Obtain current value from a specific sysfs entry
+elif [ "$command" = "get" ]; then
 
-elif [ "$LOCAL_COMMAND" = "get" ]; then
+	cat $sysfs_entry_name
 
-	cat $LOCAL_SYSFS_ENTRY_NAME
+# The "compare" command differs from "verify" in that the first one registers
+# a failure that can be propagated outside of this script using the handlerError
+elif [ "$command" = "compare" ] || [ "$LOCAL_COMMAND" = "verify" ]; then
 
-elif [ "$LOCAL_COMMAND" = "compare" ] || [ "$LOCAL_COMMAND" = "verify" ]; then
+	sysfs_entry_current=`cat $sysfs_entry_name`
+	echo "[ handlerSysFs ] Desired Value: $sysfs_entry_value" \
+				"| Current Value: $sysfs_entry_current"
 
-	LOCAL_SYSFS_ENTRY_VALUE=$3
-
-	LOCAL_SYSFS_ENTRY_CURRENT=`cat $LOCAL_SYSFS_ENTRY_NAME`
-
-	echo "[ handlerSysFs ] Desired Value: $LOCAL_SYSFS_ENTRY_VALUE" \
-				"| Current Value: $LOCAL_SYSFS_ENTRY_CURRENT"
-
-	if [ "$LOCAL_SYSFS_ENTRY_VALUE" = "$LOCAL_SYSFS_ENTRY_CURRENT" ]; then
+	if [ "$sysfs_entry_value" = "$sysfs_entry_current" ]; then
 		echo "[ handlerSysFs ] PASS: comparison succeeded"
 		exit 0
 	else
 		echo "[ handlerSysFs ] FAIL: comparison failed" 1>&2
-		if [ "$LOCAL_COMMAND" = "compare" ]; then
+		if [ "$command" = "compare" ]; then
 			handlerError.sh "log" "1" "halt" "handlerSysFs.sh"
 		fi
 		exit 1
