@@ -39,6 +39,8 @@ monkey_script=$3
 key_event=$4
 x_coord=$4
 y_coord=$5
+x2_coord=$6
+y2_coord=$7
 error_val=0
 
 # =============================================================================
@@ -90,6 +92,32 @@ createTouchScreenScript() {
 	EOF
 }
 
+# Creates a touchscreen drag script for Android Monkey
+# @ Function: createTouchDragScript
+# @ parameters: {coordX1} {coordY1} {coordX2} {coordY2} {delay}
+# @ Return: None
+createTouchDragScript() {
+	coordX1=$1
+	coordY1=$2
+	coordX2=$3
+	coordY2=$4
+	delay=$5
+	showInfo "MONKEY: touch event: Drag ($coordX1, $coordY1) to ($coordX2, $coordY2)"
+	# Creating Touchscreen script
+	cat > touchDragScript <<-EOF
+	<pre>
+	type= raw data
+	count=10
+	speed= 1
+	start data >>
+	captureDispatchPointer(0,0,0,$coordX1,$coordY1,0,0,0,0,0,0,0)
+	captureDispatchPointer(0,0,2,$coordX2,$coordY2,0,0,0,0,0,0,0)
+	captureDispatchPointer(0,0,1,$coordX2,$coordY2,0,0,0,0,0,0,0)
+	UserWait($delay)
+	EOF
+}
+
+
 # Display the script usage
 # @ Function: generalUsage
 # @ parameters: None
@@ -111,8 +139,12 @@ generalUsage() {
 
 	 To excute a touchscreen event use the following:
 
-	   $ handlerAndroidMonkey.sh touchscreen {repeat} {delay}
-						 {x coord} {y coord}
+	   $ handlerAndroidMonkey.sh touchscreen {repeat} {delay} {x1} {y1}
+
+	 To excute a touchscreen drag event use the following:
+
+	   $ handlerAndroidMonkey.sh drag {repeat} {delay} {x1} {y1} {x2} {y2}
+
 	   Where:
 	   @ keyevent = Android UI KeyEvent**
 	   @ x coord  = X coordinate value in the display
@@ -220,6 +252,30 @@ case $main_operation in
 	isPositiveInteger $y_coord
 	verifyErrorFlag "generalUsage(): Checking 5th parameter for touchscreen case"
 	;;
+"drag")
+	if [ $# -ne 7 ]; then
+		generalUsage
+		verifyErrorFlag "Number of parameters for 'drag' operation is incorrect"
+	fi
+	# Check 2nd parameter
+	isPositiveInteger $repeat_counter
+	verifyErrorFlag "generalUsage(): Checking 2nd parameter"
+	# Check 3rd  parameter
+	isPositiveInteger $command_delay
+	verifyErrorFlag "generalUsage(): Checking 3rd parameter"
+	# Check 4th parameter
+	isPositiveInteger $x_coord
+	verifyErrorFlag "generalUsage(): Checking 4th parameter for touch drag case"
+	# Check 5th parameter
+	isPositiveInteger $y_coord
+	verifyErrorFlag "generalUsage(): Checking 5th parameter for touch drag case"
+	# Check 6th parameter
+	isPositiveInteger $x2_coord
+	verifyErrorFlag "generalUsage(): Checking 6th parameter for touch drag case"
+	# Check 7th parameter
+	isPositiveInteger $y2_coord
+	verifyErrorFlag "generalUsage(): Checking 7th parameter for touch drag case"
+	;;
 "run")
 	if [ $# -ne 3 ]; then
 		generalUsage
@@ -256,6 +312,16 @@ case $main_operation in
 		error_val=1
 		rm err
 		verifyErrorFlag "Android monkey execution for touchscreen"
+	fi
+	;;
+"drag")
+	createTouchDragScript $x_coord $y_coord $x2_coord $y2_coord $command_delay
+	monkey -f touchDragScript $repeat_counter 1> /dev/null 2> err
+	if [ $? -gt 0 ]; then
+		showInfo "ERROR: Monkey command failed for the following reason:\n" "`cat err`"
+		error_val=1
+		rm err
+		verifyErrorFlag "Android monkey execution for touch drag"
 	fi
 	;;
 "run")
