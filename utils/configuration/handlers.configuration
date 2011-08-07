@@ -326,12 +326,15 @@ if [ `cat /proc/cpuinfo | grep -w Hardware | grep -wc\
 	export omapKeypadEvent="/dev/input/event0"
 	# Headset Jack for SDP4430
 	export headsetJackEvent="/dev/input/event7"
+	# TWL6030 Power Button event
+	export omapPowerButtonEvent="/dev/input/event2"
 	# TODO: export sensor input events
 
 	# These are all the availables keys in the Tablet
 	export KeyCodeVolumeUp=115
 	export KeyCodeVolumeDown=114
 	export KeyCodeHome=102
+	export KeyCodePowerKey=107 # specific for event2
 
 elif [ `cat /proc/cpuinfo | grep -w Hardware | grep -wc \
 			"OMAP4 blaze board"` -ge 1  ]; then
@@ -354,6 +357,8 @@ elif [ `cat /proc/cpuinfo | grep -w Hardware | grep -wc \
 	# Synaptics Touchscreen:TM12XX
 	export touchPoint1Event="/dev/input/event1"
 	export touchPoint2Event="/dev/input/event4"
+	# TWL6030 Power Button event
+	export omapPowerButtonEvent="/dev/input/event6"
 
 	# TODO: Export all the available key codes
 	export KeyCodeHome=102
@@ -369,6 +374,7 @@ elif [ `cat /proc/cpuinfo | grep -w Hardware | grep -wc \
 	export KeyCodeVolumeDown=114
 	export KeyCodeF1=59
 	export KeyCodeDLP=67
+	export KeyCodePowerKey=107 # specific for event6
 fi
 
 # End of file
