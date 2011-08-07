@@ -34,10 +34,20 @@ cpuHotPlug() {
 			echo "[ handlerCpuHotPlug ] CPU1 ON | Frequency $LOCAL_TIME seconds"
 			handlerSysFs.sh "set" $SYSFS_CPU1_ONLINE "1"
 			handlerSysFs.sh "compare" $SYSFS_CPU1_ONLINE "1"
+			if [ $? -ne 0 ]; then
+				echo "[ handlerCpuHotPlug ] FATAL: Not able to set CPU1 ON"
+				handlerError.sh "log" "1" "halt" "handlerCpuHotPlug.sh"
+				exit 1
+			fi
 		else
 			echo "[ handlerCpuHotPlug ] CPU1 OFF | Frequency $LOCAL_TIME seconds"
 			handlerSysFs.sh "set" $SYSFS_CPU1_ONLINE "0"
 			handlerSysFs.sh "compare" $SYSFS_CPU1_ONLINE "0"
+			if [ $? -ne 0 ]; then
+				echo "[ handlerCpuHotPlug ] FATAL: Not able to set CPU1 OFF"
+				handlerError.sh "log" "1" "halt" "handlerCpuHotPlug.sh"
+				exit 1
+			fi
 		fi
 
 		if [ -n "$LOCAL_COMMAND_LINE" ]; then
@@ -59,6 +69,11 @@ cpuHotPlug() {
 # Main
 # =============================================================================
 
+handlerError.sh "test"
+if [ $? -eq 1 ]; then
+	exit 1
+fi
+
 if [ ! -f $SYSFS_CPU0_ONLINE ]; then
 	echo "[ handlerCpuHotPlug ] FATAL: $SYSFS_CPU0_ONLINE cannot be found!"
 	handlerError.sh "log" "1" "halt" "handlerCpuHotPlug.sh"
@@ -71,11 +86,12 @@ if [ ! -f $SYSFS_CPU1_ONLINE ]; then
 	exit 1
 fi
 
+# Verify dual core support
 handlerSysFs.sh "set" $SYSFS_CPU1_ONLINE "1"
-handlerSysFs.sh "compare" $SYSFS_CPU_ONLINE "0-1" || handlerError.sh "log" "1" "halt" "handlerCpuHotPlug.sh | 2 CPUs are not available"
-
-handlerError.sh "test"
-if [ $? -eq 1 ]; then
+handlerSysFs.sh "compare" $SYSFS_CPU_ONLINE "0-1"
+if [ $? -ne 0 ]; then
+	echo "[ handlerCpuHotPlug ] FATAL: No dual core support"
+	handleError.sh "log" "1" "halt" "handlerCpuHotPlug.sh"
 	exit 1
 fi
 
