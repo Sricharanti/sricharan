@@ -317,48 +317,58 @@ export KeyMonkeyMute=91
 # handlerInputSubsystem.sh
 #-------------------------------------------------------------
 
-# Sensors
-export sensorsEvent="/dev/input/event9"
+# Export specific HW input devices and values
 
-# Pressure Sensor: BMP085
-export pressureEvent="/dev/input/event7"
+if [ `cat /proc/cpuinfo | grep -w Hardware | grep -wc\
+			"OMAP4 Tablet board"` -ge 1 ]; then
 
-# Digital Compass Sensor: HMC5843
-export digitalCompassEvent="/dev/input/event6"
+	# OMAP GPIO Keypad for Tablet
+	export omapKeypadEvent="/dev/input/event0"
+	# Headset Jack for SDP4430
+	export headsetJackEvent="/dev/input/event7"
+	# TODO: export sensor input events
 
-# Ambient Light sensor:  BH1780GLI
-export ambientLightEvent="/dev/input/event5"
+	# These are all the availables keys in the Tablet
+	export KeyCodeVolumeUp=115
+	export KeyCodeVolumeDown=114
+	export KeyCodeHome=102
 
-# Accelerometer sensor: cma3000
-export accelerometerEvent="/dev/input/event3"
+elif [ `cat /proc/cpuinfo | grep -w Hardware | grep -wc \
+			"OMAP4 blaze board"` -ge 1  ]; then
+	# Sensors
+	export sensorsEvent="/dev/input/event9"
+	# Pressure Sensor: BMP085
+	export pressureEvent="/dev/input/event7"
+	# Digital Compass Sensor: HMC5843
+	export digitalCompassEvent="/dev/input/event6"
+	# Ambient Light sensor:  BH1780GLI
+	export ambientLightEvent="/dev/input/event5"
+	# Accelerometer sensor: cma3000
+	export accelerometerEvent="/dev/input/event3"
+	# Headset Jack for SDP4430
+	export headsetJackEvent="/dev/input/event8"
+	# OMAP Keypad for SDP4430
+	export omapKeypadEvent="/dev/input/event0"
+	# Proximity Sensor: SFH7741
+	export proximityEvent="/dev/input/event2"
+	# Synaptics Touchscreen:TM12XX
+	export touchPoint1Event="/dev/input/event1"
+	export touchPoint2Event="/dev/input/event4"
 
-# Headset Jack for SDP4430
-export headsetJackEvent="/dev/input/event8"
-
-# Omap Keypad for SDP4430
-export omapKeypadEvent="/dev/input/event0"
-
-# Proximity Sensor: SFH7741
-export proximityEvent="/dev/input/event2"
-
-# Synaptics Touchscreen:TM12XX
-export touchPoint1Event="/dev/input/event1"
-export touchPoint2Event="/dev/input/event4"
-
-# TODO: Export all the available key codes
-
-export KeyCodeHome=102
-export KeyCodeBack=158
-export KeyCodeCall=231
-export KeyCodeEndCall=107
-export KeyCodeDpadUp=103
-export KeyCodeDpadDown=108
-export KeyCodeDpadLeft=105
-export KeyCodeDpadRight=106
-export KeyCodeDpadCenter=352
-export KeyCodeVolumeUp=115
-export KeyCodeVolumeDown=114
-export KeyCodeF1=59
-export KeyCodeDLP=67
+	# TODO: Export all the available key codes
+	export KeyCodeHome=102
+	export KeyCodeBack=158
+	export KeyCodeCall=231
+	export KeyCodeEndCall=107
+	export KeyCodeDpadUp=103
+	export KeyCodeDpadDown=108
+	export KeyCodeDpadLeft=105
+	export KeyCodeDpadRight=106
+	export KeyCodeDpadCenter=352
+	export KeyCodeVolumeUp=115
+	export KeyCodeVolumeDown=114
+	export KeyCodeF1=59
+	export KeyCodeDLP=67
+fi
 
 # End of file
