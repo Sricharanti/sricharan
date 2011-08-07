@@ -31,11 +31,11 @@ cpuHotPlug() {
 		rem=$(( $LOCAL_COUNT % 2 ))
 		if [ $rem -eq 1 ]
 		then
-			echo "CPU Hotplug CPU1 On | Frequency $LOCAL_TIME seconds"
+			echo "[ handlerCpuHotPlug ] CPU1 ON | Frequency $LOCAL_TIME seconds"
 			handlerSysFs.sh "set" $SYSFS_CPU1_ONLINE "1"
 			handlerSysFs.sh "compare" $SYSFS_CPU1_ONLINE "1"
 		else
-			echo "CPU Hotplug CPU1 Off | Frequency $LOCAL_TIME seconds"
+			echo "[ handlerCpuHotPlug ] CPU1 OFF | Frequency $LOCAL_TIME seconds"
 			handlerSysFs.sh "set" $SYSFS_CPU1_ONLINE "0"
 			handlerSysFs.sh "compare" $SYSFS_CPU1_ONLINE "0"
 		fi
@@ -60,13 +60,13 @@ cpuHotPlug() {
 # =============================================================================
 
 if [ ! -f $SYSFS_CPU0_ONLINE ]; then
-	echo "FATAL: $SYSFS_CPU0_ONLINE cannot be found!"
+	echo "[ handlerCpuHotPlug ] FATAL: $SYSFS_CPU0_ONLINE cannot be found!"
 	handlerError.sh "log" "1" "halt" "handlerCpuHotPlug.sh"
 	exit 1
 fi
 
 if [ ! -f $SYSFS_CPU1_ONLINE ]; then
-	echo "FATAL: $SYSFS_CPU1_ONLINE cannot be found!"
+	echo "[ handlerCpuHotPlug ] FATAL: $SYSFS_CPU1_ONLINE cannot be found!"
 	handlerError.sh "log" "1" "halt" "handlerCpuHotPlug.sh"
 	exit 1
 fi
