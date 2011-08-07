@@ -280,7 +280,7 @@ case $operation in
 				 "Starting Android early suspend"
 			releaseWakelocks $system_wakelocks
 			verifyErrorFlag "Fail to release wakelock list"
-			handlerInputSubsystem.sh "keypad" "KeyCodeEndCall" 1 1 1
+			handlerInputSubsystem.sh "keypad" "KeyCodePowerKey" 1 1 1
 		elif [ $suspend_method = "timeout" ]; then
 			showInfo "Suspending system via timeout" \
 				 "Starting Android early suspend"
@@ -318,7 +318,7 @@ case $operation in
 		verifyErrorFlag "Not able to set wakelock"
 		showInfo "Android: resuming the system" \
 			 "starting Android late resume"
-		handlerInputSubsystem.sh "keypad" "KeyCodeEndCall" 1 1 1
+		handlerInputSubsystem.sh "keypad" "KeyCodePowerKey" 1 1 1
 		sleep 1
 		handlerInputSubsystem.sh "keypad" "KeyCodeF1" 1 1 1
 		;;

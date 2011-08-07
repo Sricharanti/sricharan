@@ -51,6 +51,10 @@ generateKeyPress() {
 	delay=$4
 	counter=0
 	keyCodeVal='eval "echo \$$keyCode"'
+	# twl6030 power button special case
+	if [ "$keyCode" = "KeyCodePowerKey" ]; then
+		omapKeypadEvent=$omapPowerButtonEvent
+	fi
 	showInfo "keypad event: pressing $keyCode = `eval $keyCodeVal`"
 	showInfo "generating $repeat key events every $delay seconds"
 	while [ $counter -lt $repeat ]; do
