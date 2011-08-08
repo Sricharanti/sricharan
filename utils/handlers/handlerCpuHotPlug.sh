@@ -51,7 +51,20 @@ cpuHotPlug() {
 		fi
 
 		if [ -n "$LOCAL_COMMAND_LINE" ]; then
-			test -d /proc/$LOCAL_COMMAND_PID || break
+			test -d /proc/$LOCAL_COMMAND_PID
+			if [ $? -ne 0 ]; then
+				# get exit code of background process
+				wait $LOCAL_COMMAND_PID
+				if [ $? -ne 0 ]; then
+					echo "[ handlerCpuHotPlug ] FATAL: failure detected in"\
+						" background process"
+					echo "[ handlerCpuHotPlug ] FATAL: <$LOCAL_COMMAND_LINE>"\
+						" command failed"
+					handlerError.sh "log" "1" "halt" "handlerCpuHotPlug.sh"
+					exit 1
+				fi
+				break
+			fi
 		fi
 
 		sleep $LOCAL_TIME
