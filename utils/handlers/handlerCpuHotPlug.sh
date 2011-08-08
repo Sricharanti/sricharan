@@ -1,14 +1,35 @@
 #!/bin/sh
 
+#
+#  CPU hotplug handler
+#
+#  Copyright (c) 2011 Texas Instruments
+#
+#  This program is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU General Public License as
+#  published by the Free Software Foundation; either version 2 of the
+#  License, or (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
+#  USA
+#
+
 # =============================================================================
 # Variables
 # =============================================================================
 
-LOCAL_OPERATION=$1
-LOCAL_TIME=$2
-LOCAL_COMMAND=$3
+operation=$1
+time=$2
+command=$3
 
-LOCAL_ERROR=0
+error_val=0
 
 # =============================================================================
 # Functions
@@ -16,22 +37,21 @@ LOCAL_ERROR=0
 
 cpuHotPlug() {
 
-	LOCAL_COMMAND_LINE=$@
-	LOCAL_ERROR=0
-	LOCAL_COUNT=1
+	command_line=$@
+	error_val=0
+	iteration=1
 
-	if [ -n "$LOCAL_COMMAND_LINE" ]; then
-		$LOCAL_COMMAND_LINE &
-		LOCAL_COMMAND_PID=`echo $!`
+	if [ -n "$command_line" ]; then
+		eval $command_line &
+		command_pid=`echo $!`
 	fi
 
 	while [ 1 ]; do
-
-		echo
-		rem=$(( $LOCAL_COUNT % 2 ))
+		echo "[ handlerCpuHotPlug ] ITERATION: $iteration"
+		rem=$(( $iteration % 2 ))
 		if [ $rem -eq 1 ]
 		then
-			echo "[ handlerCpuHotPlug ] CPU1 ON | Frequency $LOCAL_TIME seconds"
+			echo "[ handlerCpuHotPlug ] CPU1 ON | Frequency $time seconds"
 			handlerSysFs.sh "set" $SYSFS_CPU1_ONLINE "1"
 			handlerSysFs.sh "compare" $SYSFS_CPU1_ONLINE "1"
 			if [ $? -ne 0 ]; then
@@ -40,7 +60,7 @@ cpuHotPlug() {
 				exit 1
 			fi
 		else
-			echo "[ handlerCpuHotPlug ] CPU1 OFF | Frequency $LOCAL_TIME seconds"
+			echo "[ handlerCpuHotPlug ] CPU1 OFF | Frequency $time seconds"
 			handlerSysFs.sh "set" $SYSFS_CPU1_ONLINE "0"
 			handlerSysFs.sh "compare" $SYSFS_CPU1_ONLINE "0"
 			if [ $? -ne 0 ]; then
@@ -49,16 +69,15 @@ cpuHotPlug() {
 				exit 1
 			fi
 		fi
-
-		if [ -n "$LOCAL_COMMAND_LINE" ]; then
-			test -d /proc/$LOCAL_COMMAND_PID
+		if [ -n "$command_line" ]; then
+			test -d /proc/$command_pid
 			if [ $? -ne 0 ]; then
 				# get exit code of background process
-				wait $LOCAL_COMMAND_PID
+				wait $command_pid
 				if [ $? -ne 0 ]; then
 					echo "[ handlerCpuHotPlug ] FATAL: failure detected in"\
 						" background process"
-					echo "[ handlerCpuHotPlug ] FATAL: <$LOCAL_COMMAND_LINE>"\
+					echo "[ handlerCpuHotPlug ] FATAL: <$command_line>"\
 						" command failed"
 					handlerError.sh "log" "1" "halt" "handlerCpuHotPlug.sh"
 					exit 1
@@ -66,15 +85,9 @@ cpuHotPlug() {
 				break
 			fi
 		fi
-
-		sleep $LOCAL_TIME
-
-		LOCAL_COUNT=`expr $LOCAL_COUNT + 1`
-
+		sleep $time
+		iteration=`expr $iteration + 1`
 	done
-
-	wait
-
 }
 
 
@@ -87,6 +100,7 @@ if [ $? -eq 1 ]; then
 	exit 1
 fi
 
+# Verify required sysfs entries
 if [ ! -f $SYSFS_CPU0_ONLINE ]; then
 	echo "[ handlerCpuHotPlug ] FATAL: $SYSFS_CPU0_ONLINE cannot be found!"
 	handlerError.sh "log" "1" "halt" "handlerCpuHotPlug.sh"
@@ -108,12 +122,12 @@ if [ $? -ne 0 ]; then
 	exit 1
 fi
 
-if [ "$LOCAL_OPERATION" = "run" ]; then
+if [ "$operation" = "run" ]; then
 
-	cpuHotPlug $LOCAL_COMMAND
+	cpuHotPlug $command
 
 fi
 
-exit $LOCAL_ERROR
+exit $error_val
 
 # End of file
