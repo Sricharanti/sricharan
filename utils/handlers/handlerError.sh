@@ -46,13 +46,13 @@ elif [ "$LOCAL_OPERATION" = "test" ];  then
 	if [ -f $HE_ERROR_FILE_HALT ]; then
 
 		LOCAL_HANDLER=`cat $HE_ERROR_FILE_HALT`
-		echo -e "\n\nFATAL: Error flag is set pointing to $LOCAL_HANDLER and will not continue\n\n"
+		 echo "[ handlerError ] FATAL: Error flag is set pointing to $LOCAL_HANDLER"
 		exit 1
 
 	elif [ -f $HE_ERROR_FILE_CONTINUE ]; then
 
 		LOCAL_HANDLER=`cat $HE_ERROR_FILE_CONTINUE`
-		echo -e "\n\nWARNING: Error flag is set pointing to $LOCAL_HANDLER but will continue\n\n"
+		echo "[ handlerError ] WARNING: Error detected at $LOCAL_HANDLER"
 		exit 0
 
 	fi
