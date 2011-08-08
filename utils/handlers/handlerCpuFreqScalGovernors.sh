@@ -67,6 +67,8 @@ setOneGovernor() {
 setAllGovernor() {
 
 	command_to_execute=$@
+	iteration=1
+	# Cleaning log files
 	echo > $HCFSG_GOVERNORS_LIST_OK
 	echo > $HCFSG_GOVERNORS_LIST_ERROR
 
@@ -77,6 +79,8 @@ setAllGovernor() {
 		command_pid=`echo $!`
 	fi
 	while [ 1 ]; do
+		echo "CPU Governors don't set correctly in cycle No $iteration:" >> $HCFSG_GOVERNORS_LIST_ERROR
+		echo "CPU Governors set correctly in cycle No $iteration:" >> $HCFSG_GOVERNORS_LIST_OK
 		for governor in $available_governors; do
 			showInfo "Setting CPU Governor to $governor"
 			handlerSysFs.sh "set" $SYSFS_CPU0_CURRENT_GOVERNOR $governor
@@ -107,6 +111,7 @@ setAllGovernor() {
 				break
 			fi
 		fi
+		iteration=`expr $iteration + 1`
 	done
 
 	showInfo "Info: The following Governors were set correctly"
