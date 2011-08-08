@@ -21,10 +21,10 @@ setOneGovernor() {
 
 	echo $LOCAL_GOVERNOR > $SYSFS_CPU0_CURRENT_GOVERNOR
 	if [ $? -eq 1 ]; then
-		echo "Info: Error! Governor $i cannot be set"
+		showInfo "Error: Governor < $LOCAL_GOVERNOR > cannot be set"
 		exit 1
 	else
-		echo "Info: Governor $LOCAL_GOVERNOR was correctly set"
+		showInfo "Governor < $LOCAL_GOVERNOR > was set correctly"
 	fi
 
 	wait
@@ -41,7 +41,7 @@ setAllGovernor() {
 	echo > $HCFSG_GOVERNORS_LIST_ERROR
 
 	LOCAL_GOVERNORS_LIST_AVAILABLE=`cat $SYSFS_CPU0_AVAILABLE_GOVERNORS`
-	echo "Info: Available Governors are -> $LOCAL_GOVERNORS_LIST_AVAILABLE"
+	showInfo "Info: Available Governors are -> $LOCAL_GOVERNORS_LIST_AVAILABLE"
 
 	if [ -n "$LOCAL_COMMAND_LINE" ]; then
 		$LOCAL_COMMAND_LINE &
@@ -53,14 +53,14 @@ setAllGovernor() {
 		for i in $LOCAL_GOVERNORS_LIST_AVAILABLE
 
 		do
-			echo "Setting Governor to" $i
+			showInfo "Setting Governor to $i"
 			echo $i > $SYSFS_CPU0_CURRENT_GOVERNOR
 			if [ $? -eq 1 ]; then
-				echo "Info: Error! Governor $i cannot be set"
+				showInfo "Error: Governor $i cannot be set"
 				echo $i >> $HCFSG_GOVERNORS_LIST_ERROR
 				error=1
 			else
-				echo "Info: Governor $i was correctly set"
+				showInfo "Info: Governor $i was correctly set"
 				echo $i >> $HCFSG_GOVERNORS_LIST_OK
 			fi
 			sleep 1
@@ -76,11 +76,9 @@ setAllGovernor() {
 
 	wait
 
-	echo
-	echo "Info: The following Governors were correctly set"
+	showInfo "Info: The following Governors were correctly set"
 	cat $HCFSG_GOVERNORS_LIST_OK
-	echo
-	echo "Info: The following Governors were not correctly set"
+	showInfo "Info: The following Governors were not correctly set"
 	cat $HCFSG_GOVERNORS_LIST_ERROR
 
 	sleep 5
@@ -93,7 +91,7 @@ setAllGovernor() {
 getCurrentGovernor() {
 	LOCAL_FILE=$1
 	LOCAL_GOVERNOR=`cat $SYSFS_CPU0_CURRENT_GOVERNOR`
-	echo "Info: Current Governor -> $LOCAL_GOVERNOR"
+	showInfo "Info: Current Governor -> $LOCAL_GOVERNOR"
 
 	echo $LOCAL_GOVERNOR > $LOCAL_FILE
 }
@@ -103,10 +101,14 @@ restoreCurrentGovernor() {
 
 	if [ -f $LOCAL_FILE ]; then
 		cat $LOCAL_FILE > $SYSFS_CPU0_CURRENT_GOVERNOR
-		echo "Info: Restore to Governor -> `cat $LOCAL_FILE`"
+		showInfo "Info: Restore to Governor -> `cat $LOCAL_FILE`"
 	else
-		echo 'Error: $LOCAL_FILE parameter is empty'
+		showInfo 'Error: $LOCAL_FILE parameter is empty'
 	fi
+}
+
+showInfo() {
+	echo "[ handlerCpuGovernors ] $1"
 }
 
 # =============================================================================
@@ -119,13 +121,13 @@ if [ $? -eq 1 ]; then
 fi
 
 if [ ! -f $SYSFS_CPU0_AVAILABLE_GOVERNORS ]; then
-	echo "FATAL: $SYSFS_CPU0_AVAILABLE_GOVERNORS cannot be found!"
+	showInfo "FATAL: $SYSFS_CPU0_AVAILABLE_GOVERNORS cannot be found!"
 	handlerError.sh "log" "1" "halt" "handlerCpuFreqScalGovernors.sh"
 	exit 1
 fi
 
 if [ ! -f $SYSFS_CPU0_CURRENT_GOVERNOR ]; then
-	echo "FATAL: $SYSFS_CPU0_CURRENT_GOVERNOR cannot be found!"
+	showInfo "FATAL: $SYSFS_CPU0_CURRENT_GOVERNOR cannot be found!"
 	handlerError.sh "log" "1" "halt" "handlerCpuFreqScalGovernors.sh"
 	exit 1
 fi
