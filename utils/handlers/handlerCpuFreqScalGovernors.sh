@@ -28,6 +28,7 @@
 operation=$1
 cpugovernor=$2
 command_line=$3
+error=0
 
 # =============================================================================
 # Functions
@@ -40,6 +41,7 @@ setOneGovernor() {
 
 	if [ -n "$command_to_execute" ]; then
 		eval $command_to_execute &
+		command_pid=`echo $!`
 	fi
 
 	handlerSysFs.sh "set" $SYSFS_CPU0_CURRENT_GOVERNOR $local_governor
@@ -47,16 +49,24 @@ setOneGovernor() {
 	if [ $? -ne 0 ]; then
 		showInfo "Error: Governor < $local_governor > cannot be set"
 		exit 1
+	else
+		showInfo "Governor < $local_governor > was set correctly"
 	fi
-	showInfo "Governor < $local_governor > was set correctly"
-	wait
-	sleep 5
+	# Wait until the background process to finish and review the exit status
+	if [ -n "$command_to_execute" ]; then
+		wait $command_pid
+		if [ $? -ne 0 ]; then
+			showInfo "FATAL: failure detected in background process"
+			showInfo "FATAL: <$command_line> command failed"
+			handlerError.sh "log" "1" "halt" "handlerCpuHotPlug.sh"
+			exit 1
+		fi
+	fi
 }
 
 setAllGovernor() {
 
 	command_to_execute=$@
-	error=0
 	echo > $HCFSG_GOVERNORS_LIST_OK
 	echo > $HCFSG_GOVERNORS_LIST_ERROR
 
@@ -84,12 +94,20 @@ setAllGovernor() {
 		done
 
 		if [ -n "$command_to_execute" ]; then
-			test -d /proc/$command_pid || break
-		else
-			break
+			test -d /proc/$command_pid
+			if [ $? -ne 0 ]; then
+				# get exit code of background process
+				wait $command_pid
+				if [ $? -ne 0 ]; then
+					showInfo "FATAL: failure detected in background process"
+					showInfo "FATAL: <$command_line> command failed"
+					handlerError.sh "log" "1" "halt" "handlerCpuHotPlug.sh"
+					exit 1
+				fi
+				break
+			fi
 		fi
 	done
-	wait
 
 	showInfo "Info: The following Governors were set correctly"
 	cat $HCFSG_GOVERNORS_LIST_OK
