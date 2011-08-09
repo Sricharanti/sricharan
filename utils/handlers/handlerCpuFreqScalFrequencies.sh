@@ -124,6 +124,8 @@ if [ $? -eq 1 ]; then
 	exit 1
 fi
 
+# Evaluate required sysfs entries
+
 if [ ! -f $SYSFS_CPU0_AVAILABLE_FREQUENCIES ]; then
 	showInfo "FATAL: $SYSFS_CPU0_AVAILABLE_FREQUENCIES cannot be found!"
 	handlerError.sh "log" "1" "halt" "handlerCpuFreqScalFrequencies.sh"
@@ -136,8 +138,13 @@ if [ ! -f $SYSFS_CPU0_SET_SPEED ]; then
 	exit 1
 fi
 
+# Only in userspace governor the frequencies can be safely changed
 handlerCpuFreqScalGovernors.sh "get"
 handlerCpuFreqScalGovernors.sh "set" "userspace"
+if [ $? -ne 0 ]; then
+	showInfo "ERROR: userspace governor can not be set. The script will not continue"
+	exit 1
+fi
 
 if [ "$LOCAL_OPERATION" = "list" ]; then
 
