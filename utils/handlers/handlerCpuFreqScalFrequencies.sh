@@ -64,7 +64,7 @@ setAllFrequencies() {
 	showInfo "Info: Available frequencies are -> `echo $LOCAL_FREQUENCIES_LIST_AVAILABLE`"
 
 	if [ -n "$LOCAL_COMMAND_LINE" ]; then
-		$LOCAL_COMMAND_LINE &
+		eval $LOCAL_COMMAND_LINE &
 		LOCAL_COMMAND_PID=`echo $!`
 	fi
 
