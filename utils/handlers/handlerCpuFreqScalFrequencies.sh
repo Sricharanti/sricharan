@@ -1,10 +1,34 @@
 #!/bin/sh
 
+#
+#  CPU Frequency handler
+#
+#  Copyright (c) 2010 Texas Instruments
+#
+#  This program is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU General Public License as
+#  published by the Free Software Foundation; either version 2 of the
+#  License, or (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
+#  USA
+#
+
 # =============================================================================
 # Variables
 # =============================================================================
 
-LOCAL_OPERATION=$1
+operation=$1
+frequency_val=$2
+cmd_to_execute=$3
+error_val=0
 
 # =============================================================================
 # Functions
@@ -12,83 +36,79 @@ LOCAL_OPERATION=$1
 
 setOneFrequency() {
 
-	LOCAL_FREQUENCY=$1
-	LOCAL_COMMAND_LINE=$2
+	frequency_val=$1
+	cmd_to_execute=$2
 
-	LOCAL_LOOP_NUMBER=0
+	loop_number=0
 
-	LOCAL_FREQUENCY_NUMBER=`echo ${LOCAL_FREQUENCY#OPP}`
-	LOCAL_FREQUENCIES_LIST_AVAILABLE=`cat $SYSFS_CPU0_AVAILABLE_FREQUENCIES`
+	frequency_val_number=`echo ${frequency_val#OPP}`
+	available_frequencies=`cat $SYSFS_CPU0_AVAILABLE_FREQUENCIES`
 
-	for FREQUENCY in $LOCAL_FREQUENCIES_LIST_AVAILABLE
+	for frequency in $available_frequencies
 	do
-		LOCAL_LOOP_NUMBER=`expr $LOCAL_LOOP_NUMBER + 1`
-		echo $FREQUENCY	> $HCFSF_FREQUENCIES_LIST_AVAILABILITY.$LOCAL_LOOP_NUMBER
+		loop_number=`expr $loop_number + 1`
+		echo $frequency	> $HCFSF_FREQUENCIES_LIST_AVAILABILITY.$loop_number
 	done
 
-	if [ "$LOCAL_FREQUENCY_NUMBER" -gt "$LOCAL_LOOP_NUMBER" ]; then
-
-		LOCAL_FREQUENCY_NUMBER=$LOCAL_LOOP_NUMBER
-
+	if [ "$frequency_val_number" -gt "$loop_number" ]; then
+		frequency_val_number=$loop_number
 	fi
 
-	LOCAL_FREQUENCY=`cat $HCFSF_FREQUENCIES_LIST_AVAILABILITY.$LOCAL_FREQUENCY_NUMBER`
+	frequency_val=`cat $HCFSF_FREQUENCIES_LIST_AVAILABILITY.$frequency_val_number`
 
-	if [ -n "$LOCAL_COMMAND_LINE" ]; then
-		eval $LOCAL_COMMAND_LINE &
+	if [ -n "$cmd_to_execute" ]; then
+		eval $cmd_to_execute &
 	fi
 
-	echo $LOCAL_FREQUENCY > $SYSFS_CPU0_SET_SPEED
-	LOCAL_CUR_FREQ=`cat $SYSFS_CPU0_CURRENT_FREQUENCY`
+	echo $frequency_val > $SYSFS_CPU0_SET_SPEED
+	current_frequency=`cat $SYSFS_CPU0_CURRENT_FREQUENCY`
 
-	if [ $LOCAL_FREQUENCY -ne $LOCAL_CUR_FREQ ]; then
+	if [ $frequency_val -ne $current_frequency ]; then
 		showInfo "Info: Error! Frequency $i coudl not be set"
 	else
-		showInfo "Info: Frequency $LOCAL_FREQUENCY was correctly set"
+		showInfo "Info: Frequency $frequency_val was correctly set"
 	fi
 
 	wait
-
 	sleep 5
 }
 
 setAllFrequencies() {
 
-	LOCAL_COMMAND_LINE=$@
-
+	cmd_to_execute=$@
 	error=0
 	echo > $HCFSF_FREQUENCIES_LIST_OK
 	echo > $HCFSF_FREQUENCIES_LIST_ERROR
 
-	LOCAL_FREQUENCIES_LIST_AVAILABLE=`cat $SYSFS_CPU0_AVAILABLE_FREQUENCIES`
-	showInfo "Info: Available frequencies are -> `echo $LOCAL_FREQUENCIES_LIST_AVAILABLE`"
+	available_frequencies=`cat $SYSFS_CPU0_AVAILABLE_FREQUENCIES`
+	showInfo "Info: Available frequencies are -> `echo $available_frequencies`"
 
-	if [ -n "$LOCAL_COMMAND_LINE" ]; then
-		eval $LOCAL_COMMAND_LINE &
-		LOCAL_COMMAND_PID=`echo $!`
+	if [ -n "$cmd_to_execute" ]; then
+		eval $cmd_to_execute &
+		command_pid=`echo $!`
 	fi
 
 	while [ 1 ]; do
 
-		for i in $LOCAL_FREQUENCIES_LIST_AVAILABLE
+		for frequency in $available_frequencies
 		do
-			showInfo "Info: Setting Frequency to $i"
-			echo $i > $SYSFS_CPU0_SET_SPEED
-			LOCAL_CUR_FREQ=`cat $SYSFS_CPU0_CURRENT_FREQUENCY`
+			showInfo "Info: Setting Frequency to $frequency"
+			echo $frequency > $SYSFS_CPU0_SET_SPEED
+			current_frequency=`cat $SYSFS_CPU0_CURRENT_FREQUENCY`
 
-			if [ $i -ne $LOCAL_CUR_FREQ ]; then
-				showInfo "Info: Error! Frequency $i cannot be set"
-				echo $i >> $HCFSF_FREQUENCIES_LIST_ERROR
+			if [ $frequency -ne $current_frequency ]; then
+				showInfo "Info: Error! Frequency $frequency cannot be set"
+				echo $frequency >> $HCFSF_FREQUENCIES_LIST_ERROR
 				error=1
 			else
-				showInfo "Info: Frequency $i was correctly set"
-				echo $i >> $HCFSF_FREQUENCIES_LIST_OK
+				showInfo "Info: Frequency $frequency was correctly set"
+				echo $frquency >> $HCFSF_FREQUENCIES_LIST_OK
 			fi
 			sleep 1
 		done
 
-		if [ -n "$LOCAL_COMMAND_LINE" ]; then
-			test -d /proc/$LOCAL_COMMAND_PID || break
+		if [ -n "$cmd_to_execute" ]; then
+			test -d /proc/$command_pid || break
 		else
 			break
 		fi
@@ -124,6 +144,8 @@ if [ $? -eq 1 ]; then
 	exit 1
 fi
 
+# TODO: Add script usage
+
 # Evaluate required sysfs entries
 
 if [ ! -f $SYSFS_CPU0_AVAILABLE_FREQUENCIES ]; then
@@ -146,32 +168,29 @@ if [ $? -ne 0 ]; then
 	exit 1
 fi
 
-if [ "$LOCAL_OPERATION" = "list" ]; then
+# Main script operations
+
+if [ "$operation" = "list" ]; then
 
 	cat $SYSFS_CPU0_AVAILABLE_FREQUENCIES
 
-elif [ "$LOCAL_OPERATION" = "set" ]; then
+elif [ "$operation" = "set" ]; then
 
-	LOCAL_FREQUENCY=$2
-
-	if [ "$LOCAL_FREQUENCY" = "all" ]; then
+	if [ "$frequency_val" = "all" ]; then
 		setAllFrequencies
 	else
-		setOneFrequency $LOCAL_FREQUENCY
+		setOneFrequency $frequency_val
 	fi
 
-elif [ "$LOCAL_OPERATION" = "run" ]; then
+elif [ "$operation" = "run" ]; then
 
-	LOCAL_FREQUENCY=$2
-	LOCAL_COMMAND_LINE=$3
-
-	if [ "$LOCAL_FREQUENCY" = "all" ]; then
-		setAllFrequencies "$LOCAL_COMMAND_LINE"
+	if [ "$frequency_val" = "all" ]; then
+		setAllFrequencies "$cmd_to_execute"
 	else
-		setOneFrequency $LOCAL_FREQUENCY "$LOCAL_COMMAND_LINE"
+		setOneFrequency $frequency_val "$cmd_to_execute"
 	fi
 
-elif [ "$LOCAL_OPERATION" = "set_fail" ]; then
+elif [ "$operation" = "set_fail" ]; then
 
 	# Changing through unexisting frequencies
 	available_frequencies=" 123456 654321 123654 456123"
@@ -184,10 +203,10 @@ elif [ "$LOCAL_OPERATION" = "set_fail" ]; then
 		if [ "$i" = "$cur_frequency" ]
 		then
 			showInfo "Fatal: Frequency was changed, unexpected!"
-			LOCAL_ERROR=1
+			error_val=1
 		else
 			showInfo "Info: Frequency was not changed, good!"
-			LOCAL_ERROR=0
+			error_val=0
 		fi
   done
 
@@ -195,6 +214,6 @@ fi
 
 handlerCpuFreqScalGovernors.sh "restore"
 
-exit $LOCAL_ERROR
+exit $error_val
 
 # End of file
