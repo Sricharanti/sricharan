@@ -42,9 +42,9 @@ setOneFrequency() {
 	LOCAL_CUR_FREQ=`cat $SYSFS_CPU0_CURRENT_FREQUENCY`
 
 	if [ $LOCAL_FREQUENCY -ne $LOCAL_CUR_FREQ ]; then
-		echo "Info: Error! Frequency $i coudl not be set"
+		showInfo "Info: Error! Frequency $i coudl not be set"
 	else
-		echo "Info: Frequency $LOCAL_FREQUENCY was correctly set"
+		showInfo "Info: Frequency $LOCAL_FREQUENCY was correctly set"
 	fi
 
 	wait
@@ -61,7 +61,7 @@ setAllFrequencies() {
 	echo > $HCFSF_FREQUENCIES_LIST_ERROR
 
 	LOCAL_FREQUENCIES_LIST_AVAILABLE=`cat $SYSFS_CPU0_AVAILABLE_FREQUENCIES`
-	echo "Info: Available frequencies are -> `echo $LOCAL_FREQUENCIES_LIST_AVAILABLE`"
+	showInfo "Info: Available frequencies are -> `echo $LOCAL_FREQUENCIES_LIST_AVAILABLE`"
 
 	if [ -n "$LOCAL_COMMAND_LINE" ]; then
 		$LOCAL_COMMAND_LINE &
@@ -72,16 +72,16 @@ setAllFrequencies() {
 
 		for i in $LOCAL_FREQUENCIES_LIST_AVAILABLE
 		do
-			echo "Info: Setting Frequency to" $i
+			showInfo "Info: Setting Frequency to $i"
 			echo $i > $SYSFS_CPU0_SET_SPEED
 			LOCAL_CUR_FREQ=`cat $SYSFS_CPU0_CURRENT_FREQUENCY`
 
 			if [ $i -ne $LOCAL_CUR_FREQ ]; then
-				echo "Info: Error! Frequency $i cannot be set"
+				showInfo "Info: Error! Frequency $i cannot be set"
 				echo $i >> $HCFSF_FREQUENCIES_LIST_ERROR
 				error=1
 			else
-				echo "Info: Frequency $i was correctly set"
+				showInfo "Info: Frequency $i was correctly set"
 				echo $i >> $HCFSF_FREQUENCIES_LIST_OK
 			fi
 			sleep 1
@@ -111,6 +111,10 @@ setAllFrequencies() {
 	fi
 }
 
+showInfo() {
+	echo "[ handlerCpuFreq ] $1"
+}
+
 # =============================================================================
 # Main
 # =============================================================================
@@ -121,13 +125,13 @@ if [ $? -eq 1 ]; then
 fi
 
 if [ ! -f $SYSFS_CPU0_AVAILABLE_FREQUENCIES ]; then
-	echo "FATAL: $SYSFS_CPU0_AVAILABLE_FREQUENCIES cannot be found!"
+	showInfo "FATAL: $SYSFS_CPU0_AVAILABLE_FREQUENCIES cannot be found!"
 	handlerError.sh "log" "1" "halt" "handlerCpuFreqScalFrequencies.sh"
 	exit 1
 fi
 
 if [ ! -f $SYSFS_CPU0_SET_SPEED ]; then
-	echo "FATAL: $SYSFS_CPU0_SET_SPEED cannot be found!"
+	showInfo "FATAL: $SYSFS_CPU0_SET_SPEED cannot be found!"
 	handlerError.sh "log" "1" "halt" "handlerCpuFreqScalFrequencies.sh"
 	exit 1
 fi
@@ -166,16 +170,16 @@ elif [ "$LOCAL_OPERATION" = "set_fail" ]; then
 	available_frequencies=" 123456 654321 123654 456123"
 	for i in $available_frequencies
 	do
-		echo "Setting Frequency to " $i
-		echo "echo $i > $SYSFS_CPU0_SET_SPEED"
+		showInfo "Setting Frequency to " $i
+		showInfo "echo $i > $SYSFS_CPU0_SET_SPEED"
 		echo $i > $SYSFS_CPU0_SET_SPEED
 		cur_frequency=`cat $SYSFS_CPU0_CURRENT_FREQUENCY`
 		if [ "$i" = "$cur_frequency" ]
 		then
-			echo "Fatal: Frequency was changed, unexpected!"
+			showInfo "Fatal: Frequency was changed, unexpected!"
 			LOCAL_ERROR=1
 		else
-			echo "Info: Frequency was not changed, good!"
+			showInfo "Info: Frequency was not changed, good!"
 			LOCAL_ERROR=0
 		fi
   done
