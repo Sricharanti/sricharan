@@ -47,24 +47,24 @@ cpuHotPlug() {
 	fi
 
 	while [ 1 ]; do
-		echo "[ handlerCpuHotPlug ] ITERATION: $iteration"
+		showInfo "ITERATION: $iteration"
 		rem=$(( $iteration % 2 ))
 		if [ $rem -eq 1 ]
 		then
-			echo "[ handlerCpuHotPlug ] CPU1 ON | Frequency $time seconds"
+			showInfo "CPU1 ON | Frequency $time seconds"
 			handlerSysFs.sh "set" $SYSFS_CPU1_ONLINE "1"
 			handlerSysFs.sh "compare" $SYSFS_CPU1_ONLINE "1"
 			if [ $? -ne 0 ]; then
-				echo "[ handlerCpuHotPlug ] FATAL: Not able to set CPU1 ON"
+				showInfo "FATAL: Not able to set CPU1 ON"
 				handlerError.sh "log" "1" "halt" "handlerCpuHotPlug.sh"
 				exit 1
 			fi
 		else
-			echo "[ handlerCpuHotPlug ] CPU1 OFF | Frequency $time seconds"
+			showInfo "CPU1 OFF | Frequency $time seconds"
 			handlerSysFs.sh "set" $SYSFS_CPU1_ONLINE "0"
 			handlerSysFs.sh "compare" $SYSFS_CPU1_ONLINE "0"
 			if [ $? -ne 0 ]; then
-				echo "[ handlerCpuHotPlug ] FATAL: Not able to set CPU1 OFF"
+				showInfo "FATAL: Not able to set CPU1 OFF"
 				handlerError.sh "log" "1" "halt" "handlerCpuHotPlug.sh"
 				exit 1
 			fi
@@ -75,10 +75,8 @@ cpuHotPlug() {
 				# get exit code of background process
 				wait $command_pid
 				if [ $? -ne 0 ]; then
-					echo "[ handlerCpuHotPlug ] FATAL: failure detected in"\
-						" background process"
-					echo "[ handlerCpuHotPlug ] FATAL: <$command_line>"\
-						" command failed"
+					showInfo "FATAL: failure detected in background process"
+					showInfo "FATAL: <$command_line> command failed"
 					handlerError.sh "log" "1" "halt" "handlerCpuHotPlug.sh"
 					exit 1
 				fi
@@ -92,6 +90,9 @@ cpuHotPlug() {
 	done
 }
 
+showInfo() {
+	echo "[ handlerCpuHotPlug ] $1"
+}
 
 # =============================================================================
 # Main
@@ -104,13 +105,13 @@ fi
 
 # Verify required sysfs entries
 if [ ! -f $SYSFS_CPU0_ONLINE ]; then
-	echo "[ handlerCpuHotPlug ] FATAL: $SYSFS_CPU0_ONLINE cannot be found!"
+	showInfo "FATAL: $SYSFS_CPU0_ONLINE cannot be found!"
 	handlerError.sh "log" "1" "halt" "handlerCpuHotPlug.sh"
 	exit 1
 fi
 
 if [ ! -f $SYSFS_CPU1_ONLINE ]; then
-	echo "[ handlerCpuHotPlug ] FATAL: $SYSFS_CPU1_ONLINE cannot be found!"
+	showInfo "FATAL: $SYSFS_CPU1_ONLINE cannot be found!"
 	handlerError.sh "log" "1" "halt" "handlerCpuHotPlug.sh"
 	exit 1
 fi
@@ -119,7 +120,7 @@ fi
 handlerSysFs.sh "set" $SYSFS_CPU1_ONLINE "1"
 handlerSysFs.sh "compare" $SYSFS_CPU_ONLINE "0-1"
 if [ $? -ne 0 ]; then
-	echo "[ handlerCpuHotPlug ] FATAL: No dual core support"
+	showInfo "FATAL: No dual core support"
 	handleError.sh "log" "1" "halt" "handlerCpuHotPlug.sh"
 	exit 1
 fi
