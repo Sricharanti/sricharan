@@ -81,6 +81,7 @@ setAllFrequencies() {
 
 	cmd_to_execute=$@
 	error=0
+	iteration=1
 	# Clean log files
 	echo > $HCFSF_FREQUENCIES_LIST_OK
 	echo > $HCFSF_FREQUENCIES_LIST_ERROR
@@ -94,9 +95,9 @@ setAllFrequencies() {
 	fi
 
 	while [ 1 ]; do
-
-		for frequency in $available_frequencies
-		do
+		echo "CPU Frquencies don't set correctly in cycle No $iteration:" >> $HCFSF_FREQUENCIES_LIST_ERROR
+		echo "CPU Frquencies set correctly in cycle No $iteration:" >> $HCFSF_FREQUENCIES_LIST_OK
+		for frequency in $available_frequencies; do
 			showInfo "Info: Setting Frequency to $frequency"
 			handlerSysFs.sh set $SYSFS_CPU0_SET_SPEED $frequency
 			handlerSysFs.sh verify $SYSFS_CPU0_CURRENT_FREQUENCY $frequency
@@ -128,17 +129,14 @@ setAllFrequencies() {
 		else
 			break
 		fi
+		iteration=`expr $iteration + 1`
 	done
 
-	echo "Info: The following frequencies were correctly set"
+	showInfo "INFO: The following frequencies were set correctly:"
 	cat $HCFSF_FREQUENCIES_LIST_OK
-	echo
-	echo "Info: The following frequencies were not correctly set"
-	cat $HCFSF_FREQUENCIES_LIST_ERROR
-
-	sleep 5
-
 	if [ $error -eq 1 ]; then
+		showInfo "INFO: The following frequencies were not set correctly"
+		cat $HCFSF_FREQUENCIES_LIST_ERROR
 		exit 1
 	fi
 }
