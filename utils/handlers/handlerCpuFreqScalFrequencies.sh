@@ -34,14 +34,15 @@ error_val=0
 # Functions
 # =============================================================================
 
+# This functions receives a OPP value and not a real frequency value
+# Example: OPP5 or 5, OPP2 or 2
 setOneFrequency() {
 
-	frequency_val=$1
+	opp_val=$1
 	cmd_to_execute=$2
-
+	frequency_val_number=`echo ${opp_val#OPP}`
 	loop_number=0
 
-	frequency_val_number=`echo ${frequency_val#OPP}`
 	available_frequencies=`cat $SYSFS_CPU0_AVAILABLE_FREQUENCIES`
 
 	for frequency in $available_frequencies
@@ -50,7 +51,9 @@ setOneFrequency() {
 		echo $frequency	> $HCFSF_FREQUENCIES_LIST_AVAILABILITY.$loop_number
 	done
 
-	if [ "$frequency_val_number" -gt "$loop_number" ]; then
+	if [ $frequency_val_number -gt $loop_number ]; then
+		showInfo "OPP$frequency_val_number does not exist"
+		showInfo "Setting Frequency value to OPP$loop_number"
 		frequency_val_number=$loop_number
 	fi
 
@@ -64,7 +67,7 @@ setOneFrequency() {
 	handlerSysFs.sh set $SYSFS_CPU0_SET_SPEED $frequency_val
 	handlerSysFs.sh verify $SYSFS_CPU0_CURRENT_FREQUENCY $frequency_val
 	if [ $? -ne 0 ]; then
-		showInfo "Error! Frequency $frequency_val coudl not be set"
+		showInfo "Error! Frequency $frequency_val could not be set"
 	else
 		showInfo "Frequency $frequency_val was correctly set"
 	fi
@@ -87,7 +90,7 @@ setAllFrequencies() {
 	echo > $HCFSF_FREQUENCIES_LIST_ERROR
 
 	available_frequencies=`cat $SYSFS_CPU0_AVAILABLE_FREQUENCIES`
-	showInfo "Info: Available frequencies are -> `echo $available_frequencies`"
+	showInfo "INFO: Available frequencies are -> `echo $available_frequencies`"
 
 	if [ -n "$cmd_to_execute" ]; then
 		eval $cmd_to_execute &
@@ -98,15 +101,15 @@ setAllFrequencies() {
 		echo "CPU Frquencies don't set correctly in cycle No $iteration:" >> $HCFSF_FREQUENCIES_LIST_ERROR
 		echo "CPU Frquencies set correctly in cycle No $iteration:" >> $HCFSF_FREQUENCIES_LIST_OK
 		for frequency in $available_frequencies; do
-			showInfo "Info: Setting Frequency to $frequency"
+			showInfo "INFO: Setting Frequency to $frequency"
 			handlerSysFs.sh set $SYSFS_CPU0_SET_SPEED $frequency
 			handlerSysFs.sh verify $SYSFS_CPU0_CURRENT_FREQUENCY $frequency
 			if [ $? -ne 0 ]; then
-				showInfo "Info: Error! Frequency $frequency cannot be set"
+				showInfo "FAIL: Frequency $frequency cannot be set"
 				echo $frequency >> $HCFSF_FREQUENCIES_LIST_ERROR
 				error=1
 			else
-				showInfo "Info: Frequency $frequency was correctly set"
+				showInfo "PASS: Frequency $frequency was set"
 				echo $frequency >> $HCFSF_FREQUENCIES_LIST_OK
 			fi
 			# TODO: Add an option to set a delay between frequency changes
@@ -215,7 +218,7 @@ elif [ "$operation" = "set_fail" ]; then
 			showInfo "Fatal: Frequency was changed, unexpected!"
 			error_val=1
 		else
-			showInfo "Info: Frequency was not changed, good!"
+			showInfo "INFO: Frequency was not changed, good!"
 			error_val=0
 		fi
   done
