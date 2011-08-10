@@ -110,6 +110,8 @@ setAllGovernor() {
 				fi
 				break
 			fi
+		else
+			break
 		fi
 		iteration=`expr $iteration + 1`
 	done

@@ -84,6 +84,8 @@ cpuHotPlug() {
 				fi
 				break
 			fi
+		else
+			break
 		fi
 		sleep $time
 		iteration=`expr $iteration + 1`
