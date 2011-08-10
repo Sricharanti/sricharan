@@ -319,8 +319,8 @@ export KeyMonkeyMute=91
 
 # Export specific HW input devices and values
 
-if [ `cat /proc/cpuinfo | grep -w Hardware | grep -wc\
-			"OMAP4 Tablet board"` -ge 1 ]; then
+if [ `cat $SYSFS_BOARD_REV | grep -wc "Tablet"` -ge 1 -o \
+     `cat $SYSFS_BOARD_REV | grep -wc "Tablet2"` -ge 1 ]; then
 
 	# OMAP GPIO Keypad for Tablet
 	export omapKeypadEvent="/dev/input/event0"
@@ -336,8 +336,7 @@ if [ `cat /proc/cpuinfo | grep -w Hardware | grep -wc\
 	export KeyCodeHome=102
 	export KeyCodePowerKey=107 # specific for event2
 
-elif [ `cat /proc/cpuinfo | grep -w Hardware | grep -wc \
-			"OMAP4 blaze board"` -ge 1  ]; then
+elif [ `cat $SYSFS_BOARD_REV | grep -wc "Blaze/SDP"` -ge 1  ]; then
 	# Sensors
 	export sensorsEvent="/dev/input/event9"
 	# Pressure Sensor: BMP085

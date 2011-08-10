@@ -5,6 +5,17 @@
 # according to the sysfs name
 
 #-------------------------------------------------------------
+# /sys/board_properties
+#-------------------------------------------------------------
+
+export SYSFS_BOARD_PROPERTIES=/sys/board_properties/board/
+export SYSFS_SOC_PROPERTIES=/sys/board_properties/soc/
+export SYSFS_BOARD_REV=$SYSFS_BOARD_PROPERTIES/board_rev
+export SYSFS_SOC_FAMILY=$SYSFS_SOC_PROPERTIES/family
+export SYSFS_SOC_TYPE=$SYSFS_SOC_PROPERTIES/type
+export SYSFS_SOC_REV=$SYSFS_SOC_PROPERTIES/revision
+
+#-------------------------------------------------------------
 # /sys/block
 #-------------------------------------------------------------
 
