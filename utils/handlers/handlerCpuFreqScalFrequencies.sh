@@ -58,25 +58,30 @@ setOneFrequency() {
 
 	if [ -n "$cmd_to_execute" ]; then
 		eval $cmd_to_execute &
+		command_pid=`echo $!`
 	fi
 
-	echo $frequency_val > $SYSFS_CPU0_SET_SPEED
-	current_frequency=`cat $SYSFS_CPU0_CURRENT_FREQUENCY`
-
-	if [ $frequency_val -ne $current_frequency ]; then
-		showInfo "Info: Error! Frequency $i coudl not be set"
+	handlerSysFs.sh set $SYSFS_CPU0_SET_SPEED $frequency_val
+	handlerSysFs.sh verify $SYSFS_CPU0_CURRENT_FREQUENCY $frequency_val
+	if [ $? -ne 0 ]; then
+		showInfo "Error! Frequency $frequency_val coudl not be set"
 	else
-		showInfo "Info: Frequency $frequency_val was correctly set"
+		showInfo "Frequency $frequency_val was correctly set"
 	fi
-
-	wait
-	sleep 5
+	wait $command_pid
+	if [ $? -ne 0 ]; then
+		showInfo "FATAL: failure detected in background process"
+		showInfo "FATAL: <$command_line> command failed"
+		handlerError.sh "log" "1" "halt" "handlerCpuFreqScalFrequencies.sh"
+		exit 1
+	fi
 }
 
 setAllFrequencies() {
 
 	cmd_to_execute=$@
 	error=0
+	# Clean log files
 	echo > $HCFSF_FREQUENCIES_LIST_OK
 	echo > $HCFSF_FREQUENCIES_LIST_ERROR
 
@@ -93,31 +98,38 @@ setAllFrequencies() {
 		for frequency in $available_frequencies
 		do
 			showInfo "Info: Setting Frequency to $frequency"
-			echo $frequency > $SYSFS_CPU0_SET_SPEED
-			current_frequency=`cat $SYSFS_CPU0_CURRENT_FREQUENCY`
-
-			if [ $frequency -ne $current_frequency ]; then
+			handlerSysFs.sh set $SYSFS_CPU0_SET_SPEED $frequency
+			handlerSysFs.sh verify $SYSFS_CPU0_CURRENT_FREQUENCY $frequency
+			if [ $? -ne 0 ]; then
 				showInfo "Info: Error! Frequency $frequency cannot be set"
 				echo $frequency >> $HCFSF_FREQUENCIES_LIST_ERROR
 				error=1
 			else
 				showInfo "Info: Frequency $frequency was correctly set"
-				echo $frquency >> $HCFSF_FREQUENCIES_LIST_OK
+				echo $frequency >> $HCFSF_FREQUENCIES_LIST_OK
 			fi
+			# TODO: Add an option to set a delay between frequency changes
 			sleep 1
 		done
 
 		if [ -n "$cmd_to_execute" ]; then
-			test -d /proc/$command_pid || break
+			test -d /proc/$command_pid
+			if [ $? -ne 0 ]; then
+				# get exit code of background process
+				wait $command_pid
+				if [ $? -ne 0 ]; then
+					showInfo "FATAL: failure detected in background process"
+					showInfo "FATAL: <$command_line> command failed"
+					handlerError.sh "log" "1" "halt" "handlerCpuFreqScalFrequencies.sh"
+					exit 1
+				fi
+				break
+			fi
 		else
 			break
 		fi
-
 	done
 
-	wait
-
-  echo
 	echo "Info: The following frequencies were correctly set"
 	cat $HCFSF_FREQUENCIES_LIST_OK
 	echo
