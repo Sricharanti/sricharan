@@ -73,7 +73,7 @@ setAllGovernor() {
 	echo > $HCFSG_GOVERNORS_LIST_ERROR
 
 	available_governors=`cat $SYSFS_CPU0_AVAILABLE_GOVERNORS`
-	showInfo "Info: Available Governors are -> $available_governors"
+	showInfo "INFO: Available Governors are -> $available_governors"
 	if [ -n "$command_to_execute" ]; then
 		eval $command_to_execute &
 		command_pid=`echo $!`
@@ -90,7 +90,7 @@ setAllGovernor() {
 				echo $governor >> $HCFSG_GOVERNORS_LIST_ERROR
 				error=1
 			else
-				showInfo "Info: Governor $governor was set correctly"
+				showInfo "INFO: Governor $governor was set correctly"
 				echo $governor >> $HCFSG_GOVERNORS_LIST_OK
 			fi
 			# TODO: Add delay option between setting cycles
@@ -116,10 +116,10 @@ setAllGovernor() {
 		iteration=`expr $iteration + 1`
 	done
 
-	showInfo "Info: The following Governors were set correctly"
+	showInfo "INFO: The following Governors were set correctly"
 	cat $HCFSG_GOVERNORS_LIST_OK
 	if [ $error -eq 1 ]; then
-		showInfo "Info: The following Governors were not set correctly"
+		showInfo "INFO: The following Governors were not set correctly"
 		cat $HCFSG_GOVERNORS_LIST_ERROR
 		exit 1
 	fi
@@ -128,7 +128,7 @@ setAllGovernor() {
 getCurrentGovernor() {
 	governor_saved=$1
 	current_governor=`cat $SYSFS_CPU0_CURRENT_GOVERNOR`
-	showInfo "Info: Current Governor -> $current_governor"
+	showInfo "INFO: Current Governor -> $current_governor"
 
 	echo $current_governor > $governor_saved
 }
@@ -137,11 +137,21 @@ restoreCurrentGovernor() {
 	governor_saved=$1
 
 	if [ -f "$governor_saved" ]; then
-		# TODO: Verify that the cpu governor was set correctly
-		cat $governor_saved > $SYSFS_CPU0_CURRENT_GOVERNOR
-		showInfo "Info: Restore to Governor -> `cat $governor_saved`"
+		prev_governor=`cat $governor_saved`
+		if [ -z $prev_governor ]; then
+			showInfo "ERROR: Not able to obtain previous governor state"
+			exit 1
+		fi
+		handlerSysFs.sh set $SYSFS_CPU0_CURRENT_GOVERNOR $governor_saved
+		handlerSysFs.sh verify $SYSFS_CPU0_CURRENT_GOVERNOR $governor_saved
+		if [ $? -ne 0 ]; then
+			showInfo "ERROR: Not able to restore previous governor state"
+			exit 1
+		else
+			showInfo "INFO: CPU governor restored to -> `cat $governor_saved`"
+		fi
 	else
-		showInfo 'Error: $governor_saved file is empty'
+		showInfo 'ERROR: $governor_saved file is empty'
 	fi
 }
 
