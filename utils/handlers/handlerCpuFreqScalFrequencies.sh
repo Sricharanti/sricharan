@@ -58,6 +58,10 @@ setOneFrequency() {
 	fi
 
 	frequency_val=`cat $HCFSF_FREQUENCIES_LIST_AVAILABILITY.$frequency_val_number`
+	if [ -z $frequency_val ]; then
+		showInfo "FATAL: unknown frequency value"
+		exit 1
+	fi
 
 	if [ -n "$cmd_to_execute" ]; then
 		eval $cmd_to_execute &
@@ -74,7 +78,7 @@ setOneFrequency() {
 	wait $command_pid
 	if [ $? -ne 0 ]; then
 		showInfo "FATAL: failure detected in background process"
-		showInfo "FATAL: <$command_line> command failed"
+		showInfo "FATAL: <$cmd_to_execute> command failed"
 		handlerError.sh "log" "1" "halt" "handlerCpuFreqScalFrequencies.sh"
 		exit 1
 	fi
