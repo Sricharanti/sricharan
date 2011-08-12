@@ -142,8 +142,8 @@ restoreCurrentGovernor() {
 			showInfo "ERROR: Not able to obtain previous governor state"
 			exit 1
 		fi
-		handlerSysFs.sh set $SYSFS_CPU0_CURRENT_GOVERNOR $governor_saved
-		handlerSysFs.sh verify $SYSFS_CPU0_CURRENT_GOVERNOR $governor_saved
+		handlerSysFs.sh set $SYSFS_CPU0_CURRENT_GOVERNOR $prev_governor
+		handlerSysFs.sh verify $SYSFS_CPU0_CURRENT_GOVERNOR $prev_governor
 		if [ $? -ne 0 ]; then
 			showInfo "ERROR: Not able to restore previous governor state"
 			exit 1
