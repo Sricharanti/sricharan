@@ -56,12 +56,18 @@ fi
 # Set a value to a specific sysfs entry. Don't check for errors here
 if [ "$command" = "set" ]; then
 
-	echo -n "$sysfs_entry_name"  > $HSF_SYSFS_ENTRY_NAME
-	echo -n "$sysfs_entry_value" > $sysfs_entry_name
+	if [ `cat $sysfs_entry_name` = "$sysfs_entry_value" ]; then
+		echo "[ handlerSysFs ] Required value is already set"
+		exit 0
+	else
+		echo -n "$sysfs_entry_name"  > $HSF_SYSFS_ENTRY_NAME
+		echo -n "$sysfs_entry_value" > $sysfs_entry_name
+	fi
 
 # Obtain current value from a specific sysfs entry
 elif [ "$command" = "get" ]; then
 
+	# TODO: Add Error check
 	cat $sysfs_entry_name
 
 # The "compare" command differs from "verify" in that the first one registers
