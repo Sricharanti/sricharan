@@ -23,6 +23,10 @@ scriptUsage() {
 	exit 1
 }
 
+showInfo() {
+	echo "[ handlerSmartReflex ] $1"
+}
+
 # =============================================================================
 # Main
 # =============================================================================
@@ -36,20 +40,20 @@ fi
 if [ `cat /proc/cpuinfo | grep -ic OMAP4` -gt 0 ]; then
 		LOCAL_SR_ENTRIES=($SR_CORE_AUTOCOMP $SR_IVA_AUTOCOMP $SR_MPU_AUTOCOMP)
 		LOCAL_SR_DOMAIN=(core iva mpu)
-		echo "OMAP4 Architecture detected"
+		showInfo "OMAP4 Architecture detected"
 	elif [ `cat /proc/cpuinfo | grep -ic Zoom3` -gt 0 ]; then
 		LOCAL_SR_ENTRIES=($SR_VDD1_AUTOCOMP $SR_VDD2_AUTOCOMP)
 		LOCAL_SR_DOMAIN=(vdd1 vdd2)
-		echo "OMAP3 Architecture detected"
+		showInfo "OMAP3 Architecture detected"
 	else
-		echo "FATAL: Architecture not detected" 1>&2
+		showInfo "FATAL: Architecture not detected" 1>&2
 		exit 1
 fi
 
 
 # Define Script Usage and validate all parameters
 if [ $# -ne 2 ]; then
-		echo "ERR: number of parameters is invalid" 1>&2
+		showInfo "ERROR: number of parameters is invalid" 1>&2
 		scriptUsage
 fi
 
@@ -58,13 +62,13 @@ if [ $LOCAL_OPERATION = "enable" ]; then
 	elif [ $LOCAL_OPERATION = "disable" ]; then
 		LOCAL_STATUS=$PM_DISABLE
 	else
-		echo "ERR: "$LOCAL_OPERATION" is an invalid parameter" 1>&2
+		showInfo "ERROR: "$LOCAL_OPERATION" is an invalid parameter" 1>&2
 		scriptUsage
 fi
 
 if [ `echo ${LOCAL_SR_DOMAIN[*]} | grep -ic $LOCAL_DOMAIN` -eq 0  ]; then
-	echo "ERR: "$LOCAL_DOMAIN" is an invalid parameter" 1>&2
-	echo "ERR: valid domain parameters are <${LOCAL_SR_DOMAIN[*]}>" 1>&2
+	showInfo "ERROR: "$LOCAL_DOMAIN" is an invalid parameter" 1>&2
+	showInfo "ERROR: valid domain parameters are <${LOCAL_SR_DOMAIN[*]}>" 1>&2
 	scriptUsage
 fi
 
@@ -74,7 +78,7 @@ handlerDebugFileSystem.sh "mount"
 
 for sr_entry in ${LOCAL_SR_ENTRIES[*]}; do
 	if [ ! -f $sr_entry ]; then
-		echo "FATAL: $sr_entry cannot be found" 1>&2
+		showInfo "FATAL: $sr_entry cannot be found" 1>&2
 		LOCAL_ERROR=1
 	fi
 done
@@ -89,11 +93,11 @@ fi
 
 for index in ${!LOCAL_SR_DOMAIN[*]}; do
 	if [ "$LOCAL_DOMAIN" = ${LOCAL_SR_DOMAIN[$index]} ]; then
-		echo "echo $LOCAL_STATUS > ${LOCAL_SR_ENTRIES[$index]}"
+		showInfo "Setting SmartReflex autocompensation for ${LOCAL_SR_ENTRIES[$index]} domain"
 		handlerSysFs.sh "set"  ${LOCAL_SR_ENTRIES[$index]} $LOCAL_STATUS
 		handlerSysFs.sh "compare"  ${LOCAL_SR_ENTRIES[$index]} $LOCAL_STATUS
 		if [ $? -ne 0 ]; then
-			echo "ERR: ${LOCAL_SR_ENTRIES[$index]} was not set properly" 1>&2
+			showInfo "ERROR: ${LOCAL_SR_ENTRIES[$index]} domain was not set for SmartReflex" 1>&2
 			LOCAL_ERROR=1
 		fi
 	fi
