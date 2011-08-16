@@ -17,7 +17,11 @@ LOCAL_ERROR=0
 # Functions
 # =============================================================================
 
-# None
+scriptUsage() {
+	echo -e "\nScript usage:\n"
+	echo -e "handlerSmartReflex.sh {enable|disable} [ ${sr_domain[*]} ] -or- all\n"
+	exit 1
+}
 
 # =============================================================================
 # Main
@@ -46,8 +50,7 @@ fi
 # Define Script Usage and validate all parameters
 if [ $# -ne 2 ]; then
 		echo "ERR: number of parameters is invalid" 1>&2
-		echo "Try -- $0 <enable/disable> <${LOCAL_SR_DOMAIN[*]}>" 1>&2
-		exit 1
+		scriptUsage
 fi
 
 if [ $LOCAL_OPERATION = "enable" ]; then
@@ -56,15 +59,13 @@ if [ $LOCAL_OPERATION = "enable" ]; then
 		LOCAL_STATUS=$PM_DISABLE
 	else
 		echo "ERR: "$LOCAL_OPERATION" is an invalid parameter" 1>&2
-		echo "Try -- $0 <enable/disable> <${LOCAL_SR_DOMAIN[*]}>" 1>&2
-		exit 1
+		scriptUsage
 fi
 
 if [ `echo ${LOCAL_SR_DOMAIN[*]} | grep -ic $LOCAL_DOMAIN` -eq 0  ]; then
 	echo "ERR: "$LOCAL_DOMAIN" is an invalid parameter" 1>&2
 	echo "ERR: valid domain parameters are <${LOCAL_SR_DOMAIN[*]}>" 1>&2
-	echo "Try -- $0 <enable/disable> <${LOCAL_SR_DOMAIN[*]}>" 1>&2
-	exit 1
+	scriptUsage
 fi
 
 # Verify that all sysfs entries for SmartReflex exists
