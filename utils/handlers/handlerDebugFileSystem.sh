@@ -48,7 +48,7 @@ if [ "$command" = "mount" ]; then
 
 	# Verify/Create debugfs mount point
 	test -d $PM_DEBUGFS_DIRECTORY || mkdir -p $PM_DEBUGFS_DIRECTORY
-	mount | grep debugfs | grep "$PM_DEBUGFS_DIRECTORY on $PM_DEBUGFS_DIRECTORY"
+	mount | grep debugfs | grep "on $PM_DEBUGFS_DIRECTORY type debugfs"
 	if [ $? -ne 0 ]; then
 		# mount debugfs
 		mount -t debugfs debugfs $PM_DEBUGFS_DIRECTORY
