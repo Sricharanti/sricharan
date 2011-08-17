@@ -1,17 +1,33 @@
 #!/bin/bash
 
 #
-# TODO
-# 1. Include "all" parameter to set all domains at once
+#  Handler SmartReflex Autocompensation
+#
+#  Copyright (c) 2011 Texas Instruments
+#
+#  This program is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU General Public License as
+#  published by the Free Software Foundation; either version 2 of the
+#  License, or (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
+#  USA
 #
 
 # =============================================================================
 # Variables
 # =============================================================================
 
-LOCAL_OPERATION=$1
-LOCAL_DOMAIN=$2
-LOCAL_ERROR=0
+operation=$1
+domain=$2
+error_status=0
 
 # =============================================================================
 # Functions
@@ -38,12 +54,12 @@ fi
 
 # Define which Architecture is being used
 if [ `cat /proc/cpuinfo | grep -ic OMAP4` -gt 0 ]; then
-		LOCAL_SR_ENTRIES=($SR_CORE_AUTOCOMP $SR_IVA_AUTOCOMP $SR_MPU_AUTOCOMP)
-		LOCAL_SR_DOMAIN=(core iva mpu)
+		sr_entries=($SR_CORE_AUTOCOMP $SR_IVA_AUTOCOMP $SR_MPU_AUTOCOMP)
+		sr_domain=(core iva mpu)
 		showInfo "OMAP4 Architecture detected"
 	elif [ `cat /proc/cpuinfo | grep -ic Zoom3` -gt 0 ]; then
-		LOCAL_SR_ENTRIES=($SR_VDD1_AUTOCOMP $SR_VDD2_AUTOCOMP)
-		LOCAL_SR_DOMAIN=(vdd1 vdd2)
+		sr_entries=($SR_VDD1_AUTOCOMP $SR_VDD2_AUTOCOMP)
+		sr_domain=(vdd1 vdd2)
 		showInfo "OMAP3 Architecture detected"
 	else
 		showInfo "FATAL: Architecture not detected" 1>&2
@@ -57,18 +73,20 @@ if [ $# -ne 2 ]; then
 		scriptUsage
 fi
 
-if [ $LOCAL_OPERATION = "enable" ]; then
-		LOCAL_STATUS=$PM_ENABLE
-	elif [ $LOCAL_OPERATION = "disable" ]; then
-		LOCAL_STATUS=$PM_DISABLE
-	else
-		showInfo "ERROR: "$LOCAL_OPERATION" is an invalid parameter" 1>&2
-		scriptUsage
+if [ $operation = "enable" ]; then
+	status=$PM_ENABLE
+	action="Enabling"
+elif [ $operation = "disable" ]; then
+	status=$PM_DISABLE
+	action="Disabling"
+else
+	showInfo "ERROR: $operation is an invalid parameter" 1>&2
+	scriptUsage
 fi
 
-if [ `echo ${LOCAL_SR_DOMAIN[*]} | grep -ic $LOCAL_DOMAIN` -eq 0  ]; then
-	showInfo "ERROR: "$LOCAL_DOMAIN" is an invalid parameter" 1>&2
-	showInfo "ERROR: valid domain parameters are <${LOCAL_SR_DOMAIN[*]}>" 1>&2
+if [ `echo ${sr_domain[*]} | grep -wc $domain` -eq 0 -a \
+	"$domain" != "all" ]; then
+	showInfo "ERROR: "$domain" is an invalid parameter" 1>&2
 	scriptUsage
 fi
 
@@ -76,40 +94,53 @@ fi
 
 handlerDebugFileSystem.sh "mount"
 
-for sr_entry in ${LOCAL_SR_ENTRIES[*]}; do
+for sr_entry in ${sr_entries[*]}; do
 	if [ ! -f $sr_entry ]; then
 		showInfo "FATAL: $sr_entry cannot be found" 1>&2
-		LOCAL_ERROR=1
+		error_status=1
 	fi
 done
 
-if [ $LOCAL_ERROR -eq 1 ]; then
+if [ $error_status -eq 1 ]; then
 	handlerError.sh "log" "1" "halt" "handlerSmartReflex.sh"
 	handlerDebugFileSystem.sh "umount"
-	exit $LOCAL_ERROR
+	exit $error_status
 fi
 
 # Set SmartReflex autocompensation
 
-for index in ${!LOCAL_SR_DOMAIN[*]}; do
-	if [ "$LOCAL_DOMAIN" = ${LOCAL_SR_DOMAIN[$index]} ]; then
-		showInfo "Setting SmartReflex autocompensation for ${LOCAL_SR_ENTRIES[$index]} domain"
-		handlerSysFs.sh "set"  ${LOCAL_SR_ENTRIES[$index]} $LOCAL_STATUS
-		handlerSysFs.sh "compare"  ${LOCAL_SR_ENTRIES[$index]} $LOCAL_STATUS
+if [ $domain = "all" ]; then
+	for index in ${!sr_domain[*]}; do
+		showInfo "$action SmartReflex autocompensation for ${sr_domain[$index]} domain"
+		handlerSysFs.sh "set"  ${sr_entries[$index]} $status
+		handlerSysFs.sh "verify"  ${sr_entries[$index]} $status
 		if [ $? -ne 0 ]; then
-			showInfo "ERROR: ${LOCAL_SR_ENTRIES[$index]} domain was not set for SmartReflex" 1>&2
-			LOCAL_ERROR=1
+			showInfo "ERROR: ${sr_domain[$index]} domain was not set for SmartReflex" 1>&2
+			error_status=1
 		fi
-	fi
-done
+	done
+# Set SmartReflex autocompensation for a specific domain
+else
+	for index in ${!sr_domain[*]}; do
+		if [ "$domain" = ${sr_domain[$index]} ]; then
+			showInfo "$action SmartReflex autocompensation for ${sr_domain[$index]} domain"
+			handlerSysFs.sh "set"  ${sr_entries[$index]} $status
+			handlerSysFs.sh "verify"  ${sr_entries[$index]} $status
+			if [ $? -ne 0 ]; then
+				showInfo "ERROR: ${sr_domain[$index]} domain was not set for SmartReflex" 1>&2
+				error_status=1
+			fi
+		fi
+	done
+fi
 
-if [ $LOCAL_ERROR -eq 1 ]; then
+if [ $error_status -eq 1 ]; then
         handlerError.sh "log" "1" "halt" "handlerSmartReflex.sh"
         handlerDebugFileSystem.sh "umount"
-        exit $LOCAL_ERROR
+        exit $error_status
 fi
 
 handlerDebugFileSystem.sh "umount"
-exit $LOCAL_ERROR
+exit $error_status
 
 # End of file
