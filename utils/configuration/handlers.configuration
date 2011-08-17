@@ -144,9 +144,9 @@ fi
 #-------------------------------------------------------------
 
 if [ `cat /proc/cpuinfo | grep -ic OMAP4` -gt 0 ]; then
-		export SR_CORE_AUTOCOMP=$PM_DEBUG/smartreflex/sr_core/autocomp
-		export SR_IVA_AUTOCOMP=$PM_DEBUG/smartreflex/sr_iva/autocomp
-		export SR_MPU_AUTOCOMP=$PM_DEBUG/smartreflex/sr_mpu/autocomp
+		export SR_CORE_AUTOCOMP=$PM_DEBUGFS_DIRECTORY/smartreflex/sr_core/autocomp
+		export SR_IVA_AUTOCOMP=$PM_DEBUGFS_DIRECTORY/smartreflex/sr_iva/autocomp
+		export SR_MPU_AUTOCOMP=$PM_DEBUGFS_DIRECTORY/smartreflex/sr_mpu/autocomp
 
 	elif [ `cat /proc/cpuinfo | grep -ic Zoom3` -gt 0 ]; then
 		export SR_VDD1_AUTOCOMP=$PM_SYS_PWR/sr_vdd1_autocomp
