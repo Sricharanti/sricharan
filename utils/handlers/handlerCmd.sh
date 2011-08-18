@@ -185,7 +185,7 @@ case $operation in
 	while [ $counter -lt $iterations ]; do
 		# print iteration number in a non zero based indexing
 		let report_iteration=$counter+1
-		showInfo "ITERATION::::::::::::::: $report_iteration"
+		echo -e "\n::::::::::::::::: ITERATION $report_iteration ::::::::::::::::::\n"
 		commands=`echo -e $operand2 | tr " " "," | tr ';' ' '`
 		executeCommands $commands
 		verifyErrorFlag "executeCommands reported an error"

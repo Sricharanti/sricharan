@@ -47,7 +47,6 @@ cpuHotPlug() {
 	fi
 
 	while [ 1 ]; do
-		showInfo "ITERATION: $iteration"
 		rem=$(( $iteration % 2 ))
 		if [ $rem -eq 1 ]
 		then
