@@ -46,9 +46,7 @@ MODULES = dma_single_channel.o \
  endif
 
  ifeq ($(TARGET_FILESYSTEM), ANDROID)
- MODULES += dma_dload.o \
-  	    dma_addrmode_constant_oswr.o \
-	    dma_dload_thread_access.o \
+ MODULES += dma_addrmode_constant_oswr.o \
             dma_oswr_trigger.o \
             dma_register_dump.o
  endif

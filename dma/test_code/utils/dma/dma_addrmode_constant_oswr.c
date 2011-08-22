@@ -24,9 +24,9 @@
 #define TRANSFER_POLL_COUNT 60
 #define TRANSFER_POLL_TIME 1500
 
-u32 reg_dump_after_config[CH_END * 4];
+u32 reg_dump_after_config[EDMA_CH_END * 4];
 
-u32 reg_dump_after_suspend[CH_END*4];
+u32 reg_dump_after_suspend[EDMA_CH_END*4];
 EXPORT_SYMBOL(reg_dump_after_suspend);
 
 u8 wait_oswr_trigger;
@@ -230,7 +230,7 @@ static int __init dma_module_init(void) {
 static void __exit dma_module_exit(void) {
 	int i;
 
-	for (i = CCR; i < CH_END; i++) {
+	for (i = EDMA_CCR; i < EDMA_CH_END; i++) {
 		if (reg_dump_after_config[i] != reg_dump_after_suspend[i]){
 			printk("%s: Test failed ....!!!!!\n", __func__);
 			set_test_passed(0);

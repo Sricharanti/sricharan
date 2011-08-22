@@ -18,7 +18,7 @@
 
 #include "dma_single_channel.h"
 
-extern u32 reg_dump_after_suspend[CH_END*4];
+extern u32 reg_dump_after_suspend[EDMA_CH_END*4];
 extern u8 wait_oswr_trigger;
 
 static int __init oswr_trigger_init(void)

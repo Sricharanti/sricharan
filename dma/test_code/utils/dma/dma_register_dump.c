@@ -42,7 +42,7 @@ void dma_channel_registers_dump(int lch, u32 *reg_values)
 {
 	u32 base, dma_stride, i;
 	u8 count = 0;
-	u32 reg_dump[CH_END * 4];
+	u32 reg_dump[EDMA_CH_END * 4];
 	if (cpu_is_omap24xx())
 		base = OMAP24XX_DMA4_BASE;
 	else if (cpu_is_omap34xx())
@@ -56,7 +56,7 @@ void dma_channel_registers_dump(int lch, u32 *reg_values)
 
 	omap_dma_base = ioremap(base, SZ_4K);
 	printk("OMAP2+ Channel Registers Dump...\n");
-	for (i = CCR; i < CH_END; i += 1) {
+	for (i = EDMA_CCR; i < EDMA_CH_END; i += 1) {
 		dma_stride = (i * 4) + 0x80;
 		dma_stride += lch * 0x60;	
 		reg_dump[count] = __raw_readl(omap_dma_base + dma_stride);
