@@ -337,27 +337,51 @@ if [ `cat $SYSFS_BOARD_REV | grep -wc "Tablet"` -ge 1 -o \
 	export KeyCodePowerKey=107 # specific for event2
 
 elif [ `cat $SYSFS_BOARD_REV | grep -wc "Blaze/SDP"` -ge 1  ]; then
-	# Sensors
-	export sensorsEvent="/dev/input/event9"
-	# Pressure Sensor: BMP085
-	export pressureEvent="/dev/input/event7"
+
+	if [ `cat $SYSFS_SOC_FAMILY | grep -wc "OMAP4430"` -ge 1 ]; then
+
 	# Digital Compass Sensor: HMC5843
 	export digitalCompassEvent="/dev/input/event6"
+	# Pressure Sensor: BMP085
+	export pressureEvent="/dev/input/event4"
 	# Ambient Light sensor:  BH1780GLI
-	export ambientLightEvent="/dev/input/event5"
+	export ambientLightEvent="/dev/input/event3"
 	# Accelerometer sensor: cma3000
-	export accelerometerEvent="/dev/input/event3"
-	# Headset Jack for SDP4430
+	export accelerometerEvent="/dev/input/event2"
+	# Headset Jack for SDP44xx
 	export headsetJackEvent="/dev/input/event8"
-	# OMAP Keypad for SDP4430
-	export omapKeypadEvent="/dev/input/event0"
 	# Proximity Sensor: SFH7741
-	export proximityEvent="/dev/input/event2"
+	export proximityEvent="/dev/input/event7"
+	# OMAP Keypad for SDP44XX
+	export omapKeypadEvent="/dev/input/event0"
 	# Synaptics Touchscreen:TM12XX
 	export touchPoint1Event="/dev/input/event1"
-	export touchPoint2Event="/dev/input/event4"
+	# TWL6030 Power Button event
+	export omapPowerButtonEvent="/dev/input/event5"
+
+	elif [ `cat $SYSFS_SOC_FAMILY | grep -wc "OMAP4460"` -ge 1 ]; then
+
+	# Digital Compass Sensor: HMC5843
+	export digitalCompassEvent="/dev/input/event7"
+	# Pressure Sensor: BMP085
+	export pressureEvent="/dev/input/event5"
+	# Ambient Light sensor:  BH1780GLI
+	export ambientLightEvent="/dev/input/event4"
+	# Accelerometer sensor: cma3000
+	export accelerometerEvent="/dev/input/event3"
+	# Headset Jack for SDP44XX
+	export headsetJackEvent="/dev/input/event9"
+	# Proximity Sensor: SFH7741
+	export proximityEvent="/dev/input/event8"
+	# Synaptics Touchscreen:TM12XX
+	export touchPoint1Event="/dev/input/event1"
+	export touchPoint2Event="/dev/input/event2"
+	# OMAP Keypad for SDP44XX
+	export omapKeypadEvent="/dev/input/event0"
 	# TWL6030 Power Button event
 	export omapPowerButtonEvent="/dev/input/event6"
+
+	fi
 
 	# TODO: Export all the available key codes
 	export KeyCodeHome=102
