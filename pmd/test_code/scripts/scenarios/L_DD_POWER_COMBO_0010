@@ -1,0 +1,23 @@
+###############################################################################
+# Scenario: L_DD_PM_COMBO_0010
+# Author  : Leed Aguilar
+# Date    : Fri Aug 12 15:50:31 CDT 2011
+# Testing :
+# Results :
+###############################################################################
+
+# Begin L_DD_PM_COMBO_0010
+
+# Enable SmartRelfex for all domains
+0001 set -x; handlerSmartReflex.sh enable all
+
+# Obtain current cpu governor to be restored at the end of the test
+0002 set -x; handlerCpuFreqScalGovernors.sh get
+
+# Iterate over all the cpu governors and frequencies during 60 seconds while
+# unplugging/plugging CPU1 simultaneously 
+0003 set -x; handlerCmd.sh iterate 'handlerCpuHotPlug.sh run 2 "handlerCpuFreqScalGovernors.sh run all \"handlerCpuFreqScalFrequencies.sh run all sleep\,60 \""' 1000 2
+
+0004 set -x; handlerCpuFreqScalGovernors.sh restore
+
+# End L_DD_PM_COMBO_0010

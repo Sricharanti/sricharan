@@ -1,0 +1,36 @@
+###############################################################################
+# Scenario: L_DD_PM_COMBO_0004
+# Author  : Leed Aguilar
+# Date    : Fri Aug 12 15:50:31 CDT 2011
+# Testing : Long hour test for CPU freq, CPU hotplug and CPU governor with
+#           SmartReflex enabled: Enable SmartReflex for all domains, then
+#           plug/unplug CPU1 for a period of time and iterate over all the
+#           available frequencies and CPU governors during a specific time
+#           with CPU1 online. Repeat this process 1000 times
+# Results : CPU1 hotplug process must be completed with no errors and all the
+#           frequencies and governors should be set correctly. There should be
+#           any lockup or system crash
+###############################################################################
+
+# Begin L_DD_PM_COMBO_0004
+
+# Enable SmartRelfex for all domains
+0001 set -x; handlerSmartReflex.sh enable all
+
+# Setting CPU1 online
+0002 set -x; handlerSysFs.sh "set" $SYSFS_CPU1_ONLINE 1
+0003 set -x; handlerSysFs.sh "compare" $SYSFS_CPU1_ONLINE 1
+
+# Obtain current cpu governor to be restored at the end of the test
+0004 set -x; handlerCpuFreqScalGovernors.sh get
+
+# Iterate 1000 times every 2 seconds the following:
+# * Plug/unplug CPU1 during 60 seconds
+# * Ensure CPU1 remain online
+# * Set all the available frequencies during 60 seconds
+# * Set all the available cpu governors during 60 seconds
+0005 set -x; handlerCmd.sh iterate 'handlerCpuHotPlug.sh run 2 "sleep 60"; handlerSysFs.sh "set" $SYSFS_CPU1_ONLINE 1; handlerSysFs.sh "compare" $SYSFS_CPU1_ONLINE 1; handlerCpuFreqScalFrequencies.sh run all "sleep 60"; handlerCpuFreqScalGovernors.sh run all "sleep 60"' 1000 2 
+
+0006 set -x; handlerCpuFreqScalGovernors.sh restore
+
+# End L_DD_PM_COMBO_0004

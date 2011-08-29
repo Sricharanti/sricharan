@@ -1,0 +1,37 @@
+###############################################################################
+# Scenario: L_DD_PM_COMBO_0003
+# Author  : Leed Aguilar
+# Date    : Fri Aug 12 15:50:31 CDT 2011
+# Testing : SmartReflex, CPU hotplug, CPU freq and CPU governors:
+#           Enable SmartReflex for all domains, then plug/unplug CPU1 for a
+#           period of time and iterate over all the available frequencies and
+#           CPU governors during a specific time with CPU1 online
+# Results : CPU1 hotplug process must be completed with no errors and all the
+#           frequencies and governors should be set correctly. There should be
+#           any lockup or system crash
+###############################################################################
+
+# Begin L_DD_PM_COMBO_0003
+
+# Enable SmartRelfex for all domains
+0001 set -x; handlerSmartReflex.sh enable all
+
+# Obtain current cpu governor to be restored at the end of the test
+0002 set -x; handlerCpuFreqScalGovernors.sh get
+
+# plug/unplug CPU1 every 2 seconds for a period of 1 min
+0003 set -x; handlerCpuHotPlug.sh run 2 "sleep 60" 
+
+# Setting CPU1 online
+0004 set -x; handlerSysFs.sh "set" $SYSFS_CPU1_ONLINE 1
+0005 set -x; handlerSysFs.sh "compare" $SYSFS_CPU1_ONLINE 1
+
+# Iterate for a period of time over all the available frequencies
+0006 set -x; handlerCpuFreqScalFrequencies.sh run all "sleep 60"
+
+# Iterate for a period of time over all the cpu governors
+0007 set -x; handlerCpuFreqScalGovernors.sh run all "sleep 60"
+
+0008 set -x; handlerCpuFreqScalGovernors.sh restore
+
+# End L_DD_PM_COMBO_0003

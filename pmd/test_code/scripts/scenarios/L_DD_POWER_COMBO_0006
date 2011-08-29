@@ -1,0 +1,24 @@
+###############################################################################
+# Scenario: L_DD_PM_COMBO_0006
+# Author  : Leed Aguilar
+# Date    : Fri Aug 12 15:50:31 CDT 2011
+# Testing :
+# Results :
+###############################################################################
+
+# Begin L_DD_PM_COMBO_0005
+
+# Enable SmartRelfex for all domains
+0001 set -x; handlerSmartReflex.sh enable all
+
+# Obtain current cpu governor to be restored at the end of the test
+0002 set -x; handlerCpuFreqScalGovernors.sh get
+
+# Iterate 1000 times every 2 seconds the following:
+# * Set all the available frequencies during 1 min while plugging/unplugging CPU1
+# * Ensure CPU1 remain online
+# * Set all the available cpu governors during 60 seconds
+0005 set -x; handlerCmd.sh iterate 'handlerCpuHotPlug.sh run 2 "handlerCpuFreqScalFrequencies.sh run all \"sleep 60\""; handlerSysFs.sh "set" $SYSFS_CPU1_ONLINE 1; handlerSysFs.sh "compare" $SYSFS_CPU1_ONLINE 1; handlerCpuFreqScalGovernors.sh run all "sleep 60"' 1000 2 
+
+0006 set -x; handlerCpuFreqScalGovernors.sh restore
+# End L_DD_PM_COMBO_0006

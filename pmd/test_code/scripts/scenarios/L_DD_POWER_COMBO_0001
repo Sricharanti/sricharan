@@ -1,0 +1,36 @@
+###############################################################################
+# Scenario: L_DD_PM_COMBO_0001
+# Author  : Leed Aguilar
+# Date    : Fri Aug 12 15:50:31 CDT 2011
+# Testing : SmartReflex, CPU freq and CPU governors:
+#           Iterate for a period of time over all the available frequencies
+#           and CPU governors keeping CPU1 offile with SmartReflex enabled
+# Results : All the frequencies, governors should be set correctly
+#           There should be any lockup or system crash
+###############################################################################
+
+# Begin L_DD_PM_COMBO_0001
+
+# Enable SmartRelfex for all domains
+0001 set -x; handlerSmartReflex.sh enable all
+
+# Setting CPU1 offline
+0002 set -x; handlerSysFs.sh "set" $SYSFS_CPU1_ONLINE 0
+0003 set -x; handlerSysFs.sh "compare" $SYSFS_CPU1_ONLINE 0
+
+# Obtain current cpu governor to be restored at the end of the test
+0004 set -x; handlerCpuFreqScalGovernors.sh get
+
+# Ensure CPU1 is still offline
+0005 set -x; handlerSysFs.sh "set" $SYSFS_CPU1_ONLINE 0
+0006 set -x; handlerSysFs.sh "compare" $SYSFS_CPU1_ONLINE 0
+
+# Iterate for a period of time over all the available frequencies
+0007 set -x; handlerCpuFreqScalFrequencies.sh run all "sleep 60"
+
+# Iterate for a period of time over all the cpu governors
+0008 set -x; handlerCpuFreqScalGovernors.sh run all "sleep 60"
+
+0009 set -x; handlerCpuFreqScalGovernors.sh restore
+
+# End L_DD_PM_COMBO_0001
