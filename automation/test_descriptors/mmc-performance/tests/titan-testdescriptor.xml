@@ -1,0 +1,231 @@
+<?xml version="1.0"?>
+<titan>
+
+	<test id="L_DD_MMC_SD_PERF_0005_0001">
+
+		<information>
+			<autor> Jyothi PK </autor>
+			<description> Synchronous - Write 1 GB - FAT formated </description>
+			<dateofcreation> 9/26/2011 </dateofcreation>
+		</information>
+
+		<run>
+			<action>
+				<deviceundertest>reboot</deviceundertest>
+			</action>
+			<action>
+				<command>export SLOT=0</command>
+			</action>
+			<action>
+				<command>/testsuites/mmc/scripts/test_runner.sh L_DD_MMC_SD_PERF_0000_0001</command>
+			</action>
+			<action>
+				<command>rm log.*</command>
+			</action>
+		</run>
+
+		<pass>
+			<output>
+				<value>stat=0</value>
+			</output>
+		</pass>
+
+		<fail>
+			<timeout time="500"/>
+			<output>
+				<regularexpression>stat=[^0]\d*</regularexpression>
+			</output>
+		</fail>
+
+	</test>
+
+<test id="L_DD_MMC_SD_PERF_0005_0002">
+
+		<information>
+			<autor> Jyothi PK </autor>
+			<description> Asynchronous - Write 1 GB - FAT formated </description>
+			<dateofcreation> 9/26/2011 </dateofcreation>
+		</information>
+
+		<run>
+			<action>
+				<deviceundertest>reboot</deviceundertest>
+			</action>
+			<action>
+				<command>export SLOT=0</command>
+			</action>
+			<action>
+				<command>/testsuites/mmc/scripts/test_runner.sh L_DD_MMC_SD_PERF_0000_0003</command>
+			</action>
+			<action>
+				<command>rm log.*</command>
+			</action>
+		</run>
+
+		<pass>
+			<output>
+				<value>stat=0</value>
+			</output>
+		</pass>
+
+		<fail>
+			<timeout time="500"/>
+			<output>
+				<regularexpression>stat=[^0]\d*</regularexpression>
+			</output>
+		</fail>
+
+	</test>
+
+<test id="L_DD_MMC_SD_PERF_0010_0001">
+
+		<information>
+			<autor> Jyothi PK </autor>
+			<description> Synchronous - Write 1 GB - EXT3 formated </description>
+			<dateofcreation> 9/26/2011 </dateofcreation>
+		</information>
+
+		<run>
+			<action>
+				<deviceundertest>reboot</deviceundertest>
+			</action>
+			<action>
+				<command>export SLOT=0</command>
+			</action>
+			<action>
+				<command>/testsuites/mmc/scripts/test_runner.sh L_DD_MMC_SD_PERF_0000_0005</command>
+			</action>
+			<action>
+				<command>rm log.*</command>
+			</action>
+		</run>
+
+		<pass>
+			<output>
+				<value>stat=0</value>
+			</output>
+		</pass>
+
+		<fail>
+			<timeout time="500"/>
+			<output>
+				<regularexpression>stat=[^0]\d*</regularexpression>
+			</output>
+		</fail>
+
+	</test>
+	
+<test id="L_DD_MMC_SD_PERF_0010_0002">
+
+		<information>
+			<autor> Jyothi PK </autor>
+			<description> Asynchronous - Write 1 GB - EXT3 formated </description>
+			<dateofcreation> 9/26/2011 </dateofcreation>
+		</information>
+
+		<run>
+			<action>
+				<deviceundertest>reboot</deviceundertest>
+			</action>
+			<action>
+				<command>export SLOT=0</command>
+			</action>
+			<action>
+				<command>/testsuites/mmc/scripts/test_runner.sh L_DD_MMC_SD_PERF_0000_0007</command>
+			</action>
+			<action>
+				<command>rm log.*</command>
+			</action>
+		</run>
+
+		<pass>
+			<output>
+				<value>stat=0</value>
+			</output>
+		</pass>
+
+		<fail>
+			<timeout time="500"/>
+			<output>
+				<regularexpression>stat=[^0]\d*</regularexpression>
+			</output>
+		</fail>
+
+	</test>
+
+<test id="L_DD_MMC_SD_PERF_0011_0001">
+
+		<information>
+			<autor> Jyothi PK </autor>
+			<description> Syncroneous - Read 1GB - RAW mode </description>
+			<dateofcreation> 9/26/2011 </dateofcreation>
+		</information>
+
+		<run>
+			<action>
+				<deviceundertest>reboot</deviceundertest>
+			</action>
+			<action>
+				<command>export SLOT=0</command>
+			</action>
+			<action>
+				<command>/testsuites/mmc/scripts/test_runner.sh L_DD_MMC_SD_PERF_0000_0008</command>
+			</action>
+			<action>
+				<command>rm log.*</command>
+			</action>
+		</run>
+
+		<pass>
+			<output>
+				<value>stat=0</value>
+			</output>
+		</pass>
+
+		<fail>
+			<timeout time="500"/>
+			<output>
+				<regularexpression>stat=[^0]\d*</regularexpression>
+			</output>
+		</fail>
+
+	</test>
+
+	<test id="L_DD_MMC_SD_PERF_0011_0002">
+
+		<information>
+			<autor> Jyothi PK </autor>
+			<description> Syncroneous - Write 1GB - RAW mode </description>
+			<dateofcreation> 9/26/2011 </dateofcreation>
+		</information>
+
+		<run>
+			<action>
+				<deviceundertest>reboot</deviceundertest>
+			</action>
+			<action>
+				<command>export SLOT=0</command>
+			</action>
+			<action>
+				<command>/testsuites/mmc/scripts/test_runner.sh L_DD_MMC_SD_PERF_0000_0009</command>
+			</action>
+			<action>
+				<command>rm log.*</command>
+			</action>
+		</run>
+
+		<pass>
+			<output>
+				<value>stat=0</value>
+			</output>
+		</pass>
+
+		<fail>
+			<timeout time="500"/>
+			<output>
+				<regularexpression>stat=[^0]\d*</regularexpression>
+			</output>
+		</fail>
+
+	</test>
+</titan>
