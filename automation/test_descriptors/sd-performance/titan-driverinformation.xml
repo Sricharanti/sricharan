@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<titan>
+
+	<driverinformation>
+		<name>SD- performance tests</name>
+		<description>Tests suites for performance tests of SD</description>
+	</driverinformation>
+
+</titan>
