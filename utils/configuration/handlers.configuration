@@ -325,9 +325,9 @@ if [ `cat $SYSFS_BOARD_REV | grep -wc "Tablet"` -ge 1 -o \
 	# OMAP GPIO Keypad for Tablet
 	export omapKeypadEvent="/dev/input/event0"
 	# Headset Jack for SDP4430
-	export headsetJackEvent="/dev/input/event7"
+	export headsetJackEvent="/dev/input/event9"
 	# TWL6030 Power Button event
-	export omapPowerButtonEvent="/dev/input/event2"
+	export omapPowerButtonEvent="/dev/input/event3"
 	# TODO: export sensor input events
 
 	# These are all the availables keys in the Tablet
