@@ -174,6 +174,11 @@ export UART_TEST_PORT2="ttyO1"
 export UART_TEST_PORT3="ttyO2"
 export UART_TEST_PORT4="ttyO3"
 
+export UART_TEST_PORT1_IRQ="104"
+export UART_TEST_PORT2_IRQ="105"
+export UART_TEST_PORT3_IRQ="106"
+export UART_TEST_PORT4_IRQ="102"
+
 #-----------------------------------------------------------------------------------
 
 # Remove all existing references for handlerError.shz
