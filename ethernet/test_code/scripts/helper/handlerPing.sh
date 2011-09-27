@@ -21,6 +21,11 @@ if [ $? -eq 1 ]; then
 	exit 1
 fi
 
+if [ -x $IPADDR] ; then
+	echo -e "\n SERVER/REMOTE IP ADDRESS TO PING IS MISSING EXPORT IPADDR \n"
+	exit 1
+fi
+
 ping $LOCAL_ARGUMENTS
 
 # End of file
