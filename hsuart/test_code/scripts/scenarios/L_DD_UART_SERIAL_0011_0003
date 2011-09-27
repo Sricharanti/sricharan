@@ -16,7 +16,7 @@
 
 03  set -x; sleep 10
 
-04  set -x; handlerFile.sh "create" "pattern" "$TMPFILE/text.file" "1000"
-05  set -x; handlerIrqAffinity.sh "switch" "cat $TMPFILE/text.file" "10" "5" "$UART_TEST_PORT3_IRQ"
+04  set -x; handlerFile.sh "create" "pattern" "$TMPFILE" "1000"
+05  set -x; handlerIrqAffinity.sh "switch" "cat $TMPFILE" "10" "5" "$UART_TEST_PORT3_IRQ"
 
 # End L_DD_UART_SERIAL_0011_0003
