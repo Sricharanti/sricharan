@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <titan>
 
-	<test id="L_DD_TIMER_0001_0001">
+	<test id="L_DD_TIMERS_0001_0001">
 
 		<information>
 			<autor> Cristopherson Torres </autor>
@@ -36,7 +36,7 @@
 
 	</test>
 
-	<test id="L_DD_TIMER_0002_0001">
+	<test id="L_DD_TIMERS_0002_0001">
 
 		<information>
 			<autor> Cristopherson Torres </autor>
@@ -70,7 +70,7 @@
 		</fail>
 
 	</test>
-	<test id="L_DD_TIMER_0003_0001">
+	<test id="L_DD_TIMERS_0003_0001">
 
 		<information>
 			<autor> Tarun </autor>
@@ -104,7 +104,7 @@
 		</fail>
 
 	</test>
-	<test id="L_DD_TIMER_0004_0001">
+	<test id="L_DD_TIMERS_0004_0001">
 
 		<information>
 			<autor> Cristopherson Torres </autor>
