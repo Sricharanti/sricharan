@@ -577,4 +577,39 @@
 
 	</test>
 
+<test id="L_DD_RTC_0008_0001">
+
+		<information>
+			<autor> Misael Lopez Cruz </autor>
+			<description> RTC driver shall support configuration of the time in (year/month/week/hour/minute/second) format.</description>
+			<dateofcreation> 10/05/2006 </dateofcreation>
+		</information>
+
+		<run>
+			<action>
+				<command>/testsuites/realtimeclock/scripts/test_runner.sh L_DD_RTC_0008_0001</command>
+			</action>
+			<action>
+				<command>rm /testsuites/realtimeclock/scripts/log.*</command>
+			</action>
+		</run>
+
+		<pass>
+			<output>
+				<value>stat=0</value>
+			</output>
+		</pass>
+
+		<fail>
+			<timeout time="100"/>
+			<output>
+				<regularexpression>stat=[^0]\d*</regularexpression>
+			</output>
+		</fail>
+
+	</test>
+
+
+
+
 </titan>
