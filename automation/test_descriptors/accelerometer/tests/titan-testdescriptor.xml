@@ -284,7 +284,288 @@
 		</fail>
 
 	</test>
+<test id="L_DD_ACCELEROMETER_0000_0013">
+
+		<information>
+			<autor> Jyothi PK </autor>
+			<description> Android Accelerometer Enable Support</description>
+			<dateofcreation> 07/14/2010 </dateofcreation>
+		</information>
+
+		<run>
+			<action>
+				<command>/testsuites/accelerometer/scripts/test_runner.sh L_DD_ACCELEROMETER_0000_0013</command>
+			</action>
+			<action>
+				<command>rm /testsuites/accelerometer/scripts/log.*</command>
+			</action>
+		</run>
+
+		<pass>
+			<output>
+				<value>stat=0</value>
+			</output>
+		</pass>
+
+		<fail>
+			<timeout time="300"/>
+			<output>
+				<regularexpression>stat=[^0]\d*</regularexpression>
+			</output>
+		</fail>
+
+	</test>
 
 	
+<test id="L_DD_ACCELEROMETER_0000_0014">
 
+		<information>
+			<autor>Jyothi PK</autor>
+			<description>Android Accelerometer Delay Support</description>
+			<dateofcreation> 07/14/2010 </dateofcreation>
+		</information>
+
+		<run>
+			<action>
+				<command>/testsuites/accelerometer/scripts/test_runner.sh L_DD_ACCELEROMETER_0000_0014</command>
+			</action>
+			<action>
+				<command>rm /testsuites/accelerometer/scripts/log.*</command>
+			</action>
+		</run>
+
+		<pass>
+			<output>
+				<value>stat=0</value>
+			</output>
+		</pass>
+
+		<fail>
+			<timeout time="300"/>
+			<output>
+				<regularexpression>stat=[^0]\d*</regularexpression>
+			</output>
+		</fail>
+
+	</test>
+<test id="L_DD_ACCELEROMETER_0000_0015">
+
+		<information>
+			<autor> Jyothi PK </autor>
+			<description> Android Out of Bounds Test on enable</description>
+			<dateofcreation> 07/14/2010 </dateofcreation>
+		</information>
+
+		<run>
+			<action>
+				<command>/testsuites/accelerometer/scripts/test_runner.sh L_DD_ACCELEROMETER_0000_0015</command>
+			</action>
+			<action>
+				<command>rm /testsuites/accelerometer/scripts/log.*</command>
+			</action>
+		</run>
+
+		<pass>
+			<output>
+				<value>stat=0</value>
+			</output>
+		</pass>
+
+		<fail>
+			<timeout time="300"/>
+			<output>
+				<regularexpression>stat=[^0]\d*</regularexpression>
+			</output>
+		</fail>
+
+	</test>
+<test id="L_DD_ACCELEROMETER_0000_0016">
+
+		<information>
+			<autor> Jyothi PK </autor>
+			<description>Android Out of Bounds Test on delay</description>
+			<dateofcreation> 07/14/2010 </dateofcreation>
+		</information>
+
+		<run>
+			<action>
+				<command>/testsuites/accelerometer/scripts/test_runner.sh L_DD_ACCELEROMETER_0000_0016</command>
+			</action>
+			<action>
+				<command>rm /testsuites/accelerometer/scripts/log.*</command>
+			</action>
+		</run>
+
+		<pass>
+			<output>
+				<value>stat=0</value>
+			</output>
+		</pass>
+
+		<fail>
+			<timeout time="300"/>
+			<output>
+				<regularexpression>stat=[^0]\d*</regularexpression>
+			</output>
+		</fail>
+
+	</test>
+<test id="L_DD_ACCELEROMETER_0000_0018">
+
+		<information>
+			<autor> Jyothi PK</autor>
+			<description>Out of Bounds Test on mode</description>
+			<dateofcreation> 07/14/2010 </dateofcreation>
+		</information>
+
+		<run>
+			<action>
+				<command>/testsuites/accelerometer/scripts/test_runner.sh L_DD_ACCELEROMETER_0000_0018</command>
+			</action>
+			<action>
+				<command>rm /testsuites/accelerometer/scripts/log.*</command>
+
+</action>
+		</run>
+
+		<pass>
+			<output>
+				<value>stat=0</value>
+			</output>
+		</pass>
+
+		<fail>
+			<timeout time="300"/>
+			<output>
+				<regularexpression>stat=[^0]\d*</regularexpression>
+			</output>
+		</fail>
+
+	</test>
+<test id="L_DD_ACCELEROMETER_0000_0019">
+
+		<information>
+			<autor>Jyothi PK</autor>
+			<description>Out of Bounds Test for the Motion Detect threshold</description>
+			<dateofcreation> 07/14/2010 </dateofcreation>
+		</information>
+
+		<run>
+			<action>
+				<command>/testsuites/accelerometer/scripts/test_runner.sh L_DD_ACCELEROMETER_0000_0019</command>
+			</action>
+			<action>
+				<command>rm /testsuites/accelerometer/scripts/log.*</command>
+			</action>
+		</run>
+
+		<pass>
+			<output>
+				<value>stat=0</value>
+			</output>
+		</pass>
+
+		<fail>
+			<timeout time="300"/>
+			<output>
+				<regularexpression>stat=[^0]\d*</regularexpression>
+			</output>
+		</fail>
+
+	</test>
+<test id="L_DD_ACCELEROMETER_0000_0020">
+
+		<information>
+			<autor>Jyothi PK</autor>
+			<description> Out of Bounds Test on grange</description>
+			<dateofcreation> 07/14/2010 </dateofcreation>
+		</information>
+
+		<run>
+			<action>
+				<command>/testsuites/accelerometer/scripts/test_runner.sh L_DD_ACCELEROMETER_0000_0020</command>
+			</action>
+			<action>
+				<command>rm /testsuites/accelerometer/scripts/log.*</command>
+			</action>
+		</run>
+
+		<pass>
+			<output>
+	
+<value>stat=0</value>
+			</output>
+		</pass>
+
+		<fail>
+			<timeout time="300"/>
+			<output>
+				<regularexpression>stat=[^0]\d*</regularexpression>
+			</output>
+		</fail>
+
+	</test>
+<test id="L_DD_ACCELEROMETER_0000_0023">
+
+		<information>
+			<autor> Jyothi PK</autor>
+			<description>Out of Bounds Test on the free fall threshold</description>
+			<dateofcreation> 07/14/2010 </dateofcreation>
+		</information>
+
+		<run>
+			<action>
+				<command>/testsuites/accelerometer/scripts/test_runner.sh L_DD_ACCELEROMETER_0000_0023</command>
+			</action>
+			<action>
+				<command>rm /testsuites/accelerometer/scripts/log.*</command>
+			</action>
+		</run>
+
+		<pass>
+			<output>
+				<value>stat=0</value>
+			</output>
+		</pass>
+
+		<fail>
+			<timeout time="300"/>
+
+<output>
+				<regularexpression>stat=[^0]\d*</regularexpression>
+			</output>
+		</fail>
+
+	</test>
+<test id="L_DD_ACCELEROMETER_0000_0024">
+
+		<information>
+			<autor> Jyothi PK</autor>
+			<description>Out of Bounds Test for the Motion Detect threshold</description>
+			<dateofcreation> 07/14/2010 </dateofcreation>
+		</information>
+
+		<run>
+			<action>
+				<command>/testsuites/accelerometer/scripts/test_runner.sh L_DD_ACCELEROMETER_0000_0024</command>
+			</action>
+			<action>
+				<command>rm /testsuites/accelerometer/scripts/log.*</command>
+			</action>
+		</run>
+
+		<pass>
+			<output>
+				<value>stat=0</value>
+			</output>
+		</pass>
+
+		<fail>
+			<timeout time="300"/>
+			<output>
+				<regularexpression>stat=[^0]\d*</regularexpression>
+			</output>
+		</fail>
+
+	</test>
 </titan>
