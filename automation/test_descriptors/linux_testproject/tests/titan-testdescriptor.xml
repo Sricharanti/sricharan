@@ -29,7 +29,7 @@
 
  <pass>
   <output>
-    <value>stat=0</value>
+    <value>ltp-pan reported all tests PASS</value>
   </output>
  </pass>
 
@@ -69,7 +69,7 @@
 
  <pass>
   <output>
-    <value>stat=0</value>
+    <value>ltp-pan reported all tests PASS</value>
   </output>
  </pass>
 
@@ -109,7 +109,7 @@
 
  <pass>
   <output>
-    <value>stat=0</value>
+    <value>ltp-pan reported all tests PASS</value>
   </output>
  </pass>
 
@@ -149,7 +149,7 @@
 
  <pass>
   <output>
-    <value>stat=0</value>
+    <value>ltp-pan reported all tests PASS</value>
   </output>
  </pass>
 
@@ -189,7 +189,7 @@
 
  <pass>
   <output>
-    <value>stat=0</value>
+    <value>ltp-pan reported all tests PASS</value>
   </output>
  </pass>
 
@@ -229,7 +229,7 @@
 
  <pass>
   <output>
-    <value>stat=0</value>
+    <value>ltp-pan reported all tests PASS</value>
   </output>
  </pass>
 
@@ -270,7 +270,7 @@
 
  <pass>
   <output>
-    <value>stat=0</value>
+    <value>ltp-pan reported all tests PASS</value>
   </output>
  </pass>
 
@@ -310,7 +310,7 @@
 
  <pass>
   <output>
-    <value>stat=0</value>
+    <value>ltp-pan reported all tests PASS</value>
   </output>
  </pass>
 
@@ -350,7 +350,7 @@
 
  <pass>
   <output>
-    <value>stat=0</value>
+    <value>ltp-pan reported all tests PASS</value>
   </output>
  </pass>
 
@@ -391,7 +391,7 @@
 
  <pass>
   <output>
-    <value>stat=0</value>
+    <value>ltp-pan reported all tests PASS</value>
   </output>
  </pass>
 
@@ -431,7 +431,7 @@
 
  <pass>
   <output>
-    <value>stat=0</value>
+    <value>ltp-pan reported all tests PASS</value>
   </output>
  </pass>
 
@@ -471,7 +471,7 @@
 
  <pass>
   <output>
-    <value>stat=0</value>
+    <value>ltp-pan reported all tests PASS</value>
   </output>
  </pass>
 
@@ -511,7 +511,7 @@
 
  <pass>
   <output>
-    <value>stat=0</value>
+    <value>ltp-pan reported all tests PASS</value>
   </output>
  </pass>
 
@@ -551,7 +551,688 @@
 
  <pass>
   <output>
-    <value>stat=0</value>
+    <value>ltp-pan reported all tests PASS</value>
+  </output>
+ </pass>
+
+ <fail>
+   <timeout time="7200"/>
+  <output>
+    <regularexpression>stat=[^0]\d*</regularexpression>
+  </output>
+ </fail>
+
+</test>
+
+<test id="15 Admin tools">
+
+ <information>
+  <autor> Jyothi PK </autor>
+  <description>
+		Test Admin tools
+	</description>
+  <dateofcreation> 7/5/2011 </dateofcreation>
+ </information>
+
+ <run>
+	<action>
+		<deviceundertest>reboot</deviceundertest>
+	</action>
+  <action>
+      <command>rm /temp; rm /temp.failed</command>
+  </action>
+  <action>
+      <command>/ltp/runltp -l /temp -C /temp.failed -f admin_tools</command>
+  </action>
+  <action>
+      <command>cat /temp; echo; cat /temp.failed</command>
+  </action>
+ </run>
+
+ <pass>
+  <output>
+    <value>ltp-pan reported all tests PASS</value>
+  </output>
+ </pass>
+
+ <fail>
+   <timeout time="7200"/>
+  <output>
+    <regularexpression>stat=[^0]\d*</regularexpression>
+  </output>
+ </fail>
+
+</test>
+
+<test id="16 Ballista">
+
+ <information>
+  <autor> Jyothi PK </autor>
+  <description>
+		Ballista
+	</description>
+  <dateofcreation> 7/5/2011 </dateofcreation>
+ </information>
+
+ <run>
+	<action>
+		<deviceundertest>reboot</deviceundertest>
+	</action>
+  <action>
+      <command>rm /temp; rm /temp.failed</command>
+  </action>
+  <action>
+      <command>/ltp/runltp -l /temp -C /temp.failed -f ballista</command>
+  </action>
+  <action>
+      <command>cat /temp; echo; cat /temp.failed</command>
+  </action>
+ </run>
+
+ <pass>
+  <output>
+    <value>ltp-pan reported all tests PASS</value>
+  </output>
+ </pass>
+
+ <fail>
+   <timeout time="7200"/>
+  <output>
+    <regularexpression>stat=[^0]\d*</regularexpression>
+  </output>
+ </fail>
+
+</test>
+
+<test id="17 COmmands">
+
+ <information>
+  <autor> Jyothi PK </autor>
+  <description>
+		commands
+	</description>
+  <dateofcreation> 7/5/2011 </dateofcreation>
+ </information>
+
+ <run>
+	<action>
+		<deviceundertest>reboot</deviceundertest>
+	</action>
+  <action>
+      <command>rm /temp; rm /temp.failed</command>
+  </action>
+  <action>
+      <command>/ltp/runltp -l /temp -C /temp.failed -f commands</command>
+  </action>
+  <action>
+      <command>cat /temp; echo; cat /temp.failed</command>
+  </action>
+ </run>
+
+ <pass>
+  <output>
+    <value>ltp-pan reported all tests PASS</value>
+  </output>
+ </pass>
+
+ <fail>
+   <timeout time="7200"/>
+  <output>
+    <regularexpression>stat=[^0]\d*</regularexpression>
+  </output>
+ </fail>
+
+</test>
+
+<test id="18 File Caps">
+
+ <information>
+  <autor> Jyothi PK </autor>
+  <description>
+		File Caps
+	</description>
+  <dateofcreation> 7/5/2011 </dateofcreation>
+ </information>
+
+ <run>
+	<action>
+		<deviceundertest>reboot</deviceundertest>
+	</action>
+  <action>
+      <command>rm /temp; rm /temp.failed</command>
+  </action>
+  <action>
+      <command>/ltp/runltp -l /temp -C /temp.failed -f filecaps</command>
+  </action>
+  <action>
+      <command>cat /temp; echo; cat /temp.failed</command>
+  </action>
+ </run>
+
+ <pass>
+  <output>
+    <value>ltp-pan reported all tests PASS</value>
+  </output>
+ </pass>
+
+ <fail>
+   <timeout time="7200"/>
+  <output>
+    <regularexpression>stat=[^0]\d*</regularexpression>
+  </output>
+ </fail>
+
+</test>
+
+<test id="19 File bind">
+
+ <information>
+  <autor> Jyothi PK </autor>
+  <description>
+		File bind
+	</description>
+  <dateofcreation> 7/5/2011 </dateofcreation>
+ </information>
+
+ <run>
+	<action>
+		<deviceundertest>reboot</deviceundertest>
+	</action>
+  <action>
+      <command>rm /temp; rm /temp.failed</command>
+  </action>
+  <action>
+      <command>/ltp/runltp -l /temp -C /temp.failed -f fs_bind</command>
+  </action>
+  <action>
+      <command>cat /temp; echo; cat /temp.failed</command>
+  </action>
+ </run>
+
+ <pass>
+  <output>
+    <value>ltp-pan reported all tests PASS</value>
+  </output>
+ </pass>
+
+ <fail>
+   <timeout time="7200"/>
+  <output>
+    <regularexpression>stat=[^0]\d*</regularexpression>
+  </output>
+ </fail>
+
+</test>
+
+
+<test id="20 FS_ext4">
+
+ <information>
+  <autor> Jyothi PK </autor>
+  <description>
+		File ext4
+	</description>
+  <dateofcreation> 7/5/2011 </dateofcreation>
+ </information>
+
+ <run>
+	<action>
+		<deviceundertest>reboot</deviceundertest>
+	</action>
+  <action>
+      <command>rm /temp; rm /temp.failed</command>
+  </action>
+  <action>
+      <command>/ltp/runltp -l /temp -C /temp.failed -f fs_ext4</command>
+  </action>
+  <action>
+      <command>cat /temp; echo; cat /temp.failed</command>
+  </action>
+ </run>
+
+ <pass>
+  <output>
+    <value>ltp-pan reported all tests PASS</value>
+  </output>
+ </pass>
+
+ <fail>
+   <timeout time="7200"/>
+  <output>
+    <regularexpression>stat=[^0]\d*</regularexpression>
+  </output>
+ </fail>
+
+</test>
+
+<test id="21 file readonly">
+
+ <information>
+  <autor> Jyothi PK </autor>
+  <description>
+		File readonly
+	</description>
+  <dateofcreation> 7/5/2011 </dateofcreation>
+ </information>
+
+ <run>
+	<action>
+		<deviceundertest>reboot</deviceundertest>
+	</action>
+  <action>
+      <command>rm /temp; rm /temp.failed</command>
+  </action>
+  <action>
+      <command>/ltp/runltp -l /temp -C /temp.failed -f fs_readonly</command>
+  </action>
+  <action>
+      <command>cat /temp; echo; cat /temp.failed</command>
+  </action>
+ </run>
+
+ <pass>
+  <output>
+    <value>ltp-pan reported all tests PASS</value>
+  </output>
+ </pass>
+
+ <fail>
+   <timeout time="7200"/>
+  <output>
+    <regularexpression>stat=[^0]\d*</regularexpression>
+  </output>
+ </fail>
+
+</test>
+
+<test id="22 HUge MMAP">
+
+ <information>
+  <autor> Jyothi PK </autor>
+  <description>
+		HUGe TLB
+	</description>
+  <dateofcreation> 7/5/2011 </dateofcreation>
+ </information>
+
+ <run>
+	<action>
+		<deviceundertest>reboot</deviceundertest>
+	</action>
+  <action>
+      <command>rm /temp; rm /temp.failed</command>
+  </action>
+  <action>
+      <command>/ltp/runltp -l /temp -C /temp.failed -f hugetlb</command>
+  </action>
+  <action>
+      <command>cat /temp; echo; cat /temp.failed</command>
+  </action>
+ </run>
+
+ <pass>
+  <output>
+    <value>ltp-pan reported all tests PASS</value>
+  </output>
+ </pass>
+
+ <fail>
+   <timeout time="7200"/>
+  <output>
+    <regularexpression>stat=[^0]\d*</regularexpression>
+  </output>
+ </fail>
+
+</test>
+
+<test id="23 IO">
+
+ <information>
+  <autor> Jyothi PK </autor>
+  <description>
+		IO
+	</description>
+  <dateofcreation> 7/5/2011 </dateofcreation>
+ </information>
+
+ <run>
+	<action>
+		<deviceundertest>reboot</deviceundertest>
+	</action>
+  <action>
+      <command>rm /temp; rm /temp.failed</command>
+  </action>
+  <action>
+      <command>/ltp/runltp -l /temp -C /temp.failed -f io</command>
+  </action>
+  <action>
+      <command>cat /temp; echo; cat /temp.failed</command>
+  </action>
+ </run>
+
+ <pass>
+  <output>
+    <value>ltp-pan reported all tests PASS</value>
+  </output>
+ </pass>
+
+ <fail>
+   <timeout time="7200"/>
+  <output>
+    <regularexpression>stat=[^0]\d*</regularexpression>
+  </output>
+ </fail>
+
+</test>
+
+<test id="24 LTPLITE">
+
+ <information>
+  <autor> Jyothi PK </autor>
+  <description>
+	LTPLITE
+	</description>
+  <dateofcreation> 7/5/2011 </dateofcreation>
+ </information>
+
+ <run>
+	<action>
+		<deviceundertest>reboot</deviceundertest>
+	</action>
+  <action>
+      <command>rm /temp; rm /temp.failed</command>
+  </action>
+  <action>
+      <command>/ltp/runltp -l /temp -C /temp.failed -f ltplite</command>
+  </action>
+  <action>
+      <command>cat /temp; echo; cat /temp.failed</command>
+  </action>
+ </run>
+
+ <pass>
+  <output>
+    <value>ltp-pan reported all tests PASS</value>
+  </output>
+ </pass>
+
+ <fail>
+   <timeout time="7200"/>
+  <output>
+    <regularexpression>stat=[^0]\d*</regularexpression>
+  </output>
+ </fail>
+
+</test>
+
+<test id="25 MM">
+
+ <information>
+  <autor> Jyothi PK </autor>
+  <description>
+		Memory management
+	</description>
+  <dateofcreation> 7/5/2011 </dateofcreation>
+ </information>
+
+ <run>
+	<action>
+		<deviceundertest>reboot</deviceundertest>
+	</action>
+  <action>
+      <command>rm /temp; rm /temp.failed</command>
+  </action>
+  <action>
+      <command>/ltp/runltp -l /temp -C /temp.failed -f mm</command>
+  </action>
+  <action>
+      <command>cat /temp; echo; cat /temp.failed</command>
+  </action>
+ </run>
+
+ <pass>
+  <output>
+    <value>ltp-pan reported all tests PASS</value>
+  </output>
+ </pass>
+
+ <fail>
+   <timeout time="7200"/>
+  <output>
+    <regularexpression>stat=[^0]\d*</regularexpression>
+  </output>
+ </fail>
+
+</test>
+
+<test id="26 Kernel modules">
+
+ <information>
+  <autor> Jyothi PK </autor>
+  <description>
+		Kernel modules
+	</description>
+  <dateofcreation> 7/5/2011 </dateofcreation>
+ </information>
+
+ <run>
+	<action>
+		<deviceundertest>reboot</deviceundertest>
+	</action>
+  <action>
+      <command>rm /temp; rm /temp.failed</command>
+  </action>
+  <action>
+      <command>/ltp/runltp -l /temp -C /temp.failed -f modules</command>
+  </action>
+  <!--<action>
+      <command>cat /temp; echo; cat /temp.failed</command>
+  </action>-->
+ </run>
+
+ <pass>
+  <output>
+    <value>ltp-pan reported all tests PASS</value>
+  </output>
+ </pass>
+
+ <fail>
+   <timeout time="7200"/>
+  <output>
+    <regularexpression>stat=[^0]\d*</regularexpression>
+  </output>
+ </fail>
+
+</test>
+
+<test id="27 Multicast">
+
+ <information>
+  <autor> Jyothi PK </autor>
+  <description>
+		Kernel modules
+	</description>
+  <dateofcreation> 7/5/2011 </dateofcreation>
+ </information>
+
+ <run>
+	<action>
+		<deviceundertest>reboot</deviceundertest>
+	</action>
+  <action>
+      <command>rm /temp; rm /temp.failed</command>
+  </action>
+  <action>
+      <command>/ltp/runltp -l /temp -C /temp.failed -f multicast</command>
+  </action>
+  <!--<action>
+      <command>cat /temp; echo; cat /temp.failed</command>
+  </action>-->
+ </run>
+
+ <pass>
+  <output>
+    <value>0</value>
+  </output>
+ </pass>
+
+ <fail>
+   <timeout time="7200"/>
+  <output>
+    <regularexpression>stat=[^0]\d*</regularexpression>
+  </output>
+ </fail>
+
+</test>
+
+<test id="28 P9Auth">
+
+ <information>
+  <autor> Jyothi PK </autor>
+  <description>
+		Kernel modules
+	</description>
+  <dateofcreation> 7/5/2011 </dateofcreation>
+ </information>
+
+ <run>
+	<action>
+		<deviceundertest>reboot</deviceundertest>
+	</action>
+  <action>
+      <command>rm /temp; rm /temp.failed</command>
+  </action>
+  <action>
+      <command>/ltp/runltp -l /temp -C /temp.failed -f p9auth</command>
+  </action>
+  <!--<action>
+      <command>cat /temp; echo; cat /temp.failed</command>
+  </action>-->
+ </run>
+
+ <pass>
+  <output>
+    <value>ltp-pan reported all tests PASS</value>
+  </output>
+ </pass>
+
+ <fail>
+   <timeout time="7200"/>
+  <output>
+    <regularexpression>stat=[^0]\d*</regularexpression>
+  </output>
+ </fail>
+
+</test>
+
+<test id="29 Performance counters">
+
+ <information>
+  <autor> Jyothi PK </autor>
+  <description>
+		Kernel modules
+	</description>
+  <dateofcreation> 7/5/2011 </dateofcreation>
+ </information>
+
+ <run>
+	<action>
+		<deviceundertest>reboot</deviceundertest>
+	</action>
+  <action>
+      <command>rm /temp; rm /temp.failed</command>
+  </action>
+  <action>
+      <command>/ltp/runltp -l /temp -C /temp.failed -f perfcounters</command>
+  </action>
+  <!--<action>
+      <command>cat /temp; echo; cat /temp.failed</command>
+  </action>-->
+ </run>
+
+ <pass>
+  <output>
+    <value>ltp-pan reported all tests PASS</value>
+  </output>
+ </pass>
+
+ <fail>
+   <timeout time="7200"/>
+  <output>
+    <regularexpression>stat=[^0]\d*</regularexpression>
+  </output>
+ </fail>
+
+</test>
+
+<test id="30 Power management tests">
+
+ <information>
+  <autor> Jyothi PK </autor>
+  <description>
+		Kernel modules
+	</description>
+  <dateofcreation> 7/5/2011 </dateofcreation>
+ </information>
+
+ <run>
+	<action>
+		<deviceundertest>reboot</deviceundertest>
+	</action>
+  <action>
+      <command>rm /temp; rm /temp.failed</command>
+  </action>
+  <action>
+      <command>/ltp/runltp -l /temp -C /temp.failed -f power_management_tests</command>
+  </action>
+  <!--<action>
+      <command>cat /temp; echo; cat /temp.failed</command>
+  </action>-->
+ </run>
+
+ <pass>
+  <output>
+    <value>ltp-pan reported all tests PASS</value>
+  </output>
+ </pass>
+
+ <fail>
+   <timeout time="7200"/>
+  <output>
+    <regularexpression>stat=[^0]\d*</regularexpression>
+  </output>
+ </fail>
+
+</test>
+
+<test id="31 PTY">
+
+ <information>
+  <autor> Jyothi PK </autor>
+  <description>
+		Kernel modules
+	</description>
+  <dateofcreation> 7/5/2011 </dateofcreation>
+ </information>
+
+ <run>
+	<action>
+		<deviceundertest>reboot</deviceundertest>
+	</action>
+  <action>
+      <command>rm /temp; rm /temp.failed</command>
+  </action>
+  <action>
+      <command>/ltp/runltp -l /temp -C /temp.failed -f pty</command>
+  </action>
+  <!--<action>
+      <command>cat /temp; echo; cat /temp.failed</command>
+  </action>-->
+ </run>
+
+ <pass>
+  <output>
+    <value>ltp-pan reported all tests PASS</value>
   </output>
  </pass>
 
