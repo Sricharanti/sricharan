@@ -1,15 +1,12 @@
 ###############################################################################
 # Scenario: L_DD_I2C_0007_0001
 # Author  : Nishanth Menon
-# Modifications : Abraham Arce, Aharon Campos
-# Date    : October 23, 2009
+# Modified: Abraham Arce, Aharon Campos, Leed Aguilar
+# Date    : October 25, 2011
 ###############################################################################
 
 # Begin L_DD_I2C_0007_0001
 
-0001  set -x; handlerProcessParallelism.sh "clean"
-0002  set -x; handlerProcessParallelism.sh "add" "$UTILS_DIR_SCRIPTS/dvfs.opp.sh"
-0003  set -x; handlerProcessParallelism.sh "add" "runtestcase.sh $I2C_EXISTING_DEVICES $I2C_STANDARD_MODE "
-0004  set -x; handlerProcessParallelism.sh "execute"
+0001 set -x; handlerCpuFreqScalFrequencies.sh run all "runtestcase.sh $I2C_EXISTING_DEVICES $I2C_STANDARD_MODE"
 
 # End L_DD_I2C_0007_0001
