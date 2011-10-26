@@ -18,7 +18,7 @@
 03  set -x; handlerProcessParallelism.sh "add" "$TESTSCRIPT/handlerHsuart.sh $UART_TEST_PORT4 3500000 0"
 04  set -x; handlerProcessParallelism.sh "execute"
 05  set -x; diff uart_tx_file_$UART_TEST_PORT1 uart_rx_file_$UART_TEST_PORT1 && exit 0 || exit 1
-06  set -x; diff uart_tx_file_$UART_TEST_PORT2 uart_rx_file_$UART_TEST_PORT2 && exit 0 || exit 1
+06  set -x; diff uart_tx_file_$UART_TEST_PORT4 uart_rx_file_$UART_TEST_PORT4 && exit 0 || exit 1
 
 07  set -x; sleep 10
 
