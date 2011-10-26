@@ -20,7 +20,7 @@
 
 # Ensure that the system is still running with both CPUs enabled
 0004 set -x; handlerSysFs.sh "set" $SYSFS_CPU1_ONLINE 1
-0005 set -x; handlerSysFs.sh "compare" $SYSFS_CPU1_ONLINE
+0005 set -x; handlerSysFs.sh "compare" $SYSFS_CPU1_ONLINE 1
 
 # Iterate for a period of time over all the cpu governors
 0006 set -x; handlerCpuFreqScalGovernors.sh run all "sleep 60"
