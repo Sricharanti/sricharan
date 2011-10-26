@@ -7,6 +7,6 @@
 
 # Begin L_DD_GPIO_0011_0001
 
-0001  set -x; echo "To be implemented" && exit 1
+0001 set -x; handlerCpuFreqScalFrequencies.sh run all "handlerGpioTest.sh run 1"
 
 # End L_DD_GPIO_0011_0001
