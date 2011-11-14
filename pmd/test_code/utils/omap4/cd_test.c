@@ -109,7 +109,6 @@ extern int clkdm_for_each(int (*fn)(struct clockdomain *clkdm, void *user),
 		        void *user);
 extern struct powerdomain *clkdm_get_pwrdm(struct clockdomain *clkdm);
 
-/* FIXME: Remove once dependency testing is supported
 extern int clkdm_add_wkdep(struct clockdomain *clkdm1, struct clockdomain *clkdm2);
 extern int clkdm_del_wkdep(struct clockdomain *clkdm1, struct clockdomain *clkdm2);
 extern int clkdm_read_wkdep(struct clockdomain *clkdm1, struct clockdomain *clkdm2);
@@ -118,7 +117,6 @@ extern int clkdm_add_sleepdep(struct clockdomain *clkdm1, struct clockdomain *cl
 extern int clkdm_del_sleepdep(struct clockdomain *clkdm1, struct clockdomain *clkdm2);
 extern int clkdm_read_sleepdep(struct clockdomain *clkdm1, struct clockdomain *clkdm2);
 extern int clkdm_clear_all_sleepdeps(struct clockdomain *clkdm);
- */
 
 extern void clkdm_allow_idle(struct clockdomain *clkdm);
 extern void clkdm_deny_idle(struct clockdomain *clkdm);
