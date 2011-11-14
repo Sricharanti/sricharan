@@ -26,6 +26,7 @@
 
 #include <linux/sched.h>
 #include <linux/kthread.h>
+#include <linux/unistd.h>
 
 #define PROC_FILE "driver/gpio_test_result"
 
@@ -39,6 +40,10 @@ static uint test_passed = 1;
 static uint error_flag_1 = 1, error_flag_2 = 1, error_flag_3 = 1;
 static uint iterations = 1;
 
+/* To ensure that we protect the global variable used in test case */
+static DEFINE_SPINLOCK(gpio_lock);
+unsigned int msleep( unsigned int milliseconds );
+
 module_param(iterations, int, S_IRUGO|S_IWUSR);
 module_param(test, int, S_IRUGO|S_IWUSR);
 module_param(gpio, int, S_IRUGO|S_IWUSR);
@@ -50,7 +55,9 @@ static void gpio_test_request(void)
 	printk(KERN_INFO "Reserving GPIO line %d\n", gpio);
 	ret = gpio_request(gpio, "titan_test");
 	if (!ret) {
+		spin_lock(&gpio_lock);
 		request_flag = 1;
+		spin_unlock(&gpio_lock);
 		printk(KERN_INFO "Succesfully Reserved GPIO %d\n", gpio);
 	} else
 		printk(KERN_ERR "GPIO line %d request: failed!\n", gpio);
@@ -137,20 +144,26 @@ static void gpio_test_irq(void)
 	}
 }
 
-void gpio_keep_reading(void *no_of_iterations)
+static int gpio_keep_reading(void *no_of_iterations)
 {
 	int loop;
-
 	for (loop = 0; loop < iterations; loop++) {
 		gpio_test_request();
+		spin_lock(&gpio_lock);
 		if (request_flag) {
-		printk(KERN_INFO "Running on %d ",smp_processor_id() );
+			request_flag = 0;
+			spin_unlock(&gpio_lock);
+			printk(KERN_INFO "Running on %d ",smp_processor_id() );
 			gpio_test_direction_input();
 			if (input_direction_flag)
 				gpio_test_read();
 			gpio_test_free();
-                }
-        }
+            }
+        else {
+			spin_unlock(&gpio_lock);
+		}
+    }
+    return 0;
 }
 
 static void gpio_test7(void)
@@ -410,6 +423,11 @@ static int __init gpio_test_init(void)
 
 static void __exit gpio_test_exit(void)
 {
+	/* This sleep is to ensure that both the asynchronous threads run to
+	 * completion before we exit the process, else we might exit before
+	 * threads run to completion resulting in a crash
+	 */
+	msleep (100);
 	/* Remove the proc entry */
 	remove_gpio_proc(PROC_FILE);
 	printk(KERN_INFO "\nGPIO Test Module Removal\n\n");
