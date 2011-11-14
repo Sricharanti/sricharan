@@ -60,6 +60,10 @@ export SYSFS_FB_BLANK=$SYSFS_GRAPHICS_FB/blank
 
 # /sys/devices/omapdss
 # /sys/devices/platform
+export SYSFS_OMAPDSS=/sys/devices/platform/omapdss/
+export SYSFS_OMAPDSS_OV0=$SYSFS_OMAPDSS/overlay0/
+export SYSFS_OMAPDSS_OV0_EN=$SYSFS_OMAPDSS_OV0/enabled
+
 # /sys/devices/system
 # /sys/devices/system/clocksource
 # /sys/devices/system/cpu
