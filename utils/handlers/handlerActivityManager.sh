@@ -83,10 +83,13 @@ android_browser_process="com.android.browser"
 android_setings_process="com.android.settings"
 android_launcher_process="com.android.launcher"
 android_wallpaper_picker="com.android.wallpaper.livepicker"
+android_gallery3d_process="com.android.gallery3d"
 
 # Android APPs
 app_gallery="$android_media_process/.Gallery"
+app_gallery3d="$android_gallery3d_process/.app.Gallery"
 app_movie_view="$android_media_process/.MovieView"
+app_movie3d_view="$android_gallery3d_process/.app.MovieActivity"
 app_omap4_camera="$android_omap4_cam_process/.Camera"
 app_video_camera="$android_omap4_cam_process/.VideoCamera"
 app_camera="$android_cam_process/.Camera"
@@ -102,10 +105,12 @@ app_live_wallpaper_picker="$android_wallpaper_picker/.LiveWallpaperListActivity"
 run_media_playback="$am_process_execute $app_media_playback"
 run_sound_recorder="$am_process_execute $app_sound_recorder"
 run_movie_view="$am_process_execute $app_movie_view"
+run_movie3d_view="$am_process_execute $app_movie3d_view"
 run_video_camera="$am_process_execute $app_video_camera"
 run_omap4_camera="$am_process_execute $app_omap4_camera"
 run_camera="$am_process_execute $app_camera"
 run_gallery="$am_process_execute $app_gallery"
+run_gallery3d="$am_process_execute $app_gallery3d"
 run_gears4android="$am_process_execute $app_gears4android"
 run_browser="$am_process_execute $app_browser"
 run_settings="$am_process_execute $app_setting"
@@ -115,7 +120,7 @@ run_live_wallpaper_picker="$am_process_execute $app_live_wallpaper_picker"
 usecase_list=( "audio_playback" "audio_record" "av_playback" \
 			"av_record" "image_capture" "image_capture_omap4" \
 			"image_decode" "gears4android" "browser" "settings" \
-			"wallpaper2D" "wallpaper3D" )
+			"wallpaper2D" "wallpaper3D" "av_playback_ics" )
 
 # =============================================================================
 # Functions
@@ -297,6 +302,11 @@ case $android_usecase in
 	need_scard=1
 	android_intent=$android_media_process
 	execute=$run_movie_view
+	;;
+"av_playback_ics")
+	need_scard=1
+	android_intent=$android_gallery3d_process
+	execute=$run_movie3d_view
 	;;
 "av_record")
 	need_scard=1
