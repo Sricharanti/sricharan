@@ -1,0 +1,43 @@
+###############################################################################
+# Scenario: L_DD_POWER_1010_0016
+# Author  : Leed Aguilar
+# Date    : 11/11/11
+# Testing : Verify CSWR for CORE power domain after an Audio playback usecase
+#           in Android OS
+# Results : Verify CORE power domain RET counter increases after a period
+#           of time through cpu idle path once the Audio usecase is completed
+###############################################################################
+
+# Begin L_DD_POWER_1010_0016
+
+# Set the max screen timeout (30 min)
+0001 set -x; handlerAndroidSqlite3.sh set "system" "screen_off_timeout" "1800000"
+
+# set a dummy wakelock to avoid going to suspend
+0002 set -x; handlerAndroidPM.sh wakelock hold dummy
+
+# Verify that the screen is ON
+0003 set -x; android_display_switch.sh ON
+
+# Start Audio playback usecase: Play an MP3 for 15 seconds
+0004 set -x; handlerActivityManager.sh audio_playback start $MP3_FILE && sleep 15
+
+# Stop playback and close Audio app
+0005 set -x; handlerAndroidMonkey.sh keypad 1 800 KeyMonkeyPlayPause && sleep 1
+0006 set -x; handlerAndroidMonkey.sh keypad 1 800 KeyMonkeyHome && sleep 2
+0007 set -x;  handlerActivityManager.sh audio_playback stop
+
+# Turn off the display by pressing TWL power key
+0008 set -x; android_display_switch.sh OFF
+
+# Verify CORE RET counter (CSWR) increases during a test period
+0009 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET" "cswr1"
+0010 set -x; echo "Waiting 20 seconds" && sleep 20
+0011 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET" "cswr2"
+0012 set -x; handlerPowerTransitionStats.sh compare "core_pwrdm" "RET" "cswr1" "cswr2"
+
+0013 set -x; handlerInputSubsystem.sh "keypad" "KeyCodePowerKey" 1 1 1
+0014 set -x; sleep 1; input keyevent $KeyMonkeyMenu; input keyevent $KeyMonkeyHome
+0015 set -x; handlerAndroidPM.sh wakelock release dummy
+
+# End L_DD_POWER_1010_0016

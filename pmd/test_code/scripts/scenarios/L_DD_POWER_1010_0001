@@ -1,0 +1,31 @@
+###############################################################################
+# Scenario: L_DD_POWER_1010_0001
+# Author  : Leed Aguilar
+# Date    : 11/11/11
+# Testing : CPU idle: CSWR for mpu pwr domain
+# Results : Verify MPU power domain RET counter increases after a
+#           period of time through cpu idle path
+###############################################################################
+
+# Begin L_DD_POWER_1010_0001
+
+# Set the max screen timeout (30 min)
+0001 set -x; handlerAndroidSqlite3.sh set "system" "screen_off_timeout" "1800000"
+
+# set a dummy wakelock to avoid going to suspend
+0002 set -x; handlerAndroidPM.sh wakelock hold dummy
+
+# Turn the display OFF by pressing TWL power key
+0003 set -x; android_display_switch.sh OFF
+
+# Verify MPU RET counter (CSWR) increases during a test period
+0004 set -x; handlerPowerTransitionStats.sh log "mpu_pwrdm" "RET" "cswr1"
+0005 set -x; echo "Waiting 20 seconds" && sleep 20
+0006 set -x; handlerPowerTransitionStats.sh log "mpu_pwrdm" "RET" "cswr2"
+0007 set -x; handlerPowerTransitionStats.sh compare "mpu_pwrdm" "RET" "cswr1" "cswr2"
+
+0008 set -x; handlerInputSubsystem.sh "keypad" "KeyCodePowerKey" 1 1 1
+0009 set -x; sleep 1; input keyevent $KeyMonkeyMenu; input keyevent $KeyMonkeyHome
+0010 set -x; handlerAndroidPM.sh wakelock release dummy
+
+# End L_DD_POWER_1010_0001
