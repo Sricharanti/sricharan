@@ -6,10 +6,8 @@
 
 # Begin L_DD_ACCELEROMETER_0000_0004
 
-01 $ACCELEROMETER_DIR_HELPER/$ACCELEROMETER_HW/ACC_0000_0004
-# Calls different test files depending on actual HW .
-# "pan" interprets zero return value as pass.
-# If an error is encountered, test files often try to return a value that 
-#  facilitates pinpointing the problem line.
+handlerSysFs.sh "set" $ACCELEROMETER_SYSFS_PATH/mode $ACCELEROMETER_MODE_MEAS400
+
+$ACCELEROMETER_DIR_BINARIES/evtest $DEVFS_ACCELEROMETER 
 
 # End L_DD_ACCELEROMETER_0000_0004
