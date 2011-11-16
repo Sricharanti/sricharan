@@ -7,6 +7,6 @@
 # Begin L_DD_SENSOR_0006_0002
 
 # Checking at boot up if the driver is initialised
-01 dmesg | grep "sfh7741" || exit 1
+01 dmesg | grep $PROXIMITY_HW
 
 # End L_DD_SENSOR_0006_0002
