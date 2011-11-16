@@ -1,0 +1,30 @@
+###############################################################################
+# Scenario: L_DD_ACCELEROMETER_0000_0016
+# Author  : Dan Murphy
+# Date    : Mon Nov 1, 2010
+###############################################################################
+
+# Begin L_DD_ACCELEROMETER_0000_0016
+
+exitfn ()
+{
+	handlerSysFs.sh "set" $ACCELEROMETER_SYSFS_PATH/delay "`cat delay.log`"
+	rm delay.log
+	exit $1
+}
+
+handlerSysFs.sh "set" $ACCELEROMETER_SYSFS_PATH/enable "1"
+
+handlerSysFs.sh "get" $ACCELEROMETER_SYSFS_PATH/delay > delay.log
+
+handlerOutOfBounds.sh "set" $ACCELEROMETER_SYSFS_PATH/delay "-1" || exitfn 1
+
+handlerSysFs.sh "compare" $ACCELEROMETER_SYSFS_PATH/delay "`cat delay.log`" || exitfn 2
+
+handlerSysFs.sh "set" $ACCELEROMETER_SYSFS_PATH/delay "`cat delay.log`"
+
+handlerSysFs.sh "compare" $ACCELEROMETER_SYSFS_PATH/delay "`cat delay.log`" || exitfn 4
+
+exitfn 0
+
+# End L_DD_ACCELEROMETER_0000_0016
