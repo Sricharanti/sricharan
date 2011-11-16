@@ -1,0 +1,52 @@
+###############################################################################
+# Scenario: L_DD_POWER_1011_0002
+# Author  : Leed Aguilar
+# Date    : 11/15/11
+# Testing : Stress test for Low Power Audio playback  usecase in Android OS
+#           Verify enter/exit process of DPLL cascade mode for Audio playback
+#           usecase 1000 times
+# Results : Verify that the system enters to OPP25 in all power domains (CORE,
+#           MPU, IVA) during the audio playback usecase with headset or
+#           headphones connected and display off. The system must exit DPLL
+#           cascade mode when display is turned on
+###############################################################################
+
+# Begin L_DD_POWER_1011_0002
+
+# Set the max screen timeout (30 min)
+0001 set -x; handlerAndroidSqlite3.sh set "system" "screen_off_timeout" "1800000"
+
+# Set the device in airplane mode
+0002 set -x; handlerAndroidSqlite3.sh set "system" "airplane_mode_on" "1"
+
+# set a dummy wakelock to avoid going to suspend
+0003 set -x; handlerAndroidPM.sh wakelock hold dummy
+
+# Verify that the screen is ON
+0004 set -x; android_display_switch.sh ON
+
+# Verify Headset/Headphones are connected
+0005 set -x; if [ `cat $SYSFS_H2W_STATE` -eq 0 ]; then exit 1; else exit 0; fi
+
+# Close any instance of the MP3 player app running in the background
+0006 set -x; handlerActivityManager.sh audio_playback stop && sleep 3
+
+# Start Audio playback usecase: Play an MP3
+0007 set -x; handlerActivityManager.sh audio_playback start $MP3_FILE
+
+# TODO: fix DPLL cascade mode entry/exit evaluation
+# Turn display ON/OFF 1000 times during the MP3 playback
+0008 set -x; handlerCmd.sh iterate 'sleep 2; android_display_switch.sh OFF; sleep 2; echo "TODO"; android_display_switch.sh ON; sleep 2; echo "TODO"; sleep 2; android_display_switch.sh OFF; sleep 2; echo "TODO"; android_display_switch.sh ON; sleep 2; echo "TODO"; sleep 2; android_display_switch.sh OFF; sleep 2; echo "TODO"; android_display_switch.sh ON; sleep 2; echo "TODO"; sleep 2; android_display_switch.sh OFF; sleep 2; echo "TODO"; android_display_switch.sh ON; sleep 2; echo "TODO"; sleep 2; android_display_switch.sh OFF; sleep 2; echo "TODO"; android_display_switch.sh ON; sleep 2; echo "TODO";input keyevent $KeyMonkeyPreviousSong' 200 2 
+
+# Close the MP3 player app
+0009 set -x; handlerActivityManager.sh audio_playback stop
+
+# Release dummy wakelock
+0010 set -x; handlerAndroidPM.sh wakelock release dummy
+
+# Restore system configuration:
+# Disable airplane mode to conclude the test
+0011 set -x; handlerAndroidSqlite3.sh set "system" "airplane_mode_on" "0"
+0012 set -x; android_display_switch.sh ON
+
+# End L_DD_POWER_1011_0002
