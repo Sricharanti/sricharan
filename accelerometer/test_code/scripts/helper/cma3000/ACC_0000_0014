@@ -1,0 +1,46 @@
+###############################################################################
+# Scenario: L_DD_ACCELEROMETER_0000_0014
+# Author  : Dan Murphy
+# Date    : Mon Nov 1, 2010
+###############################################################################
+
+# Begin L_DD_ACCELEROMETER_0000_0014
+
+exitfn ()
+{
+	handlerSysFs.sh "set" $ACCELEROMETER_SYSFS_PATH/delay "`cat delay.log`"
+	handlerSysFs.sh "set" $ACCELEROMETER_SYSFS_PATH/mode "`cat mode.log`"
+	rm mode.log
+	rm delay.log
+	exit $1
+}
+
+handlerSysFs.sh "get" $ACCELEROMETER_SYSFS_PATH/mode > mode.log
+
+handlerSysFs.sh "set" $ACCELEROMETER_SYSFS_PATH/mode $ACCELEROMETER_MODE_MEAS400
+
+handlerSysFs.sh "get" $ACCELEROMETER_SYSFS_PATH/delay > delay.log
+
+handlerSysFs.sh "set" $ACCELEROMETER_SYSFS_PATH/delay "200"
+
+handlerSysFs.sh "compare" $ACCELEROMETER_SYSFS_PATH/delay 100 || exitfn 100
+
+handlerSysFs.sh "set" $ACCELEROMETER_SYSFS_PATH/delay "20"
+
+handlerSysFs.sh "compare" $ACCELEROMETER_SYSFS_PATH/delay 2 || exitfn 2
+
+handlerSysFs.sh "set" $ACCELEROMETER_SYSFS_PATH/delay "25"
+
+handlerSysFs.sh "compare" $ACCELEROMETER_SYSFS_PATH/delay 25 || exitfn 25
+
+handlerSysFs.sh "set" $ACCELEROMETER_SYSFS_PATH/delay "`cat delay.log`"
+
+handlerSysFs.sh "compare" $ACCELEROMETER_SYSFS_PATH/delay "`cat delay.log`" || exitfn 1
+
+handlerSysFs.sh "set" $ACCELEROMETER_SYSFS_PATH/mode "`cat mode.log`"
+
+handlerSysFs.sh "compare" $ACCELEROMETER_SYSFS_PATH/mode "`cat mode.log`" || exitfn 3
+
+exitfn 0
+
+# End L_DD_ACCELEROMETER_0000_0014
