@@ -80,7 +80,12 @@ endif
 APPLICABLE_TESTS :=	benchmarks dma ethernet usb_host gpio hsuart i2c \
 			keypad  mcspi mmc vfp \
 			realtimeclock timer-32k touchscreen watchdog pmd\
-			sfh7741 accelerometer ambient_light led oskernel
+			accelerometer ambient_light led oskernel \
+			compass pressure proximity temperature gyro \
+			vibrator
+
+#sfh7741 split out to compass, pressure, proximity, temperature
+
 
 ifdef CONFIG_ARCH_OMAP3
 APPLICABLE_TESTS +=     camera audio-alsa framebuffer video nand
