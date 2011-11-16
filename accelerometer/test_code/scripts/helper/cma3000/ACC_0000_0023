@@ -1,0 +1,38 @@
+###############################################################################
+# Scenario: L_DD_ACCELEROMETER_0000_0023
+# Author  : Dan Murphy
+# Date    : Mon Nov 1, 2010
+###############################################################################
+
+# Begin L_DD_ACCELEROMETER_0000_0023
+
+exitfn ()
+{
+	handlerSysFs.sh "set" $ACCELEROMETER_SYSFS_PATH/ffthr "`cat ffthr.log`"
+	handlerSysFs.sh "set" $ACCELEROMETER_SYSFS_PATH/mode "`cat mode.log`"
+	rm ffthr.log
+	rm mode.log
+	exit $1
+}
+
+handlerSysFs.sh "get" $ACCELEROMETER_SYSFS_PATH/mode > mode.log
+
+handlerSysFs.sh "set" $ACCELEROMETER_SYSFS_PATH/mode $ACCELEROMETER_MODE_MEAS400
+
+handlerSysFs.sh "get" $ACCELEROMETER_SYSFS_PATH/ffthr > ffthr.log
+
+handlerOutOfBounds.sh "set" $ACCELEROMETER_SYSFS_PATH/ffthr "-1" || exitfn 1
+
+handlerSysFs.sh "compare" $ACCELEROMETER_SYSFS_PATH/ffthr "`cat ffthr.log`" || exitfn 2
+
+handlerSysFs.sh "set" $ACCELEROMETER_SYSFS_PATH/ffthr "`cat ffthr.log`"
+
+handlerSysFs.sh "compare" $ACCELEROMETER_SYSFS_PATH/ffthr "`cat ffthr.log`" || exitfn 4
+
+handlerSysFs.sh "set" $ACCELEROMETER_SYSFS_PATH/mode "`cat mode.log`"
+
+handlerSysFs.sh "compare" $ACCELEROMETER_SYSFS_PATH/mode "`cat mode.log`" || exitfn 8
+
+exitfn 0
+
+# End L_DD_ACCELEROMETER_0000_0023
