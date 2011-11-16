@@ -1,0 +1,15 @@
+###############################################################################
+# Scenario: L_DD_MMC_0003_0004
+# Author  : Viswanath Puttagunta
+# Date    : October 6, 2011
+###############################################################################
+
+# Begin L_DD_MMC_0003_0004
+
+01  set -x; handlerMmcsdBlock.sh "create" "1" "ext2"
+02  set -x; sync && umount $MMCSD_MOUNTPOINT_1
+03  set -x; mount -t msdos $MMCSD_DEVFS_PARTITION_1 $MMCSD_MOUNTPOINT_1 && exit 1 || exit 0
+04  set -x; mount -t ext2 $MMCSD_DEVFS_PARTITION_1 $MMCSD_MOUNTPOINT_1 && exit 0 || exit 1
+05  set -x; sync && umount $MMCSD_MOUNTPOINT_1
+06  set -x; handlerMmcsdBlock.sh "remove" "1"
+# End L_DD_MMC_0003_0004
