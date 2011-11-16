@@ -42,6 +42,15 @@ export UTILS_DIR_SCRIPTS=$UTILS_DIR/scripts
 
 export PATH="$PATH:$UTILS_DIR_BIN:$UTILS_DIR_HANDLERS:$UTILS_DIR_SCRIPTS"
 
+if [ `cat $SYSFS_BOARD_REV | grep -c "Tablet"` -ne "0" ]; then
+	export HW_PLATFORM=tablet	
+elif [ `cat $SYSFS_BOARD_REV | grep -wc "Blaze/SDP"` -ne 0  ]; then
+	export HW_PLATFORM=blaze
+else
+	echo "Warning: Unrecognized hardware platform"
+	exit 1
+fi
+
 # General variables
 export DMESG_FILE=/var/log/dmesg
 
