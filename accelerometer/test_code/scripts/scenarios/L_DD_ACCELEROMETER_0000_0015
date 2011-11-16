@@ -6,24 +6,10 @@
 
 # Begin L_DD_ACCELEROMETER_0000_0015
 
-01  set -x; handlerSysFs.sh "get" $ACCELEROMETER_SYSFS_PATH/enable > enable.log
+01 $ACCELEROMETER_DIR_HELPER/$ACCELEROMETER_HW/ACC_0000_0015
+# Calls different test files depending on actual HW .
+# "pan" interprets zero return value as pass.
+# If an error is encountered, test files often try to return a value that 
+#  facilitates pinpointing the problem line.
 
-02  set -x; handlerOutOfBounds.sh "set" $ACCELEROMETER_SYSFS_PATH/enable "8"
-
-03  set -x; value=`cat $ACCELEROMETER_SYSFS_PATH/enable`
-
-04  set -x; handlerSysFs.sh "compare" $ACCELEROMETER_SYSFS_PATH/enable "`cat enable.log`"
-
-05  set -x; handlerOutOfBounds.sh "set" $ACCELEROMETER_SYSFS_PATH/enable "-1"
-
-06  set -x; value=`cat $ACCELEROMETER_SYSFS_PATH/enable`
-
-07  set -x; handlerSysFs.sh "compare" $ACCELEROMETER_SYSFS_PATH/enable "`cat enable.log`"
-
-08  set -x; handlerSysFs.sh "set" $ACCELEROMETER_SYSFS_PATH/enable "`cat enable.log`"
-
-09  set -x; handlerSysFs.sh "compare" $ACCELEROMETER_SYSFS_PATH/enable "`cat enable.log`"
-
-10  rm enable.log
-
-# End L_DD_ACCELEROMETER_0000_0015
+# End L_DD_ACCELEROMETER_0000_0014
