@@ -1,0 +1,14 @@
+###############################################################################
+# Scenario: L_DD_SENSOR_0005_0001
+# Author  : Shubhro
+# Date    : Tue May 05 16:43:35 CDT 2010
+###############################################################################
+
+# Begin L_DD_SENSOR_0005_0001
+
+01  set -x; if [ -n "$PROXIMITY_ENABLE" ]; then handlerSysFs.sh set $PROXIMITY_ENABLE 1 ; fi 
+
+02  set -x; $UTILS_DIR_HANDLERS/handlerCpuAffinity.sh "switch" "$SENSOR_DIR_BINARIES/evtest $DEVFS_SENSOR" "10" "5"
+
+# End L_DD_SENSOR_0005_0001
+
