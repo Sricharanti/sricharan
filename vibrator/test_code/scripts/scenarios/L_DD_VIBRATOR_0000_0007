@@ -1,0 +1,27 @@
+###############################################################################
+# Scenario: L_DD_VIBRATOR_0000_0007
+# Author  : dtaylor
+# Date    : 7Oct11
+###############################################################################
+
+# Begin L_DD_VIBRATOR_0000_0007
+
+# Obtain current cpu governor to be restored at the end of the test
+001 set -x; handlerCpuFreqScalGovernors.sh get
+
+# Enable userspace governor in oder to enable two CPUs
+002 set -x; handlerSysFs.sh set  $SYSFS_CPU0_CURRENT_GOVERNOR "userspace"
+003 set -x; handlerSysFs.sh compare $SYSFS_CPU0_CURRENT_GOVERNOR "userspace"
+
+# Enable CPU1
+004 set -x; handlerSysFs.sh "set" $SYSFS_CPU1_ONLINE 1
+005 set -x; handlerSysFs.sh "compare" $SYSFS_CPU1_ONLINE 1
+
+006 set -x; handlerCpuAffinity.sh "assign" "$VIBRATOR_DIR_HELPER/square.sh 15 1 2 2" 1
+007 set -x; handlerCpuAffinity.sh "assign" "$VIBRATOR_DIR_HELPER/square.sh 15 2 2 2" 2
+008 set -x; handlerCpuAffinity.sh "execute"
+009 set -x; handlerCpuAffinity.sh "clean"
+
+010 set -x; handlerCpuFreqScalGovernors.sh restore
+
+# End L_DD_VIBRATOR_0000_0007
