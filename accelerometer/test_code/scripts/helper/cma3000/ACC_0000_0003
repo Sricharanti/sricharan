@@ -1,0 +1,36 @@
+###############################################################################
+# Scenario: L_DD_ACCELEROMETER_0000_0003
+# Author  : Dan Murphy
+# Date    : Mon Nov 1, 2010
+###############################################################################
+
+# Begin L_DD_ACCELEROMETER_0000_0003
+
+exitfn ()
+{
+	handlerSysFs.sh "set" $ACCELEROMETER_SYSFS_PATH/mode "`cat mode.log`"
+	rm mode.log
+	exit $1
+}
+
+$UTILS_DIR_HANDLERS/handlerIrq.sh "get" "irq" "cma3000_accl" $ACCELEROMETER_DIR_TMP/IRQ
+
+handlerSysFs.sh "get" $ACCELEROMETER_SYSFS_PATH/mode > mode.log
+
+test -f $ACCELEROMETER_DIR_TMP/IRQ || exitfn 1
+
+handlerSysFs.sh "set" $ACCELEROMETER_SYSFS_PATH/mode $ACCELEROMETER_MODE_MEAS400
+
+$UTILS_DIR_HANDLERS/handlerIrq.sh "get" "cpu0_irq" "cma3000_accl" $ACCELEROMETER_DIR_TMP/FIRQ
+
+$UTILS_DIR_HANDLERS/handlerIrq.sh "get" "cpu0_irq" "cma3000_accl" $ACCELEROMETER_DIR_TMP/NIRQ
+
+[ "`cat $ACCELEROMETER_DIR_TMP/FIRQ`" -lt "`cat $ACCELEROMETER_DIR_TMP/NIRQ`" ] || exitfn 2
+
+handlerSysFs.sh "set" $ACCELEROMETER_SYSFS_PATH/mode "`cat mode.log`"
+
+handlerSysFs.sh "compare" $ACCELEROMETER_SYSFS_PATH/mode "`cat mode.log`" || exitfn 3
+
+exitfn 0
+
+# End L_DD_ACCELEROMETER_0000_0003
