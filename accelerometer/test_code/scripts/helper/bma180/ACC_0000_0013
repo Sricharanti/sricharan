@@ -1,0 +1,24 @@
+###############################################################################
+# Scenario: L_DD_ACCELEROMETER_0000_0013
+# Author  : Dan Murphy
+# Date    : Mon Nov 1, 2010
+###############################################################################
+
+# Begin L_DD_ACCELEROMETER_0000_0013
+
+exitfn ()
+{
+	exit $1
+}
+
+handlerSysFs.sh "set" $ACCELEROMETER_SYSFS_PATH/enable $ACCELEROMETER_MODE_OFF_0
+
+handlerSysFs.sh "compare" $ACCELEROMETER_SYSFS_PATH/enable $ACCELEROMETER_MODE_OFF_0 || exitfn 1
+
+handlerSysFs.sh "set" $ACCELEROMETER_SYSFS_PATH/enable $ACCELEROMETER_MODE_MEAS100
+
+handlerSysFs.sh "compare" $ACCELEROMETER_SYSFS_PATH/enable $ACCELEROMETER_MODE_MEAS100 || exitfn 100
+
+exitfn 0
+
+# End L_DD_ACCELEROMETER_0000_0013

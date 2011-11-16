@@ -1,0 +1,56 @@
+###############################################################################
+# Scenario: L_DD_ACCELEROMETER_0000_0013
+# Author  : Dan Murphy
+# Date    : Mon Nov 1, 2010
+###############################################################################
+
+# Begin L_DD_ACCELEROMETER_0000_0013
+
+exitfn ()
+{
+	handlerSysFs.sh "set" $ACCELEROMETER_SYSFS_PATH/enable "`cat enable.log`"
+	rm enable.log
+	exit $1
+}
+
+handlerSysFs.sh "get" $ACCELEROMETER_SYSFS_PATH/enable > enable.log
+
+handlerSysFs.sh "set" $ACCELEROMETER_SYSFS_PATH/enable $ACCELEROMETER_MODE_OFF_0
+
+handlerSysFs.sh "compare" $ACCELEROMETER_SYSFS_PATH/enable $ACCELEROMETER_MODE_OFF_0 || exitfn 1
+
+handlerSysFs.sh "set" $ACCELEROMETER_SYSFS_PATH/enable $ACCELEROMETER_MODE_MEAS100
+
+handlerSysFs.sh "compare" $ACCELEROMETER_SYSFS_PATH/enable "`cat enable.log`" || exitfn 2
+
+handlerSysFs.sh "set" $ACCELEROMETER_SYSFS_PATH/enable $ACCELEROMETER_MODE_MEAS400
+
+handlerSysFs.sh "compare" $ACCELEROMETER_SYSFS_PATH/enable "`cat enable.log`" || exitfn 4
+
+handlerSysFs.sh "set" $ACCELEROMETER_SYSFS_PATH/enable $ACCELEROMETER_MODE_MEAS40
+
+handlerSysFs.sh "compare" $ACCELEROMETER_SYSFS_PATH/enable "`cat enable.log`" || exitfn 8
+
+handlerSysFs.sh "set" $ACCELEROMETER_SYSFS_PATH/enable $ACCELEROMETER_MODE_MOTDET
+
+handlerSysFs.sh "compare" $ACCELEROMETER_SYSFS_PATH/enable "`cat enable.log`" || exitfn 16
+
+handlerSysFs.sh "set" $ACCELEROMETER_SYSFS_PATH/enable $ACCELEROMETER_MODE_FF_100
+
+handlerSysFs.sh "compare" $ACCELEROMETER_SYSFS_PATH/enable "`cat enable.log`" || exitfn 32
+
+handlerSysFs.sh "set" $ACCELEROMETER_SYSFS_PATH/enable $ACCELEROMETER_MODE_FF_400
+
+handlerSysFs.sh "compare" $ACCELEROMETER_SYSFS_PATH/enable "`cat enable.log`" || exitfn 64
+
+handlerSysFs.sh "set" $ACCELEROMETER_SYSFS_PATH/enable $ACCELEROMETER_MODE_OFF_7
+
+handlerSysFs.sh "compare" $ACCELEROMETER_SYSFS_PATH/enable $ACCELEROMETER_MODE_OFF_7 || exitfn 128
+
+handlerSysFs.sh "set" $ACCELEROMETER_SYSFS_PATH/enable "`cat enable.log`"
+
+handlerSysFs.sh "compare" $ACCELEROMETER_SYSFS_PATH/enable "`cat enable.log`" || exitfn 254
+
+exitfn 0
+
+# End L_DD_ACCELEROMETER_0000_0013
