@@ -1,7 +1,7 @@
 CC := $(CROSS_COMPILE)gcc
 CFLAGS+=-g -O -Wall -I$(KDIR)
 
-TARGETS = evtest sfh_app
+TARGETS = evtest
 
 all: $(TARGETS)
 
