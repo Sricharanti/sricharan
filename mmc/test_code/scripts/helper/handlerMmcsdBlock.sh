@@ -166,6 +166,13 @@ if [ "$LOCAL_OPERATION" = "create" ]; then
 			export LOCAL_FILESYSTEM_TYPE=ext2
 			partitionFormatHelper $MMCSD_DIR_BINARIES/mke2fs "" $MMCSD_MOUNTPOINT_2
 
+		elif [ "$LOCAL_FILESYSTEM_TYPE" = "dos-ext4" ]; then
+
+			export LOCAL_FILESYSTEM_TYPE=msdos
+			partitionFormatHelper $MMCSD_DIR_BINARIES/mkdosfs $MMCSD_MOUNTPOINT_1
+			export LOCAL_FILESYSTEM_TYPE=ext4
+			partitionFormatHelper $MMCSD_DIR_BINARIES/mke2fs "" $MMCSD_MOUNTPOINT_2
+
 		elif [ "$LOCAL_FILESYSTEM_TYPE" = "mixed" ]; then
 
 			export LOCAL_FILESYSTEM_TYPE=ext2
@@ -179,7 +186,7 @@ if [ "$LOCAL_OPERATION" = "create" ]; then
 
 elif [ "$LOCAL_OPERATION" = "remove" ]; then
 
-	if [ ! -z $4 ] ; then
+	if [ ! -z $3 ] ; then
 
 		MMCSD_MOUNTPOINT_1=`cat $MMCSD_MOUNTPOINT_1_LOG`
 		MMCSD_MOUNTPOINT_2=`cat $MMCSD_MOUNTPOINT_2_LOG`
