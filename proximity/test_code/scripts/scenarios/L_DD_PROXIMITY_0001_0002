@@ -1,0 +1,15 @@
+###############################################################################
+# Scenario: L_DD_SENSOR_0001_0001
+# Author  : Abraham Arce,Shubhro
+#
+# Date    : Mon May 03 16:43:35 CDT 2010
+###############################################################################
+
+# Begin L_DD_SENSOR_0001_0001
+
+01  set -x; if [ -n "$PROXIMITY_ENABLE" ]; then handlerSysFs.sh set $PROXIMITY_ENABLE 1 ; fi 
+
+02  $SENSOR_DIR_BINARIES/evtest $DEVFS_SENSOR
+
+# End L_DD_SENSOR_0001_0001
+
