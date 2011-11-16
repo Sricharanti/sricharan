@@ -1,0 +1,30 @@
+###############################################################################
+# Scenario: L_DD_ACCELEROMETER_0000_0001
+# Author  : Hemanth V
+# Author  : Dan Murphy
+# Date    : Thu Jun 24 16:43:42 IST 2010
+# Updated : Mon Nov 01, 2010
+###############################################################################
+
+# Begin L_DD_ACCELEROMETER_0000_0001
+
+exitfn ()
+{
+	handlerSysFs.sh "set" $ACCELEROMETER_SYSFS_PATH/mode "`cat mode.log`"
+	rm mode.log
+	exit $1
+}
+
+handlerSysFs.sh "get" $ACCELEROMETER_SYSFS_PATH/mode > mode.log
+
+handlerSysFs.sh "set" $ACCELEROMETER_SYSFS_PATH/mode $ACCELEROMETER_MODE_MEAS400
+
+test -r $DEVFS_ACCELEROMETER || exitfn 1
+
+handlerSysFs.sh "set" $ACCELEROMETER_SYSFS_PATH/mode "`cat mode.log`"
+
+handlerSysFs.sh "compare" $ACCELEROMETER_SYSFS_PATH/mode "`cat mode.log`" || exitfn 2
+
+exitfn 0
+
+# End L_DD_ACCELEROMETER_0000_0001
