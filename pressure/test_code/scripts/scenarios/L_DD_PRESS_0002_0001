@@ -1,0 +1,12 @@
+###############################################################################
+# Scenario: L_DD_PRESS_0002_0001
+# Author  : DTaylor
+#
+# Date    : 29Sep11
+###############################################################################
+
+# Begin L_DD_PRESS_0002_0001
+
+01 set -x; $UTILS_DIR_HANDLERS/handlerCpuFreqScalFrequencies.sh run all "$SENSOR_DIR_HELPER/readsec.sh" 
+
+# End L_DD_PRESS_0002_0001
