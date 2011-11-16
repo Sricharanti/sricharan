@@ -72,7 +72,7 @@ elif [ "$command" = "get" ]; then
 
 # The "compare" command differs from "verify" in that the first one registers
 # a failure that can be propagated outside of this script using the handlerError
-elif [ "$command" = "compare" ] || [ "$LOCAL_COMMAND" = "verify" ]; then
+elif [ "$command" = "compare" ] || [ "$command" = "verify" ]; then
 
 	sysfs_entry_current=`cat $sysfs_entry_name`
 	echo "[ handlerSysFs ] Desired Value: $sysfs_entry_value" \
