@@ -7,5 +7,5 @@
 
 # Begin L_DD_TEMP_0005_0003
 01 set -x; cat $DEVFS_TEMP
-02 set -x; $UTILS_DIR_HANDLERS/handlerCpuAffinity.sh "switch" "/testsuites/sfh7741/scripts/helper/Readvalues.sh 20  1" "5" "15"
+02 set -x; $UTILS_DIR_HANDLERS/handlerCpuAffinity.sh "switch" "${SENSOR_DIR_HELPER}/Readvalues.sh 20  1" "5" "15"
 # End L_DD_TEMP_0005_0002
