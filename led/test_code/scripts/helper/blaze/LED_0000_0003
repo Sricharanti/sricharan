@@ -1,0 +1,24 @@
+###############################################################################
+# Scenario: L_DD_LED_0000_0003
+# Author  : Hemanth V
+# Date    : Thu Jun 24 16:43:42 IST 2010
+###############################################################################
+
+# Begin L_DD_LED_0000_0003
+
+{ echo 1 > $LED_SYSFS_PATH/omap4\:green\:debug0/brightness;echo "\n\n\n\nCheck DEBUG LED 0 is ON\n"; sleep 1; $UTILS_DIR_BIN/akey $DEVFS_KEYPAD; } || exit 3
+{ echo 0 > $LED_SYSFS_PATH/omap4\:green\:debug0/brightness;echo "\n\n\n\nCheck DEBUG LED 0 is OFF\n"; sleep 1; $UTILS_DIR_BIN/akey $DEVFS_KEYPAD; } || exit 6
+
+{ echo 1 > $LED_SYSFS_PATH/omap4\:green\:debug1/brightness;echo "\n\n\n\nCheck DEBUG LED 1 is ON\n"; sleep 1; $UTILS_DIR_BIN/akey $DEVFS_KEYPAD; } || exit 9
+{ echo 0 > $LED_SYSFS_PATH/omap4\:green\:debug1/brightness;echo "\n\n\n\nCheck DEBUG LED 1 is OFF\n"; sleep 1; $UTILS_DIR_BIN/akey $DEVFS_KEYPAD; } || exit 12
+
+{ echo 1 > $LED_SYSFS_PATH/omap4\:green\:debug2/brightness;echo "\n\n\n\nCheck DEBUG LED 2 is ON\n"; sleep 1; $UTILS_DIR_BIN/akey $DEVFS_KEYPAD; } || exit 15
+{ echo 0 > $LED_SYSFS_PATH/omap4\:green\:debug2/brightness;echo "\n\n\n\nCheck DEBUG LED 2 is OFF\n"; sleep 1; $UTILS_DIR_BIN/akey $DEVFS_KEYPAD; } || exit 18
+
+{ echo 1 > $LED_SYSFS_PATH/omap4\:green\:debug3/brightness;echo "\n\n\n\nCheck DEBUG LED 3 is ON\n"; sleep 1; $UTILS_DIR_BIN/akey $DEVFS_KEYPAD; } || exit 21
+{ echo 0 > $LED_SYSFS_PATH/omap4\:green\:debug3/brightness;echo "\n\n\n\nCheck DEBUG LED 3 is OFF\n"; sleep 1; $UTILS_DIR_BIN/akey $DEVFS_KEYPAD; } || exit 24
+
+{ echo 1 > $LED_SYSFS_PATH/omap4\:green\:debug4/brightness;echo "\n\n\n\nCheck DEBUG LED 4 is ON\n"; sleep 1; $UTILS_DIR_BIN/akey $DEVFS_KEYPAD; } || exit 27
+{ echo 0 > $LED_SYSFS_PATH/omap4\:green\:debug4/brightness;echo "\n\n\n\nCheck DEBUG LED 4 is OFF\n"; sleep 1; $UTILS_DIR_BIN/akey $DEVFS_KEYPAD; } || exit 30
+
+# End L_DD_LED_0000_0003

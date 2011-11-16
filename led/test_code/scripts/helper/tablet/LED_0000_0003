@@ -1,0 +1,46 @@
+###############################################################################
+# Scenario: L_DD_LED_0000_0003
+# Author  : 
+# Date    : Thu Jun 24 16:43:42 IST 2010
+###############################################################################
+
+# Begin L_DD_LED_0000_0003
+
+#{ echo "1" > $LED_SYSFS_PATH/omap4\:green\:debug2/brightness;echo "\n\n\n\nCheck DEBUG LED 2 is ON\n"; sleep 1; $UTILS_DIR_BIN/akey $DEVFS_KEYPAD; } || exit 15
+#{ echo "0" > $LED_SYSFS_PATH/omap4\:green\:debug2/brightness;echo "\n\n\n\nCheck DEBUG LED 2 is OFF\n"; sleep 1; $UTILS_DIR_BIN/akey $DEVFS_KEYPAD; } || exit 18
+
+#{ echo "1" > $LED_SYSFS_PATH/omap4\:green\:debug4/brightness;echo "\n\n\n\nCheck DEBUG LED 4 is ON\n"; sleep 1; $UTILS_DIR_BIN/akey $DEVFS_KEYPAD; } || exit 27
+#{ echo "0" > $LED_SYSFS_PATH/omap4\:green\:debug4/brightness;echo "\n\n\n\nCheck DEBUG LED 4 is OFF\n"; sleep 1; $UTILS_DIR_BIN/akey $DEVFS_KEYPAD; } || exit 30
+
+echo "Remove rear panel of tablet."
+echo "D1 and D3 should alternate lighting each second."
+echo "Press center front panel button to pass."
+echo "Press either side front panel button to fail."
+echo 
+state=0
+if [ -e $LED_FILE_TMP ]; then 
+	rm -f $LED_FILE_TMP
+fi
+$LED_DIR_BINARIES/testkeypad /dev/input/event0 1|tail -n 1|awk '{ s = gensub(/.*code=([0-9]+).*/,  "\\1", "g"); print s }' >$LED_FILE_TMP &
+until [ -s $LED_FILE_TMP ]; do
+	let "state += 1"
+	state=`expr $state % 2`
+	#echo $state
+	if [ "0" -eq "$state" ]; then
+		echo "1" > $LED_SYSFS_PATH/omap4\:green\:debug2/brightness
+		echo "0" > $LED_SYSFS_PATH/omap4\:green\:debug4/brightness
+	else
+		echo "0" > $LED_SYSFS_PATH/omap4\:green\:debug2/brightness
+		echo "1" > $LED_SYSFS_PATH/omap4\:green\:debug4/brightness
+	fi
+	sleep 1
+done
+key=`cat $LED_FILE_TMP`
+rm -f $LED_FILE_TMP
+#echo
+#echo "key@$LED_FILE_TMP = $key"
+#echo
+[ "102" -eq "$key" ]
+exit $?
+# End L_DD_LED_0000_0003
+

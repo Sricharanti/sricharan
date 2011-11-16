@@ -6,19 +6,10 @@
 
 # Begin L_DD_LED_0000_0003
 
-01  set -x; echo 1 > $LED_SYSFS_PATH/omap4\:green\:debug0/brightness;echo "\n\n\n\nCheck DEBUG LED 0 is ON\n"; sleep 1; $UTILS_DIR_BIN/akey $DEVFS_KEYPAD;
-02  set -x; echo 0 > $LED_SYSFS_PATH/omap4\:green\:debug0/brightness;echo "\n\n\n\nCheck DEBUG LED 0 is OFF\n"; sleep 1; $UTILS_DIR_BIN/akey $DEVFS_KEYPAD;
-
-03  set -x; echo 1 > $LED_SYSFS_PATH/omap4\:green\:debug1/brightness;echo "\n\n\n\nCheck DEBUG LED 1 is ON\n"; sleep 1; $UTILS_DIR_BIN/akey $DEVFS_KEYPAD;
-04  set -x; echo 0 > $LED_SYSFS_PATH/omap4\:green\:debug1/brightness;echo "\n\n\n\nCheck DEBUG LED 1 is OFF\n"; sleep 1; $UTILS_DIR_BIN/akey $DEVFS_KEYPAD;
-
-05  set -x; echo 1 > $LED_SYSFS_PATH/omap4\:green\:debug2/brightness;echo "\n\n\n\nCheck DEBUG LED 2 is ON\n"; sleep 1; $UTILS_DIR_BIN/akey $DEVFS_KEYPAD;
-06  set -x; echo 0 > $LED_SYSFS_PATH/omap4\:green\:debug2/brightness;echo "\n\n\n\nCheck DEBUG LED 2 is OFF\n"; sleep 1; $UTILS_DIR_BIN/akey $DEVFS_KEYPAD;
-
-07  set -x; echo 1 > $LED_SYSFS_PATH/omap4\:green\:debug3/brightness;echo "\n\n\n\nCheck DEBUG LED 3 is ON\n"; sleep 1; $UTILS_DIR_BIN/akey $DEVFS_KEYPAD;
-08  set -x; echo 0 > $LED_SYSFS_PATH/omap4\:green\:debug3/brightness;echo "\n\n\n\nCheck DEBUG LED 3 is OFF\n"; sleep 1; $UTILS_DIR_BIN/akey $DEVFS_KEYPAD;
-
-09  set -x; echo 1 > $LED_SYSFS_PATH/omap4\:green\:debug4/brightness;echo "\n\n\n\nCheck DEBUG LED 4 is ON\n"; sleep 1; $UTILS_DIR_BIN/akey $DEVFS_KEYPAD;
-10  set -x; echo 0 > $LED_SYSFS_PATH/omap4\:green\:debug4/brightness;echo "\n\n\n\nCheck DEBUG LED 4 is OFF\n"; sleep 1; $UTILS_DIR_BIN/akey $DEVFS_KEYPAD;
+01 set -x; $LED_DIR_HELPER/$HW_PLATFORM/LED_0000_0003
+# Calls different test files depending on actual HW .
+# "pan" interprets zero return value as pass.
+# If an error is encountered, test files often try to return a value that 
+#  facilitates pinpointing the problem line.
 
 # End L_DD_LED_0000_0003
