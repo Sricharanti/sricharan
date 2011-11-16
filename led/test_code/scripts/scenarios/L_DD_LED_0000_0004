@@ -6,13 +6,10 @@
 
 # Begin L_DD_LED_0000_0004
 
-01  set -x; echo 1 > $LED_SYSFS_PATH/omap4\:red\:user/brightness;echo "\n\n\n\nCheck RED User LED is ON\n"; sleep 1; $UTILS_DIR_BIN/akey $DEVFS_KEYPAD;
-02  set -x; echo 0 > $LED_SYSFS_PATH/omap4\:red\:user/brightness;echo "\n\n\n\nCheck RED USER LED is OFF\n"; sleep 1; $UTILS_DIR_BIN/akey $DEVFS_KEYPAD;
-
-03  set -x; echo 1 > $LED_SYSFS_PATH/omap4\:green\:user/brightness;echo "\n\n\n\nCheck GREEN User LED is ON\n"; sleep 1; $UTILS_DIR_BIN/akey $DEVFS_KEYPAD;
-04  set -x; echo 0 > $LED_SYSFS_PATH/omap4\:green\:user/brightness;echo "\n\n\n\nCheck GREEN USER LED is OFF\n"; sleep 1; $UTILS_DIR_BIN/akey $DEVFS_KEYPAD;
-
-05  set -x; echo 1 > $LED_SYSFS_PATH/omap4\:blue\:user/brightness;echo "\n\n\n\nCheck BLUE User LED is ON\n"; sleep 1; $UTILS_DIR_BIN/akey $DEVFS_KEYPAD;
-06  set -x; echo 0 > $LED_SYSFS_PATH/omap4\:blue\:user/brightness;echo "\n\n\n\nCheck BLUE USER LED is OFF\n"; sleep 1; $UTILS_DIR_BIN/akey $DEVFS_KEYPAD;
+01 set -x; $LED_DIR_HELPER/$HW_PLATFORM/LED_0000_0004
+# Calls different test files depending on actual HW .
+# "pan" interprets zero return value as pass.
+# If an error is encountered, test files often try to return a value that 
+#  facilitates pinpointing the problem line.
 
 # End L_DD_LED_0000_0004

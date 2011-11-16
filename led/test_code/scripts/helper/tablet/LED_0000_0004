@@ -1,0 +1,54 @@
+###############################################################################
+# Scenario: L_DD_LED_0000_0004
+# Author  : Hemanth V
+# Date    : Thu Jun 24 16:43:42 IST 2010
+###############################################################################
+
+# Begin L_DD_LED_0000_0004
+
+#01  set -x; echo 1 > $LED_SYSFS_PATH/omap4\:red\:user/brightness;echo "\n\n\n\nCheck RED User LED is ON\n"; sleep 1; $UTILS_DIR_BIN/akey $DEVFS_KEYPAD;
+#02  set -x; echo 0 > $LED_SYSFS_PATH/omap4\:red\:user/brightness;echo "\n\n\n\nCheck RED USER LED is OFF\n"; sleep 1; $UTILS_DIR_BIN/akey $DEVFS_KEYPAD;
+
+#03  set -x; echo 1 > $LED_SYSFS_PATH/omap4\:green\:user/brightness;echo "\n\n\n\nCheck GREEN User LED is ON\n"; sleep 1; $UTILS_DIR_BIN/akey $DEVFS_KEYPAD;
+#04  set -x; echo 0 > $LED_SYSFS_PATH/omap4\:green\:user/brightness;echo "\n\n\n\nCheck GREEN USER LED is OFF\n"; sleep 1; $UTILS_DIR_BIN/akey $DEVFS_KEYPAD;
+
+#05  set -x; echo 1 > $LED_SYSFS_PATH/omap4\:blue\:user/brightness;echo "\n\n\n\nCheck BLUE User LED is ON\n"; sleep 1; $UTILS_DIR_BIN/akey $DEVFS_KEYPAD;
+#06  set -x; echo 0 > $LED_SYSFS_PATH/omap4\:blue\:user/brightness;echo "\n\n\n\nCheck BLUE USER LED is OFF\n"; sleep 1; $UTILS_DIR_BIN/akey $DEVFS_KEYPAD;
+
+echo "Remove rear panel of tablet."
+echo "Front panel RGB LEDs should alternate."
+echo "Press center front panel button to pass."
+echo "Press either side front panel button to fail."
+echo 
+state=0
+if [ -e $LED_FILE_TMP ]; then 
+	rm -f $LED_FILE_TMP
+fi
+$LED_DIR_BINARIES/testkeypad /dev/input/event0 1|tail -n 1|awk '{ s = gensub(/.*code=([0-9]+).*/,  "\\1", "g"); print s }' >$LED_FILE_TMP &
+until [ -s $LED_FILE_TMP ]; do
+	let "state += 1"
+	state=`expr $state % 3`
+	#echo $state
+	if [ "0" -eq "$state" ]; then
+		echo "1" > $LED_SYSFS_PATH/red/brightness
+		echo "0" > $LED_SYSFS_PATH/green/brightness
+		echo "0" > $LED_SYSFS_PATH/blue/brightness
+	elif [ "1" -eq "$state" ]; then
+		echo "0" > $LED_SYSFS_PATH/red/brightness
+		echo "1" > $LED_SYSFS_PATH/green/brightness
+		echo "0" > $LED_SYSFS_PATH/blue/brightness
+	else
+		echo "0" > $LED_SYSFS_PATH/red/brightness
+		echo "0" > $LED_SYSFS_PATH/green/brightness
+		echo "1" > $LED_SYSFS_PATH/blue/brightness
+	fi
+	sleep 1
+done
+key=`cat $LED_FILE_TMP`
+rm -f $LED_FILE_TMP
+#echo
+#echo "key@$LED_FILE_TMP = $key"
+#echo
+[ "102" -eq "$key" ]
+exit $?
+# End L_DD_LED_0000_0004
