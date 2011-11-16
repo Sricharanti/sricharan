@@ -7,28 +7,10 @@
 
 # Begin L_DD_LED_0000_0001
 
-01  set -x; test -d $LED_SYSFS_PATH
-
-02  set -x; test -d $LED_SYSFS_PATH/$LED_DISPLAY_LED_PATH
-
-03  set -x; test -d $LED_SYSFS_PATH/$LED_BATTERY_LED_PATH
-
-04  set -x; test -d $LED_SYSFS_PATH/$LED_KEYPAD_LED_PATH
-
-05  set -x; test -d $LED_SYSFS_PATH/$LED_RED_LED_PATH
-
-06  set -x; test -d $LED_SYSFS_PATH/$LED_GREEN_LED_PATH
-
-07  set -x; test -d $LED_SYSFS_PATH/$LED_BLUE_LED_PATH
-
-08  set -x; test -d $LED_SYSFS_PATH/omap4:green:debug0
-
-09  set -x; test -d $LED_SYSFS_PATH/omap4:green:debug1
-
-10  set -x; test -d $LED_SYSFS_PATH/omap4:green:debug2
-
-11  set -x; test -d $LED_SYSFS_PATH/omap4:green:debug3
-
-12  set -x; test -d $LED_SYSFS_PATH/omap4:green:debug4
+01 set -x; $LED_DIR_HELPER/$HW_PLATFORM/LED_0000_0001
+# Calls different test files depending on actual HW .
+# "pan" interprets zero return value as pass.
+# If an error is encountered, test files often try to return a value that 
+#  facilitates pinpointing the problem line.
 
 # End L_DD_LED_0000_0001

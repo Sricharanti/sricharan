@@ -1,0 +1,26 @@
+###############################################################################
+# Scenario: L_DD_LED_0000_0001
+# Author  : Hemanth V
+# Updated by: Dan Murphy
+# Date    : Thu Jun 24 16:43:42 IST 2010
+###############################################################################
+
+# Begin L_DD_LED_0000_0001
+
+test -d $LED_SYSFS_PATH || exit 3
+
+test -d $LED_SYSFS_PATH/$LED_DISPLAY_LED_PATH || exit 6
+ 
+test -d $LED_SYSFS_PATH/$LED_RED_LED_PATH || exit 9
+
+test -d $LED_SYSFS_PATH/$LED_GREEN_LED_PATH || exit 12
+
+test -d $LED_SYSFS_PATH/$LED_BLUE_LED_PATH || exit 15
+
+test -d $LED_SYSFS_PATH/omap4:green:debug2 || exit 18
+
+test -d $LED_SYSFS_PATH/omap4:green:debug4 || exit 21
+
+test -d $LED_SYSFS_PATH/omap4:green:chrg || exit 24
+
+# End L_DD_LED_0000_0001
