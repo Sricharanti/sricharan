@@ -6,10 +6,9 @@
 
 # Begin L_DD_ACCELEROMETER_0000_0005
 
-01 $ACCELEROMETER_DIR_HELPER/$ACCELEROMETER_HW/ACC_0000_0005
-# Calls different test files depending on actual HW .
-# "pan" interprets zero return value as pass.
-# If an error is encountered, test files often try to return a value that 
-#  facilitates pinpointing the problem line.
+echo $ACCELEROMETER_MODE_MEAS400 > $ACCELEROMETER_SYSFS_PATH/mode 
+echo "Ensure board is Flat on the surface\n"
+value=`$ACCELEROMETER_DIR_BINARIES/acctest $DEVFS_ACCELEROMETER Z |grep Value | awk '{print $2}'`
+[ $value -ge 900 ]
 
 # End L_DD_ACCELEROMETER_0000_0005
