@@ -6,10 +6,9 @@
 
 # Begin L_DD_ACCELEROMETER_0000_0011
 
-01 $ACCELEROMETER_DIR_HELPER/$ACCELEROMETER_HW/ACC_0000_0011
-# Calls different test files depending on actual HW .
-# "pan" interprets zero return value as pass.
-# If an error is encountered, test files often try to return a value that 
-#  facilitates pinpointing the problem line.
+echo -n "1" >$ACCELEROMETER_SYSFS_PATH/enable
+$ACCELEROMETER_DIR_BINARIES/evtest $DEVFS_ACCELEROMETER &
+$ACCELEROMETER_DIR_BINARIES/evtest $DEVFS_ACCELEROMETER
 
 # End L_DD_ACCELEROMETER_0000_0011
+
