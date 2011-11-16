@@ -96,6 +96,8 @@ export SYSFS_CPU0_STATS_TIME_IN_STATE=$SYSFS_CPU0_CPUFREQ/stats/time_in_state
 # /sys/devices/system/vfp
 # /sys/devices/virtual
 
+export SYSFS_DEV_VIRTUAL=/sys/devices/virtual/
+export SYSFS_H2W_STATE=$SYSFS_DEV_VIRTUAL/switch/h2w/state
 
 #-------------------------------------------------------------
 # /sys/firmware
