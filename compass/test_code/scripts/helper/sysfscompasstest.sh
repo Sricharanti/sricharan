@@ -3,8 +3,7 @@
 rm *.log
 
 #Array containing the current OMAP4 SYSFS entries for HMC5843
-SYSFS_DC_ENTRIES=(available_sampling_frequency magn_gain magn_range magn_x_raw magn_y_raw magn_z_raw meas_conf operating_mode power sampling_frequency subsystem uevent)
-
+SYSFS_DC_ENTRIES=(bias driver enable gain modalias mode name power rate subsystem uevent)
 IFS=!
 CURRENT_SYSFS_ENTRIES=(`ls $DIGITAL_COMPASS_SYSFS`)
 #ARRAY=(`ls`)
