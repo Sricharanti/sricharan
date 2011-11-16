@@ -7,6 +7,9 @@
 
 # Begin L_DD_SENSOR_0001_0001
 
-01  $SENSOR_DIR_BINARIES/evtest $DEVFS_SENSOR
+01  set -x; if [ -n "$PROXIMITY_ENABLE" ]; then handlerSysFs.sh set $PROXIMITY_ENABLE 1 ; fi 
+
+02  $SENSOR_DIR_BINARIES/evtest $DEVFS_SENSOR
 
 # End L_DD_SENSOR_0001_0001
+
