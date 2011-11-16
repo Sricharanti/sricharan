@@ -6,7 +6,8 @@
 ###############################################################################
 
 # Begin L_DD_PRESS_0001_0002
-01 set -x; cat $DEVFS_BMP085_TEMP
-02 set -x; cat $DEVFS_BMP085_PRESS
+01 set -x; echo -n "1">$DEVFS_BMP085_DIR/enable
+02 set -x; cat $DEVFS_BMP085_TEMP
+03 set -x; cat $DEVFS_BMP085_PRESS
 
 # End L_DD_PRESS_0001_0002
