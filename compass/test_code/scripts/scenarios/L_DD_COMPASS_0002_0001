@@ -1,12 +1,12 @@
 ###############################################################################
 # Scenario: L_DD_COMPASS_0002_0001
-# Author  : Ricardo Perez Olivares
-# Date    : Dec 07 2010
-# Description: Dinamic Voltage and Frequency Scaling
+# Author  : dtaylor
+# Date    : updated 30Sep11
+# Description: Dynamic Voltage and Frequency Scaling
 ###############################################################################
 
 # Begin L_DD_COMPASS_0002_0001
 
-01 set -x; compass_dvfs.sh
+01 set -x; $UTILS_DIR_HANDLERS/handlerCpuFreqScalFrequencies.sh run all "$SENSOR_DIR_HELPER/readsec.sh" 
 
 # End L_DD_COMPASS_0002_0001
