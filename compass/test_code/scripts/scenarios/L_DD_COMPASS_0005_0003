@@ -7,6 +7,7 @@
 
 # Begin L_DD_COMPASS_0005_0003
 
-01  set -x; handlerIrqAffinity.sh "switch" multimeasurement.sh "6" "6" "344"
+01 echo -e "FAIL: test not applicable: hmc5843 driver doesn't support IRQ\n" ; exit 1
+#01 set -x; handlerIrqAffinity.sh "switch" multimeasurement.sh "6" "6" "344"
 
 # End L_DD_COMPASS_0005_0003
