@@ -1,0 +1,14 @@
+###############################################################################
+# Scenario: L_DD_ACCELEROMETER_0000_0009
+# Author  : Shubhro
+# Date    : Tue May 05 16:43:35 CDT 2010
+###############################################################################
+
+# Begin L_DD_ACCELEROMETER_0000_0009
+
+01  set -x; handlerSysFs.sh set $ACCELEROMETER_ENABLE_POWER $ACCELEROMETER_POWERON_VAL
+
+02  set -x; $UTILS_DIR_HANDLERS/handlerCpuAffinity.sh "switch" "$ACCELEROMETER_DIR_BINARIES/evtest $DEVFS_ACCELEROMETER" "10" "5"
+
+# End L_DD_ACCELEROMETER_0000_0009
+
