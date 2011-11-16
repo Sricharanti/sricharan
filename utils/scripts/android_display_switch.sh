@@ -80,12 +80,10 @@ if [ "$status" = "ON" ]; then
 	if [ `cat $SYSFS_OMAPDSS_OV0_EN` -eq 1 ]; then
 		showInfo "Display is already ON"
 		input keyevent $KeyMonkeyMenu
-		input keyevent $KeyMonkeyHome
 	else
 		handlerInputSubsystem.sh "keypad" "KeyCodePowerKey" 1 1 1
 		sleep 1
 		input keyevent $KeyMonkeyMenu
-		input keyevent $KeyMonkeyHome
 	fi
 elif [ "$status" = "OFF" ]; then
 	# verify status of the Framebuffer
