@@ -25,12 +25,12 @@ checkRetentionOpenSwitch() {
 	handlerPowerTransitionStats.sh "log" $LOCAL_POWER_DOMAIN "RET" "2"
 	handlerPowerTransitionStats.sh "log" $LOCAL_POWER_DOMAIN "RET-LOGIC-OFF" "2"
 
-	handlerPowerTransitionStats.sh "compare" "RET" "1" "2"
+	handlerPowerTransitionStats.sh "compare" $LOCAL_POWER_DOMAIN "RET" "1" "2"
 	if [ $? -eq 1 ]; then
 		LOCAL_ERROR=1
 	fi
 
-	handlerPowerTransitionStats.sh "compare" "RET-LOGIC-OFF" "1" "2"
+	handlerPowerTransitionStats.sh "compare" $LOCAL_POWER_DOMAIN "RET-LOGIC-OFF" "1" "2"
 	if [ $? -eq 1 ]; then
 		LOCAL_ERROR=1
 	fi
