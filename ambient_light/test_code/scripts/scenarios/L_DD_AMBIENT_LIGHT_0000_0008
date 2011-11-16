@@ -6,6 +6,26 @@
 
 # Begin L_DD_AMBIENT_LIGHT_0000_0008
 
-01  set -x; echo 3 > $AMBIENT_LIGHT_SYSFS_PATH/power_state& cat  $AMBIENT_LIGHT_SYSFS_PATH/lux& cat  $AMBIENT_LIGHT_SYSFS_PATH/lux;
+# Enable Ambient Light Sensor
+0001 set -x; handlerSysFs.sh set $AMBIENT_LIGHT_ENABLE_POWER $AMBIENT_LIGHT_POWERON_VAL
+0002 set -x; handlerSysFs.sh compare $AMBIENT_LIGHT_ENABLE_POWER $AMBIENT_LIGHT_POWERON_VAL || exit 64
+
+# Obtain current cpu governor to be restored at the end of the test
+0003 set -x; handlerCpuFreqScalGovernors.sh get
+
+# Enable userspace governor in oder to enable two CPUs
+0004 set -x; handlerSysFs.sh set  $SYSFS_CPU0_CURRENT_GOVERNOR "userspace"
+0005 set -x; handlerSysFs.sh compare $SYSFS_CPU0_CURRENT_GOVERNOR "userspace"
+
+# Enable CPU1
+0006 set -x; handlerSysFs.sh "set" $SYSFS_CPU1_ONLINE 1
+0007 set -x; handlerSysFs.sh "compare" $SYSFS_CPU1_ONLINE 1
+
+0008 set -x; handlerCpuAffinity.sh "assign" "$AMBIENT_LIGHT_DIR_HELPER/get_lux_value.sh 100" 1
+0009 set -x; handlerCpuAffinity.sh "assign" "$AMBIENT_LIGHT_DIR_HELPER/get_lux_value.sh 100" 2
+0009 set -x; handlerCpuAffinity.sh "execute"
+0010 set -x; handlerCpuAffinity.sh "clean"
+
+0011 set -x; handlerCpuFreqScalGovernors.sh restore
 
 # End L_DD_AMBIENT_LIGHT_0000_0008
