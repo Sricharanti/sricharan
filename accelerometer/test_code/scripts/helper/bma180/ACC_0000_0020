@@ -6,10 +6,7 @@
 
 # Begin L_DD_ACCELEROMETER_0000_0020
 
-01 $ACCELEROMETER_DIR_HELPER/$ACCELEROMETER_HW/ACC_0000_0020
-# Calls different test files depending on actual HW .
-# "pan" interprets zero return value as pass.
-# If an error is encountered, test files often try to return a value that 
-#  facilitates pinpointing the problem line.
+echo -e "FAIL: test not applicable: bma180 driver doesn't support grange\n"
+exit 1
 
 # End L_DD_ACCELEROMETER_0000_0020
