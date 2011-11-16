@@ -1,0 +1,68 @@
+###############################################################################
+# Scenario: L_DD_POWER_1011_0001
+# Author  : Leed Aguilar
+# Date    : 11/15/11
+# Testing : DPLL cascade: audio playback + MMC/SD data transfer
+#           Verify the MMC/SD data transfer exit the DPLL cascade mode when
+#           audio playback scenario with headset/headphone connected and display
+#           off is being executed
+# Results : Verify that the system enters to OPP25 in all power domains (CORE,
+#           MPU, IVA) during the audio playback usecase with headset or
+#           headphones connected and display off. The system must exit DPLL
+#           cascade mode during the data transfer to the external MMC/SD device
+###############################################################################
+
+# Begin L_DD_POWER_1011_0001
+
+# Set the max screen timeout (30 min)
+0001 set -x; handlerAndroidSqlite3.sh set "system" "screen_off_timeout" "1800000"
+
+# Set the device in airplane mode
+0002 set -x; handlerAndroidSqlite3.sh set "system" "airplane_mode_on" "1"
+
+# set a dummy wakelock to avoid going to suspend
+0003 set -x; handlerAndroidPM.sh wakelock hold dummy
+
+# Verify that the screen is ON
+0004 set -x; android_display_switch.sh ON
+
+# Verify Headset/Headphones are connected
+0005 set -x; if [ `cat $SYSFS_H2W_STATE` -eq 0 ]; then exit 1; else exit 0; fi
+
+# Close any instance of the MP3 player app running in the background
+0006 set -x; handlerActivityManager.sh audio_playback stop && sleep 3
+
+# Start Audio playback usecase: Play an MP3
+0007 set -x; handlerActivityManager.sh audio_playback start $MP3_FILE
+
+# Turn the display off after 10 seconds of audio playback
+0007 set -x; sleep 10 && android_display_switch.sh OFF
+
+# Is the system in DPLL cascade mode?
+0008 set -x; sleep 10; echo "TODO: how to verify if the system enters DPLL cascade mode"
+
+# Start a data transfer to the external MMC/SD card
+0009 set -x; dd if=/dev/zero of=100MB bs=1M count=100
+0010 set -x; handlerProcessParallelism.sh add "$TESTSCRIPT/cp2mountpoint.sh /mnt/ext_sdcard 100MB"
+0011 set -x; handlerProcessParallelism.sh add "echo "TODO: verify DPLL cascade mode exit""
+0012 set -x; handlerProcessParallelism.sh execute
+0013 set -x; handlerProcessParallelism.sh clean
+
+0010 set -x; sleep 2; echo "TODO: how to verify if the system re-enter to DPLL cascade mode"
+
+# Turn the display on and verify the system exit DPLL cascade mode
+0011 set -x; sleep 10 && android_display_switch.sh ON
+0012 set -x; sleep 2; echo "TODO: how to verify if the system re-enter to DPLL cascade m
+
+# Close the MP3 player app
+0013 set -x; handlerActivityManager.sh audio_playback stop && sleep 2
+
+# Release dummy wakelock
+0014 set -x; handlerAndroidPM.sh wakelock release dummy
+
+# Restore system configuration:
+# Disable airplane mode to conclude the test
+0015 set -x; handlerAndroidSqlite3.sh set "system" "airplane_mode_on" "0"
+0016 set -x; android_display_switch.sh ON
+
+# End L_DD_POWER_1011_0001
