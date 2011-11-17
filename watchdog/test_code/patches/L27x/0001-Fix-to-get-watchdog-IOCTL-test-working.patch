@@ -1,0 +1,63 @@
+From e3247787887a250e9c63b8b9a0b063ec3f391f05 Mon Sep 17 00:00:00 2001
+From: Huzefa N K <huzefank@ti.com>
+Date: Thu, 17 Nov 2011 11:41:28 -0600
+Subject: [PATCH] Fix to get watchdog IOCTL test working
+ This patch disables watchdog petting option for IOCTLs to work. This is to be
+ used only for testing watchdog functionality through IOCTLs and should not be
+ used for general testing or any other purpose other than watchdog tests
+
+Signed-off-by: Huzefa Kankroliwala <huzefank@ti.com>
+---
+ drivers/watchdog/omap_wdt.c |   11 ++++++-----
+ 1 files changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/watchdog/omap_wdt.c b/drivers/watchdog/omap_wdt.c
+index 574588b..e80edb8 100644
+--- a/drivers/watchdog/omap_wdt.c
++++ b/drivers/watchdog/omap_wdt.c
+@@ -57,12 +57,13 @@ static unsigned timer_margin;
+ module_param(timer_margin, uint, 0);
+ MODULE_PARM_DESC(timer_margin, "initial watchdog timeout (in seconds)");
+ 
+-static int kernelpet = 1;
++static int kernelpet = 0;
+ module_param(kernelpet, int, 0);
+ MODULE_PARM_DESC(kernelpet, "pet watchdog in kernel via irq");
+ 
+ static unsigned int wdt_trgr_pattern = 0x1234;
+ static spinlock_t wdt_lock;
++static DEFINE_MUTEX(wdt_ioctl_lock);
+ 
+ struct omap_wdt_dev {
+ 	void __iomem    *base;          /* physical */
+@@ -285,9 +286,9 @@ static long omap_wdt_ioctl(struct file *file, unsigned int cmd,
+ 					(int __user *)arg);
+ 	case WDIOC_KEEPALIVE:
+ 		pm_runtime_get_sync(wdev->dev);
+-		spin_lock(&wdt_lock);
++		mutex_lock(&wdt_ioctl_lock);
+ 		omap_wdt_ping(wdev);
+-		spin_unlock(&wdt_lock);
++		mutex_unlock(&wdt_ioctl_lock);
+ 		pm_runtime_put_sync(wdev->dev);
+ 		return 0;
+ 	case WDIOC_SETTIMEOUT:
+@@ -296,13 +297,13 @@ static long omap_wdt_ioctl(struct file *file, unsigned int cmd,
+ 		omap_wdt_adjust_timeout(new_margin);
+ 
+ 		pm_runtime_get_sync(wdev->dev);
+-		spin_lock(&wdt_lock);
++		mutex_lock(&wdt_ioctl_lock);
+ 		omap_wdt_disable(wdev);
+ 		omap_wdt_set_timeout(wdev);
+ 		omap_wdt_enable(wdev);
+ 
+ 		omap_wdt_ping(wdev);
+-		spin_unlock(&wdt_lock);
++		mutex_unlock(&wdt_ioctl_lock);
+ 		pm_runtime_put_sync(wdev->dev);
+ 		/* Fall */
+ 	case WDIOC_GETTIMEOUT:
+-- 
+1.7.4.1
+
