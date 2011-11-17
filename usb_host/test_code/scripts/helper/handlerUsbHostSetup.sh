@@ -90,19 +90,19 @@ elif [ "$LOCAL_COMMAND" = "remove" ]; then
 		
 		if [ "$LOCAL_DRIVER" = "mentor" ]; then
     		sync
-    		rmmod g_zero.ko
+		rmmod g_zero
     	
     	elif [ "$LOCAL_DRIVER" = "usbtest" ]; then
 			sync
-    		rmmod usbtest.ko
+		rmmod usbtest
     		
 		elif [ "$LOCAL_DRIVER" = "ehci" ]; then
 			sync
-    		rmmod ehci_hcd.ko
+		rmmod ehci_hcd
     	
     	elif [ "$LOCAL_DRIVER" = "ohci" ]; then
 			sync
-    		rmmod ohci_hcd.ko
+		rmmod ohci_hcd
     	fi
 		else
    		 exec

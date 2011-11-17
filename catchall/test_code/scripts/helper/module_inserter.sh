@@ -32,7 +32,7 @@ if [ $? -eq 0 ]
 		echo -e "FAIL, recompile your module\n"
 fi 
 
-rmmod debug_module_test.ko
+rmmod debug_module_test
 
 if [ $? -eq 0 ]
 	then

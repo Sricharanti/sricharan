@@ -20,6 +20,6 @@
 12  set -x; echo auto > /sys/bus/usb/devices/usb1/1-1/power/control
 13  set -x; echo on > /sys/bus/usb/devices/usb1/1-1/power/control
 14  set -x; echo 1-1:1.0 > /sys/bus/usb/drivers/asix/bind
-15  set -x; rmmod g_ether.ko && exit 0 || exit 1
+15  set -x; rmmod g_ether && exit 0 || exit 1
 
 # End L_DD_USB_HOST_0019_0001
