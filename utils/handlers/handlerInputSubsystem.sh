@@ -137,15 +137,6 @@ usage() {
 	C) handlerInputSubsystem.sh "TouchPoint2" <X coord> <Y coord>
 				     <press type> <repeat> <delay>
 
-	To be implemented:
-
-	D) handlerInputSubsystem.sh "pressure"
-	E) handlerInputSubsystem.sh "sensors"
-	F) handlerInputSubsystem.sh "ambientLight"
-	G) handlerInputSubsystem.sh "accelerometer"
-	H) handlerInputSubsystem.sh "headsetJack"
-	I) handlerInputSubsystem.sh "proximity"
-
 	Where parameters are:
 
 	@ keyCode: key code decimal value
@@ -226,24 +217,6 @@ case $device in
 "TouchPoint2")
 	showInfo "Synaptics Touchscreen 2"
 	generateScreenTouch2 $param2 $param3 $param4 $param5 $param6
-	;;
-"sensors")
-	showInfo "Sensors: to be implemented"
-	;;
-"pressure")
-	showInfo "Pressure Sensor: to be implemented"
-	;;
-"ambientLight")
-	showInfo "Ambient Light Sensor: to be implemented"
-	;;
-"accelerometer")
-	showInfo "Accelerometer Sensor: to be implemented"
-	;;
-"headsetJack")
-	showInfo "headset Jack: to be implemented"
-	;;
-"proximity")
-	showInfo "Proximity Sensor: to be implemented"
 	;;
 *)
 	usage
