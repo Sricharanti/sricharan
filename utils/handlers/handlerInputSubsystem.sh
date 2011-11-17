@@ -199,8 +199,6 @@ if [ $? -eq 1 ]; then
 	exit 1
 fi
 
-handlerDebugFileSystem.sh "mount"
-
 # TODO: Check parameters and scritp usage
 
 # Start Script functionalities
@@ -223,7 +221,6 @@ case $device in
 	verifyErrorFlag
 esac
 
-handlerDebugFileSystem.sh "umount"
 exit $error_val
 
 # End of file
