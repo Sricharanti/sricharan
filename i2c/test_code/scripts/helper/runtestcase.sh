@@ -76,10 +76,10 @@ case "$TESTCASEID" in
 	;;
 	# Write while the CPU affinity is switched
 	10)
-                verifyspeed.sh &&  $UTILS_DIR_HANDLERS/handlerCpuAffinity.sh "switch" "i2cset  -r  -y -f  1 0x48  0x2  0x3 b 0 50" "5" "15" || exit 1
+                verifyspeed.sh &&  $UTILS_DIR_HANDLERS/handlerCpuAffinity.sh "switch" "i2cset  -r  -y -f  1 0x48  0x2  0x3 b" "5" "15" || exit 1
 	;;
 	11)
-                verifyspeed.sh &&  $UTILS_DIR_HANDLERS/handlerIrqAffinity.sh  "switch" "i2cset  -r  -y -f  1 0x48  0x2  0x3 b 0 50" "5" "15" "88" || exit 1
+                verifyspeed.sh &&  $UTILS_DIR_HANDLERS/handlerIrqAffinity.sh  "switch" "i2cset  -r  -y -f  1 0x48  0x2  0x3 b" "5" "15" "88" || exit 1
 	;;
 	12)
                 verifyspeed.sh &&  $UTILS_DIR_HANDLERS/handlerIrqAffinity.sh "switch" "i2cdump  -y -f  1 0x48  b  0 0x4E 25" "5" "15" "88" || exit 1
