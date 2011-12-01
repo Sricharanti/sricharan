@@ -1,0 +1,16 @@
+##########################################################################################
+# Scenario: L_DD_SATA_0000_0002
+# Author  : Jyothi PK
+# Date    : 10/13/2011
+#Description: Detach  SATA device after system reboot . No System crash or Reboot should occur after detach
+#AHCI platform driver is inbuilt in the image and not as a module ...Refer to the TDS for testing as module.
+#############################################################################################
+
+# Begin L_DD_SATA_0000_0002
+01  set -x; echo " Detach  the SATA device.."
+02  set -x; sleep 10
+03  set -x; ls $SYS_SATA_DEVICE/ | wc -l
+04  set -x; ls /dev/sd* && exit 1 ||exit 0
+05  set -x; cat $PROCFS_SCSI | grep -i "Host" && exit 1 ||exit 0
+# END L_DD_SATA_0000_0002
+##########################################################################################

@@ -1,0 +1,16 @@
+###############################################################################
+# Scenario: L_DD_SATA_0000_0001
+# Author  : Jyothi PK
+# Date    : 10/13/2011
+#Description: Attach SATA device after system reboot . The system should detect the device
+###############################################################################
+
+# Begin L_DD_SATA_0000_0001
+01  set -x; echo " Attach the SATA device.."
+02  set -x; sleep 10
+03  set -x; ls $SYS_SATA_DEVICE/ | wc -l && exit 0 || exit 1
+04  set -x; ls /dev/sd* && exit 0 ||exit 1
+05  set -x; cat $PROCFS_SCSI && exit 0 ||exit 1
+# END L_DD_SATA_0000_0001
+
+##########################################################################################
