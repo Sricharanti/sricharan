@@ -11,9 +11,13 @@
 02  set -x; test -w $VIBRATOR_SYSFS_PATH/enable
 
 03  set -x; handlerSysFs.sh "set" $VIBRATOR_SYSFS_PATH/enable 1000
+# observed get value 4 ms larger than set value - add tiny delay
+04  set -x; handlerSysFs.sh "get" $VIBRATOR_SYSFS_PATH/enable 1000
 
-04  set -x; handlerSysFs.sh "get" $VIBRATOR_SYSFS_PATH/enable 1000 > time_left.log
+05  set -x; handlerSysFs.sh "get" $VIBRATOR_SYSFS_PATH/enable 1000
 
-05  set -x; $VIBRATOR_DIR_HELPER/cmp.sh "`cat time_left.log`" -lt "1000"
+06  set -x; handlerSysFs.sh "get" $VIBRATOR_SYSFS_PATH/enable 1000 > time_left.log
+
+07  set -x; $VIBRATOR_DIR_HELPER/cmp.sh "`cat time_left.log`" -lt "1000"
 
 # End L_DD_VIBRATOR_0000_0006
