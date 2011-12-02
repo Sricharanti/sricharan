@@ -15,7 +15,7 @@ do
   	  sleep $sleepno;
   else
   	  echo "error"
-  	  exit $?
+  	  exit $RET
   fi
   i=`expr $i - 1`
 done
