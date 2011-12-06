@@ -8,6 +8,6 @@
 
 01  set -x; echo "Remove the MMC/SD card.."
 01  set -x; sleep 10
-03  set -x; ls $MMCSD_BLOCK_FOLDER/ | grep mmc$SLOT && exit 1 || exit 0
+03  set -x; ls $SYS_MMC_HOST/mmc$SLOT/ | grep mmc && exit 1 || exit 0
 
 # End L_DD_MMC_0001_0003

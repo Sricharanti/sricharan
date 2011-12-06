@@ -335,7 +335,7 @@ elif [ "$LOCAL_OPERATION" = "throughput" ]; then
 	echo Result:$1: $MNT_INFO: $3 : $2 $TOTAL-MBytes in $DIFF seconds : `echo "scale=4; $TOTAL / $DIFF" | bc` MBps
 
 elif [ "$LOCAL_OPERATION" = "check-card-version" ]; then
-	#for loop required to support multiple catd in a slot
+	#for loop required to support multiple card in a slot
 	for file in $(find /sys/class/mmc_host/mmc$SLOT -type f -name csd); do
 		#echo $file
 		csd=`cat $file`
@@ -346,7 +346,8 @@ elif [ "$LOCAL_OPERATION" = "check-card-version" ]; then
 		csd=`expr $csd`
 		csd=`echo "obase=2; $csd" | bc`
 		len=`expr length $csd`
-		if ($length > 2) ; then
+		#if ($length > 2) ; then   #has to be a typo
+		if ($len > 2) ; then
 			len=`expr 4 - $len`
 			len=`expr 2 - $len`
 			csd=`expr substr $csd 1 $len` 
