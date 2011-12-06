@@ -21,46 +21,47 @@ GetEndSector(){
 
 if [ "$LOCAL_COMMAND" = "create" ]; then
 
-	export MMCSD_SECTOR_START=100
-	export MMCSD_SECTOR_END=`GetEndSector $MMCSD_DEVFS_ENTRY`
-	export MMCSD_SECTOR_MIDDLE=`echo "$MMCSD_SECTOR_END/2" | bc`
-	export MMCSD_SECTOR2_START=`echo "$MMCSD_SECTOR_MIDDLE+1" | bc`
+	if [ "$SLOT" != "0" ] ; then
+		export MMCSD_SECTOR_START=100
+		export MMCSD_SECTOR_END=`GetEndSector $MMCSD_DEVFS_ENTRY`
+		export MMCSD_SECTOR_MIDDLE=`echo "$MMCSD_SECTOR_END/2" | bc`
+		export MMCSD_SECTOR2_START=`echo "$MMCSD_SECTOR_MIDDLE+1" | bc`
+	fi
 
 	if [ "$LOCAL_PARTITIONS" = "1" ]; then
-
-		PARTITION_OPTIONS="p\np\nn\np\n1\n${MMCSD_SECTOR_START}\n${MMCSD_SECTOR_END}\nw\n"
-		echo "Command: $PARTITION_OPTIONS | fdisk $MMCSD_DEVFS_ENTRY"
-		echo -e $PARTITION_OPTIONS | fdisk $MMCSD_DEVFS_ENTRY
+		if [ "$SLOT" != "0" ] ; then
+			PARTITION_OPTIONS="p\np\nn\np\n1\n${MMCSD_SECTOR_START}\n${MMCSD_SECTOR_END}\nw\n"
+			echo "Command: $PARTITION_OPTIONS | fdisk $MMCSD_DEVFS_ENTRY"
+			echo -e $PARTITION_OPTIONS | fdisk $MMCSD_DEVFS_ENTRY
+		fi
 		mount | grep $MMCSD_DEVFS_PARTITION_1 && umount $MMCSD_DEVFS_PARTITION_1
-
 	elif [ "$LOCAL_PARTITIONS" = "2" ]; then
-
-		PARTITION_OPTIONS="p\np\nn\np\n1\n${MMCSD_SECTOR_START}\n${MMCSD_SECTOR_MIDDLE}\nn\np\n2\n${MMCSD_SECTOR2_START}\n$MMCSD_SECTOR_END\nw\n"
-		echo "Command: $PARTITION_OPTIONS | fdisk $MMCSD_DEVFS_ENTRY"
-		echo -e $PARTITION_OPTIONS | fdisk $MMCSD_DEVFS_ENTRY
-
+		if [ "$SLOT" != "0" ] ; then
+			PARTITION_OPTIONS="p\np\nn\np\n1\n${MMCSD_SECTOR_START}\n${MMCSD_SECTOR_MIDDLE}\nn\np\n2\n${MMCSD_SECTOR2_START}\n$MMCSD_SECTOR_END\nw\n"
+			echo "Command: $PARTITION_OPTIONS | fdisk $MMCSD_DEVFS_ENTRY"
+			echo -e $PARTITION_OPTIONS | fdisk $MMCSD_DEVFS_ENTRY
+		fi
 		mount | grep $MMCSD_DEVFS_PARTITION_1 && umount $MMCSD_DEVFS_PARTITION_1
 		mount | grep $MMCSD_DEVFS_PARTITION_2 && umount $MMCSD_DEVFS_PARTITION_2
-
 	fi
 
 	mount
 
 elif [ "$LOCAL_COMMAND" = "remove" ]; then
 	if [ "$LOCAL_PARTITIONS" = "1" ]; then
-
 		mount | grep $MMCSD_DEVFS_ENTRY && umount $MMCSD_DEVFS_ENTRY* | awk '{print $3}'
-		PARTITION_OPTIONS="p\np\nd\nw\n"
-		echo "Command: $PARTITION_OPTIONS | fdisk $MMCSD_DEVFS_ENTRY"
-		echo -e $PARTITION_OPTIONS | fdisk $MMCSD_DEVFS_ENTRY
-
+		if [ "$SLOT" != "0" ] ; then
+			PARTITION_OPTIONS="p\np\nd\nw\n"
+			echo "Command: $PARTITION_OPTIONS | fdisk $MMCSD_DEVFS_ENTRY"
+			echo -e $PARTITION_OPTIONS | fdisk $MMCSD_DEVFS_ENTRY
+		fi
 	elif [ "$LOCAL_PARTITIONS" = "2" ]; then
-
 		mount | grep $MMCSD_DEVFS_ENTRY && umount $MMCSD_DEVFS_ENTRY* | awk '{print $3}'
-		PARTITION_OPTIONS="p\np\nd\n1\nd\nw\n"
-		echo "Command: $PARTITION_OPTIONS | fdisk $MMCSD_DEVFS_ENTRY"
-		echo -e $PARTITION_OPTIONS | fdisk $MMCSD_DEVFS_ENTRY
-
+		if [ "$SLOT" != "0" ] ; then
+			PARTITION_OPTIONS="p\np\nd\n1\nd\nw\n"
+			echo "Command: $PARTITION_OPTIONS | fdisk $MMCSD_DEVFS_ENTRY"
+			echo -e $PARTITION_OPTIONS | fdisk $MMCSD_DEVFS_ENTRY
+		fi
 	fi
 else
 	echo -e "\nError: Cannot recognized command ${LOCAL_COMMAND} under handlerMmcsdSetup.sh\n"
