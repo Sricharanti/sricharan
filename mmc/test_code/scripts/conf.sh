@@ -98,6 +98,8 @@ if [ ! `echo 1+1 | bc` ]; then
 	exit 1
 fi
 
+touch /etc/mtab
+
 # Remove any error file
 handlerError.sh "clean"
 
