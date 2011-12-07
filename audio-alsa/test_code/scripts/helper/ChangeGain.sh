@@ -12,14 +12,22 @@ gain=$start
 if [ "$direction" = "Increase" ]; then
 	while [ $gain -le $end ]
 	do
-		amixer cset name="$control_name" $gain
+		if [ "$AUDIOLIBRARY" = "ALSA" ]; then
+			amixer cset name="$control_name" $gain
+		else
+			$TESTSCRIPT/ConfMix.sh "$control_name" $gain
+		fi
 		sleep $delay
 		gain=`expr $gain + $step`
 	done
 elif [ "$direction" = "Decrease" ]; then
 	while [ $gain -ge $end ]
 	do
-		amixer cset name="$control_name" $gain
+		if [ "$AUDIOLIBRARY" = "ALSA" ]; then
+			amixer cset name="$control_name" $gain
+		else
+			$TESTSCRIPT/ConfMix.sh "$control_name" $gain
+		fi
 		sleep $delay
 		gain=`expr $gain - $step`
 	done

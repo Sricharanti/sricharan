@@ -168,8 +168,8 @@ export MAXGPTIMERS=12
 #-----------------------------------------------------------------------------------
 # Audio-ALSA Driver Specific
 #-----------------------------------------------------------------------------------
-
-export SAMPLESDIR="/sdcard/audio-samples"
+export LIBRARY="TINYALSA"
+export SAMPLESDIR="/mnt/ext_sdcard/audio-samples"
 if ! [ -f "/bin/aplay" ]; then
        if [ -f "/system/bin/alsa_aplay" ]; then
                echo "INFO: Creating softlink for 'aplay'"
