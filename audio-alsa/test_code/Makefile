@@ -18,27 +18,15 @@
 # Change Log:
 ############################################################################
 
-ifeq ($(SUITE_DIR),)
-SUITE_DIR:=$(PWD)
-endif
+OBJS := install
 
-DESTDIR := $(SUITE_DIR)/bin
-OBJS := utilities install
-
-all: $(OBJS)
-
-utilities:
-	$(MAKE) -C utils
+all:$(OBJS)
 
 install:
-	mkdir -p $(DESTDIR)
-	$(MAKE) -C utils install
 	mkdir -p scripts/test
 	mkdir -p scripts/tmp
 
 clean:
-	rm -rvf $(DESTDIR)
-	$(MAKE) -C utils clean
 	rm -rf scripts/log*
 	rm -rf scripts/tmp
 	rm -rf scripts/test
