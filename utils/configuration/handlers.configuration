@@ -398,6 +398,12 @@ elif [ `cat $SYSFS_BOARD_REV | grep -wc "Blaze/SDP"` -ge 1  ]; then
 	export KeyCodeF1=59
 	export KeyCodeDLP=67
 	export KeyCodePowerKey=107 # specific for event6
+
+elif [ `cat /proc/cpuinfo | grep -ic Zoom3` -gt 0 ]; then
+
+	export omapKeypadEvent="/dev/input/event0"
+	export touchPoint1Event="/dev/input/event1"
+
 fi
 
 # End of file
