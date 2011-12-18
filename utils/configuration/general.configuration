@@ -78,7 +78,7 @@ else
 	export GPIO_MAX_LINES=209
 fi
 
-export GPIO_HW_MODULE="OMAP GPIO hardware version 0.1"
+export GPIO_HW_MODULE="OMAP GPIO hardware version"
 export GPIO_FIRST_LINE=0
 export GPIO_INVALID_RANGE_INITIAL=-5
 export GPIO_INVALID_RANGE_FINAL=-1
