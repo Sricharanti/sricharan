@@ -1,5 +1,5 @@
 ###############################################################################
-# Scenario: L_DD_PM_COMBO_0004
+# Scenario: L_DD_POWER_1005_0004
 # Author  : Leed Aguilar
 # Date    : Fri Aug 12 15:50:31 CDT 2011
 # Testing : Long hour test for CPU freq, CPU hotplug and CPU governor with
@@ -12,7 +12,7 @@
 #           any lockup or system crash
 ###############################################################################
 
-# Begin L_DD_PM_COMBO_0004
+# Begin L_DD_POWER_1005_0004
 
 # Enable SmartRelfex for all domains
 0001 set -x; handlerSmartReflex.sh enable all
@@ -33,4 +33,4 @@
 
 0006 set -x; handlerCpuFreqScalGovernors.sh restore
 
-# End L_DD_PM_COMBO_0004
+# EndL_DD_POWER_1005_0004

@@ -1,12 +1,15 @@
 ###############################################################################
-# Scenario: L_DD_PM_COMBO_0005
+# Scenario: L_DD_POWER_1005_0005
 # Author  : Leed Aguilar
 # Date    : Fri Aug 12 15:50:31 CDT 2011
-# Testing :
-# Results :
+# Testing : Enable both CPUs + iterate (for a period of time) over all the
+#           available frequencies while unplugging/plugging CPU1 simultaneously
+#           + iterate over all the CPU governors for a period of time
+# Results : All the frequencies, governors should be set correctly
+#           There should be any lockup or system crash
 ###############################################################################
 
-# Begin L_DD_PM_COMBO_0005
+# Begin L_DD_POWER_1005_0005
 
 # Enable SmartRelfex for all domains
 0001 set -x; handlerSmartReflex.sh enable all
@@ -27,4 +30,4 @@
 
 0010 set -x; handlerCpuFreqScalGovernors.sh restore
 
-# End L_DD_PM_COMBO_0005
+# End L_DD_POWER_1005_0005
