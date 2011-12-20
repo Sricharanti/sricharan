@@ -91,8 +91,9 @@ app_gallery3d="$android_gallery3d_process/.app.Gallery"
 app_movie_view="$android_media_process/.MovieView"
 app_movie3d_view="$android_gallery3d_process/.app.MovieActivity"
 app_omap4_camera="$android_omap4_cam_process/.Camera"
-app_video_camera="$android_omap4_cam_process/.VideoCamera"
+app_omap4_video="$android_omap4_cam_process/.VideoCamera"
 app_camera="$android_cam_process/.Camera"
+app_video="$android_cam_process/.VideoCamera"
 app_sound_recorder="$android_sound_recorder_process/.SoundRecorder"
 app_media_playback="$android_music_process/.MediaPlaybackActivity"
 app_gears4android="$android_gears_process/.Gears4Android"
@@ -106,9 +107,10 @@ run_media_playback="$am_process_execute $app_media_playback"
 run_sound_recorder="$am_process_execute $app_sound_recorder"
 run_movie_view="$am_process_execute $app_movie_view"
 run_movie3d_view="$am_process_execute $app_movie3d_view"
-run_video_camera="$am_process_execute $app_video_camera"
-run_omap4_camera="$am_process_execute $app_omap4_camera"
+run_video="$am_process_execute $app_video"
+run_omap4_video="$am_process_execute $app_omap4_video"
 run_camera="$am_process_execute $app_camera"
+run_omap4_camera="$am_process_execute $app_omap4_camera"
 run_gallery="$am_process_execute $app_gallery"
 run_gallery3d="$am_process_execute $app_gallery3d"
 run_gears4android="$am_process_execute $app_gears4android"
@@ -118,9 +120,9 @@ run_wallpaper_chooser="$am_process_execute $app_wallpaper_chooser"
 run_live_wallpaper_picker="$am_process_execute $app_live_wallpaper_picker"
 
 usecase_list=( "audio_playback" "audio_record" "av_playback" \
-			"av_record" "image_capture" "image_capture_omap4" \
-			"image_decode" "gears4android" "browser" "settings" \
-			"wallpaper2D" "wallpaper3D" "av_playback_ics" )
+		"av_record" "av_record_omap4" "image_capture" "image_capture_omap4" \
+		"image_decode" "gears4android" "browser" "settings" \
+		"wallpaper2D" "wallpaper3D" "av_playback_ics" )
 
 # =============================================================================
 # Functions
@@ -137,7 +139,7 @@ usage() {
 	echo -e "    - handlerActivityManager.sh <usecase> [stop]\n"
 	echo -e "\n  Where <usecase> can be one of the following:\n"
 	for index in ${!usecase_list[*]}; do
-		echo -d "\t** ${usecase_list[$index]}"
+		echo -e "\t** ${usecase_list[$index]}"
 	done
 	echo -e "\n  Third parameter <file> is optional, if it is given\n" \
 		" it can be used by some of the Android apps\n"
@@ -319,19 +321,25 @@ case $android_usecase in
 	;;
 "av_record")
 	need_scard=1
-	android_intent=$android_omap4_cam_process
-	execute=$run_video_camera
-	;;
-"image_capture_omap4")
-	need_scard=1
-	android_intent=$android_omap4_cam_process
-	execute=$run_omap4_camera
+	android_intent=$android_cam_process
+	execute=$run_video
 	;;
 "image_capture")
 	need_scard=1
 	android_intent=$android_cam_process
 	execute=$run_camera
 	;;
+"av_record_omap4")
+	need_scard=1
+	android_intent=$android_omap4_cam_process
+	execute=$run_omap4_video
+	;;
+"image_capture_omap4")
+	need_scard=1
+	android_intent=$android_omap4_cam_process
+	execute=$run_omap4_camera
+	;;
+
 "image_decode")
 	need_scard=1
 	android_intent=$android_media_process
