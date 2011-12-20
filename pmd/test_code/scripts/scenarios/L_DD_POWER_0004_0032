@@ -12,42 +12,45 @@
 
 # Begin L_DD_POWER_0004_0032
 
-0000 set -x; is_android_ready.sh
+# Set the max screen timeout (30 min)
+0001 set -x; handlerAndroidSqlite3.sh set "system" "screen_off_timeout" "1800000"
 
-# Unlock the UI by pressing Menu Key then go to home screen
-0001 set -x; handlerInputSubsystem.sh "keypad" "KeyCodeF1" 1 1 1
-0002 set -x; handlerInputSubsystem.sh "keypad" "KeyCodeHome" 1 1 1
+# set a dummy wakelock to avoid going to suspend
+0002 set -x; handlerAndroidPM.sh wakelock hold dummy
 
-# Set the screen timeout to the max value (30 minutes)
-0003 set -x; handlerAndroidMonkey.sh run 1 $UTILS_DIR_MONKEY/set.max.screen.timeout.value
-0004 set -x; handlerInputSubsystem.sh "keypad" "KeyCodeHome" 1 1 1
+# Verify that the screen is ON
+0003 set -x; android_display_switch.sh ON
 
 # Save OSWR and DEVICE-OFF stats before the MM usecase
-0005 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET" "before"
-0006 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET-LOGIC-OFF" "before"
-0007 set -x; handlerPowerTransitionStats.sh log "DEVICE-OFF" "DEVICE-OFF" "before"
+0004 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET" "before"
+0005 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET-LOGIC-OFF" "before"
+0006 set -x; handlerPowerTransitionStats.sh log "DEVICE-OFF" "DEVICE-OFF" "before"
 
-# Start Image Capture usecase
-0008 set -x; handlerActivityManager.sh image_capture start && sleep 5
+# Start Image Capture usecase and take 3 pictures
+0007 set -x; handlerActivityManager.sh image_capture start && sleep 5
+0008 set -x; handlerAndroidMonkey.sh keypad 1 1000 KeyMonkeyDpadCenter && sleep 2
+0009 set -x; handlerAndroidMonkey.sh keypad 1 1000 KeyMonkeyDpadCenter && sleep 2
+0010 set -x; handlerAndroidMonkey.sh keypad 1 1000 KeyMonkeyDpadCenter && sleep 2
 
-# Take a picture and then go to home Screen
-0009 set -x; handlerAndroidMonkey.sh keypad 1 1000 KeyMonkeyDpadCenter && sleep 5
-0010 set -x; handlerInputSubsystem.sh "keypad" "KeyCodeHome" 1 1 1
+# Stop Camera application
+0011 set -x; handlerAndroidMonkey.sh keypad 1 1000 KeyMonkeyHome
+0012 set -x; handlerActivityManager.sh image_capture stop
 
 # Suspend/Resume for 5 seconds
-0011 set -x; handlerAndroidPM.sh suspend android force 5
-0012 set -x; handlerAndroidPM.sh resume android
+0013 set -x; handlerAndroidPM.sh suspend android force 5
+0014 set -x; handlerAndroidPM.sh resume android
 
 # Save OSWR and DEVICE-OFF stats after the MM usecase
-0013 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET" "after"
-0014 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET-LOGIC-OFF" "after"
-0015 set -x; handlerPowerTransitionStats.sh log "DEVICE-OFF" "DEVICE-OFF" "after"
+0015 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET" "after"
+0016 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET-LOGIC-OFF" "after"
+0017 set -x; handlerPowerTransitionStats.sh log "DEVICE-OFF" "DEVICE-OFF" "after"
 
 # Verify OSWR and DEVICE-OFF counters increased after suspend/resume
-0016 set -x; handlerPowerTransitionStats.sh compare "core_pwrdm" "RET" "before" "after"
-0017 set -x; handlerPowerTransitionStats.sh compare "core_pwrdm" "RET-LOGIC-OFF" "before" "after"
-0018 set -x; handlerPowerTransitionStats.sh compare "DEVICE-OFF" "DEVICE-OFF" "before" "after"
+0018 set -x; handlerPowerTransitionStats.sh compare "core_pwrdm" "RET" "before" "after"
+0019 set -x; handlerPowerTransitionStats.sh compare "core_pwrdm" "RET-LOGIC-OFF" "before" "after"
+0020 set -x; handlerPowerTransitionStats.sh compare "DEVICE-OFF" "DEVICE-OFF" "before" "after"
 
-0019 set -x; rm /mnt/sdcard/DCIM/Camera/*.jpg
+# hack - remove images captured
+0021 set -x; rm /sdcard/DCIM/Camera/IMG*.jpg
 
 # End L_DD_POWER_0004_0032
