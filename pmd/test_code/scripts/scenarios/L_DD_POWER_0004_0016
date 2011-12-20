@@ -14,25 +14,27 @@
 
 0000 set -x; is_android_ready.sh
 
-# Unlock the UI by pressing Menu Key then go to home screen
-0001 set -x; handlerInputSubsystem.sh "keypad" "KeyCodeF1" 1 1 1
-0002 set -x; handlerInputSubsystem.sh "keypad" "KeyCodeHome" 1 1 1
+# Set the max screen timeout (30 min)
+0001 set -x; handlerAndroidSqlite3.sh set "system" "screen_off_timeout" "1800000"
 
-# Set the screen timeout to the max value (30 minutes)
-0003 set -x; handlerAndroidMonkey.sh run 1 $UTILS_DIR_MONKEY/set.max.screen.timeout.value
-0004 set -x; handlerInputSubsystem.sh "keypad" "KeyCodeHome" 1 1 1
+# set a dummy wakelock to avoid going to suspend
+0002 set -x; handlerAndroidPM.sh wakelock hold dummy
+
+# Verify that the screen is ON
+0003 set -x; android_display_switch.sh ON
 
 # Save OSWR and DEVICE-OFF stats before the MM usecase
-0005 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET" "before"
-0006 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET-LOGIC-OFF" "before"
-0007 set -x; handlerPowerTransitionStats.sh log "DEVICE-OFF" "DEVICE-OFF" "before"
+0004 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET" "before"
+0005 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET-LOGIC-OFF" "before"
+0006 set -x; handlerPowerTransitionStats.sh log "DEVICE-OFF" "DEVICE-OFF" "before"
 
-# Start Audio playback usecase
-0008 set -x; handlerActivityManager.sh audio_playback start $MP3_FILE && sleep 15
+# Start Audio playback usecase: Play an MP3 for 15 seconds
+0007 set -x; handlerActivityManager.sh audio_playback start $MP3_FILE && sleep 15
 
-# Stop Audio playback usecase by doing a "Pause" and then going to Home screen
-0009 set -x; handlerAndroidMonkey.sh keypad 1 800 KeyMonkeyPlayPause && sleep 1
-0010 set -x; handlerInputSubsystem.sh "keypad" "KeyCodeHome" 1 1 1 && sleep 2
+# Stop playback and close Audio app
+0008 set -x; handlerAndroidMonkey.sh keypad 1 800 KeyMonkeyPlayPause && sleep 1
+0009 set -x; handlerAndroidMonkey.sh keypad 1 800 KeyMonkeyHome && sleep 2
+0010 set -x; handlerActivityManager.sh audio_playback stop
 
 # Suspend/Resume for 5 seconds
 0011 set -x; handlerAndroidPM.sh suspend android force 5
