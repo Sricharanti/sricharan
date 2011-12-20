@@ -131,8 +131,10 @@ executeCommands() {
 		execute=`echo "${toexecute[$index]}" | tr "," " "`
 		showInfo "Executing >>> $execute"
 		eval $execute
+		# Save all the failures and report at the end of the test
 		if [ $? -gt 0 ]; then
 			showInfo "ERROR: >>> $execute <<< execution failed" 2>&1
+			echo -e "ITERATION:$report_iteration >>> $execute <<<\n" >> error.log
 			error_val=1
 		fi
 	done
@@ -188,10 +190,13 @@ case $operation in
 		echo -e "\n::::::::::::::::: ITERATION $report_iteration ::::::::::::::::::\n"
 		commands=`echo -e $operand2 | tr " " "," | tr ';' ' '`
 		executeCommands $commands
-		verifyErrorFlag "executeCommands reported an error"
 		sleep $delay
 		let counter=counter+1
 	done
+	if [ $error_val -eq 1 ]; then
+		showInfo "Error(s) were reported during the test:"
+		cat error.log && rm error.log
+	fi
 	;;
 *)
 	usage
