@@ -13,19 +13,19 @@
 
 0000 set -x; is_android_ready.sh
 
-# Unlock the UI by pressing Menu Key then go to home screen
-0001 set -x; handlerInputSubsystem.sh "keypad" "KeyCodeF1" 1 1 1
-0002 set -x; handlerInputSubsystem.sh "keypad" "KeyCodeHome" 1 1 1
+# Set the max screen timeout (30 min)
+0001 set -x; handlerAndroidSqlite3.sh set "system" "screen_off_timeout" "15000"
 
-# Ensure that Screen timeout is set to the smaller value (15 seconds)
-0003 set -x; handlerAndroidMonkey.sh run 1 $UTILS_DIR_MONKEY/set.min.screen.timeout.value
-0004 set -x; handlerInputSubsystem.sh "keypad" "KeyCodeHome" 1 1 1
+# set a dummy wakelock to avoid going to suspend
+0002 set -x; handlerAndroidPM.sh wakelock hold dummy
+
+# Verify that the screen is ON
+0003 set -x; android_display_switch.sh ON
 
 # Suspend/Resume for 5 seconds via timeout 200 times
-0005 set -x; handlerCmd.sh iterate 'handlerPowerTransitionStats.sh log "core_pwrdm" "RET" "before"; handlerPowerTransitionStats.sh log "core_pwrdm" "RET-LOGIC-OFF" "before"; handlerPowerTransitionStats.sh log "DEVICE-OFF" "DEVICE-OFF" "before"; handlerAndroidPM.sh suspend android timeout 5; handlerAndroidPM.sh resume android; handlerPowerTransitionStats.sh log "core_pwrdm" "RET" "after"; handlerPowerTransitionStats.sh log "core_pwrdm" "RET-LOGIC-OFF" "after"; handlerPowerTransitionStats.sh log "DEVICE-OFF" "DEVICE-OFF" "after"; handlerPowerTransitionStats.sh compare "core_pwrdm" "RET" "before" "after"; handlerPowerTransitionStats.sh compare "core_pwrdm" "RET-LOGIC-OFF" "before" "after"; handlerPowerTransitionStats.sh compare "DEVICE-OFF" "DEVICE-OFF" "before" "after"' 200 2
+0004 set -x; handlerCmd.sh iterate 'handlerPowerTransitionStats.sh log "core_pwrdm" "RET" "before"; handlerPowerTransitionStats.sh log "core_pwrdm" "RET-LOGIC-OFF" "before"; handlerPowerTransitionStats.sh log "DEVICE-OFF" "DEVICE-OFF" "before"; handlerAndroidPM.sh suspend android timeout 5; handlerAndroidPM.sh resume android; handlerPowerTransitionStats.sh log "core_pwrdm" "RET" "after"; handlerPowerTransitionStats.sh log "core_pwrdm" "RET-LOGIC-OFF" "after"; handlerPowerTransitionStats.sh log "DEVICE-OFF" "DEVICE-OFF" "after"; handlerPowerTransitionStats.sh compare "core_pwrdm" "RET" "before" "after"; handlerPowerTransitionStats.sh compare "core_pwrdm" "RET-LOGIC-OFF" "before" "after"; handlerPowerTransitionStats.sh compare "DEVICE-OFF" "DEVICE-OFF" "before" "after"; android_display_switch.sh ON' 200 2
 
 # Set the timeout value to the max value (30 minutes) for further testing
-0006 set -x; handlerAndroidMonkey.sh run 1 $UTILS_DIR_MONKEY/set.max.screen.timeout.value
-0007 set -x; handlerInputSubsystem.sh "keypad" "KeyCodeHome" 1 1 1
+0005 set -x; handlerAndroidSqlite3.sh set "system" "screen_off_timeout" "1800000"
 
 # End L_DD_POWER_0004_0015
