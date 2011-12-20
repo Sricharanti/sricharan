@@ -14,38 +14,39 @@
 
 0000 set -x; is_android_ready.sh
 
-# Unlock the UI by pressing Menu Key then go to home screen
-0001 set -x; handlerInputSubsystem.sh "keypad" "KeyCodeF1" 1 1 1
-0002 set -x; handlerInputSubsystem.sh "keypad" "KeyCodeHome" 1 1 1
+# Set the max screen timeout (30 min)
+0001 set -x; handlerAndroidSqlite3.sh set "system" "screen_off_timeout" "1800000"
 
-# Set the screen timeout to the max value (30 minutes)
-0003 set -x; handlerAndroidMonkey.sh run 1 $UTILS_DIR_MONKEY/set.max.screen.timeout.value
-0004 set -x; handlerInputSubsystem.sh "keypad" "KeyCodeHome" 1 1 1
+# set a dummy wakelock to avoid going to suspend
+0002 set -x; handlerAndroidPM.sh wakelock hold dummy
+
+# Verify that the screen is ON
+0003 set -x; android_display_switch.sh ON
 
 # Save OSWR and DEVICE-OFF stats before the MM usecase
-0005 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET" "before"
-0006 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET-LOGIC-OFF" "before"
-0007 set -x; handlerPowerTransitionStats.sh log "DEVICE-OFF" "DEVICE-OFF" "before"
+0004 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET" "before"
+0005 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET-LOGIC-OFF" "before"
+0006 set -x; handlerPowerTransitionStats.sh log "DEVICE-OFF" "DEVICE-OFF" "before"
 
 # Start AV playback usecase
-0008 set -x; handlerActivityManager.sh av_playback start $MP4_FILE && sleep 15
+0007 set -x; handlerActivityManager.sh "av_playback_ics" start $MP4_FILE && sleep 15
 
-# Stop AV playback usecase by doing a "Pause" and then going to Home screen
-0009 set -x; handlerAndroidMonkey.sh keypad 1 800 KeyMonkeyPlayPause && sleep 1
-0010 set -x; handlerInputSubsystem.sh "keypad" "KeyCodeHome" 1 1 1 && sleep 1
+# Stop playback and close Audio app
+0008 set -x; handlerAndroidMonkey.sh keypad 1 800 KeyMonkeyHome && sleep 2
+0009 set -x; handlerActivityManager.sh "av_playback_ics" stop
 
 # Suspend/Resume for 5 seconds
-0011 set -x; handlerAndroidPM.sh suspend android force 5
-0012 set -x; handlerAndroidPM.sh resume android
+0010 set -x; handlerAndroidPM.sh suspend android force 5
+0011 set -x; handlerAndroidPM.sh resume android
 
 # Save OSWR and DEVICE-OFF stats after the MM usecase
-0013 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET" "after"
-0014 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET-LOGIC-OFF" "after"
-0015 set -x; handlerPowerTransitionStats.sh log "DEVICE-OFF" "DEVICE-OFF" "after"
+0012 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET" "after"
+0013 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET-LOGIC-OFF" "after"
+0014 set -x; handlerPowerTransitionStats.sh log "DEVICE-OFF" "DEVICE-OFF" "after"
 
 # Verify OSWR and DEVICE-OFF counters increased after suspend/resume
-0016 set -x; handlerPowerTransitionStats.sh compare "core_pwrdm" "RET" "before" "after"
-0017 set -x; handlerPowerTransitionStats.sh compare "core_pwrdm" "RET-LOGIC-OFF" "before" "after"
-0018 set -x; handlerPowerTransitionStats.sh compare "DEVICE-OFF" "DEVICE-OFF" "before" "after"
+0015 set -x; handlerPowerTransitionStats.sh compare "core_pwrdm" "RET" "before" "after"
+0016 set -x; handlerPowerTransitionStats.sh compare "core_pwrdm" "RET-LOGIC-OFF" "before" "after"
+0017 set -x; handlerPowerTransitionStats.sh compare "DEVICE-OFF" "DEVICE-OFF" "before" "after"
 
 # End L_DD_POWER_0004_0020
