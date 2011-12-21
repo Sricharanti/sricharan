@@ -1,0 +1,25 @@
+diff --git a/arch/arm/mach-omap2/board-4430sdp.c b/arch/arm/mach-omap2/board-4430sdp.c
+index baf5d24..3534154 100644
+--- a/arch/arm/mach-omap2/board-4430sdp.c
++++ b/arch/arm/mach-omap2/board-4430sdp.c
+@@ -180,13 +180,19 @@ static struct omap4_keypad_platform_data sdp4430_keypad_data = {
+ };
+ 
+ static struct spi_board_info sdp4430_spi_board_info[] __initdata = {
+-	{
++	[0] = {
+ 		.modalias               = "ks8851",
+ 		.bus_num                = 1,
+ 		.chip_select            = 0,
+ 		.max_speed_hz           = 24000000,
+ 		.irq                    = ETH_KS8851_IRQ,
+ 	},
++	[1] = {
++		.modalias               = "spitst",
++		.bus_num                = 4,
++		.chip_select            = 0,
++		.max_speed_hz           = 1500000,
++	},
+ };
+ 
+ static int omap_ethernet_init(void)

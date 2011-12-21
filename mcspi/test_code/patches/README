@@ -1,0 +1,16 @@
+
+The current McSPI testsuite verify data transmission with different
+configuration options in McSPI channel 4. In order to execute the
+test scenarios your local Kernel must contain the following patch:
+
+PATCH: mcspi_test.patch
+
+This testsuites is executed with McSPI channel 4 in loopback mode,
+so the following lines must shorted:
+
+McSPI4_SOMI <---->  McSPI4_SIMO
+
+In 44xx SDP platform these lines correspond to the following resistors:
+
+R482 <-----> R487
+
