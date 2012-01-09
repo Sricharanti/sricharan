@@ -2,7 +2,7 @@
 # Scenario: L_DD_POWER_0004_0034
 # Author  : Leed Aguilar
 # Date    : 02/10/11
-# Testing : Run and complete Image capture usecase then perform suspend/resume
+# Testing : Run and complete AV Record usecase then perform suspend/resume
 #           via timeout: Boot the platform, release wakelocks, let the system
 #	    go to suspend via timeout and then resume to ensure that system
 #	    works properly
@@ -11,6 +11,8 @@
 ###############################################################################
 
 # Begin L_DD_POWER_0004_0034
+
+0000 set -x; is_android_ready.sh
 
 # Set the max screen timeout (30 min)
 0001 set -x; handlerAndroidSqlite3.sh set "system" "screen_off_timeout" "15000"
@@ -26,15 +28,15 @@
 0005 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET-LOGIC-OFF" "before"
 0006 set -x; handlerPowerTransitionStats.sh log "DEVICE-OFF" "DEVICE-OFF" "before"
 
-# Start Image Capture usecase and take 3 pictures
-0007 set -x; handlerActivityManager.sh image_capture start && sleep 5
-0008 set -x; handlerAndroidMonkey.sh keypad 1 1000 KeyMonkeyDpadCenter && sleep 2
-0009 set -x; handlerAndroidMonkey.sh keypad 1 1000 KeyMonkeyDpadCenter && sleep 2
-0010 set -x; handlerAndroidMonkey.sh keypad 1 1000 KeyMonkeyDpadCenter && sleep 2
+# Start AV Record usecase
+0007 set -x; handlerActivityManager.sh  av_record start && sleep 3
+0008 set -x; handlerAndroidMonkey.sh keypad 1 1000 KeyMonkeyDpadRight
+0009 set -x; handlerAndroidMonkey.sh keypad 1 1000 KeyMonkeyDpadCenter && sleep 15
 
-# Stop Camera application
+# Stop AV record usecase and then go to Home screen
+0010 set -x; input keyevent $KeyMonkeyDpadCenter && sleep 1
 0011 set -x; handlerAndroidMonkey.sh keypad 1 1000 KeyMonkeyHome
-0012 set -x; handlerActivityManager.sh image_capture stop
+0012 set -x; handlerActivityManager.sh  av_record stop
 
 # Suspend/Resume for 5 seconds
 0013 set -x; handlerAndroidPM.sh suspend android timeout 5
@@ -50,9 +52,9 @@
 0019 set -x; handlerPowerTransitionStats.sh compare "core_pwrdm" "RET-LOGIC-OFF" "before" "after"
 0020 set -x; handlerPowerTransitionStats.sh compare "DEVICE-OFF" "DEVICE-OFF" "before" "after"
 
-# hack - remove images captured
-0021 set -x; rm /sdcard/DCIM/Camera/IMG*.jpg
+# hack - remove video recorded
+0021 set -x; rm /sdcard/DCIM/Camera/VID*.mp4
 
-0022 set -x; handlerAndroidSqlite3.sh set "system" "screen_off_timeout" "1800000"
+0021 set -x; handlerAndroidSqlite3.sh set "system" "screen_off_timeout" "1800000"
 
 # End L_DD_POWER_0004_0034

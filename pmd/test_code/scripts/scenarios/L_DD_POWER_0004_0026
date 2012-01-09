@@ -2,10 +2,10 @@
 # Scenario: L_DD_POWER_0004_0026
 # Author  : Leed Aguilar
 # Date    : 11/11/10
-# Testing : Run and complete Audio record usecase then perform suspend/resume
-#           via timeout: Boot platform, release wakelocks, let the system go
-#           to suspend via timeout, then resume to ensure that system works
-#           properly
+# Testing : Run and complete Audio Record usecase then perform suspend/resume
+#           in suspend path (pressing Power/F2 key): Boot the platform, release
+#           wakelocks, press power key to suspend and then resume to ensure that
+#           system works properly
 # Results : At resume, you should get the console prompt back and there should
 #           be any lockup and OSWR and DEVICE-OFF counters should increase
 ###############################################################################
@@ -15,7 +15,7 @@
 0000 set -x; is_android_ready.sh
 
 # Set the max screen timeout (30 min)
-0001 set -x; handlerAndroidSqlite3.sh set "system" "screen_off_timeout" "15000"
+0001 set -x; handlerAndroidSqlite3.sh set "system" "screen_off_timeout" "1800000"
 
 # set a dummy wakelock to avoid going to suspend
 0002 set -x; handlerAndroidPM.sh wakelock hold dummy
@@ -42,7 +42,7 @@
 0014 set -x; handlerActivityManager.sh audio_record stop & sleep 2
 
 # Suspend/Resume for 5 seconds
-0015 set -x; handlerAndroidPM.sh suspend android timeout 5
+0015 set -x; handlerAndroidPM.sh suspend android force 5
 0016 set -x; handlerAndroidPM.sh resume android
 
 # Save OSWR and DEVICE-OFF stats after the MM usecase
@@ -57,8 +57,5 @@
 
 # hack - remove messages recorded
 0023 set -x; rm /sdcard/recording*.3gpp
-
-0024 set -x; handlerAndroidSqlite3.sh set "system" "screen_off_timeout" "1800000"
-
 
 # End L_DD_POWER_0004_0026

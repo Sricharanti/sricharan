@@ -1,19 +1,21 @@
 ###############################################################################
-# Scenario: L_DD_POWER_0004_0030
+# Scenario: L_DD_POWER_0004_0024
 # Author  : Leed Aguilar
-# Date    : 02/10/11
-# Testing : Run and complete AV Record usecase then perform suspend/resume
-#           via timeout: Boot the platform, release wakelocks, let the system
-#	    go to suspend via timeout and then resume to ensure that system
-#	    works properly
+# Date    : 11/11/10
+# Testing : Execute Audio Record usecase then perform suspend/resume in suspend
+#           path (pressing Power/F2 key) during the usecase: Boot the platform,
+#           release wakelocks, press power key to suspend and then resume to
+#           ensure that system works properly
 # Results : At resume, you should get the console prompt back and there should
 #           be any lockup and OSWR and DEVICE-OFF counters should increase
 ###############################################################################
 
-# Begin L_DD_POWER_0004_0030
+# Begin L_DD_POWER_0004_0024
+
+0000 set -x; is_android_ready.sh
 
 # Set the max screen timeout (30 min)
-0001 set -x; handlerAndroidSqlite3.sh set "system" "screen_off_timeout" "15000"
+0001 set -x; handlerAndroidSqlite3.sh set "system" "screen_off_timeout" "1800000"
 
 # set a dummy wakelock to avoid going to suspend
 0002 set -x; handlerAndroidPM.sh wakelock hold dummy
@@ -26,33 +28,29 @@
 0005 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET-LOGIC-OFF" "before"
 0006 set -x; handlerPowerTransitionStats.sh log "DEVICE-OFF" "DEVICE-OFF" "before"
 
-# Start AV Record usecase
-0007 set -x; handlerActivityManager.sh  av_record start && sleep 3
-0008 set -x; handlerAndroidMonkey.sh keypad 1 1000 KeyMonkeyDpadCenter && sleep 15
-
-# Stop AV record usecase and then go to Home screen
-0009 set -x; handlerAndroidMonkey.sh keypad 1 1000 KeyMonkeyDpadCenter && sleep 1
-0010 set -x; handlerAndroidMonkey.sh keypad 1 1000 KeyMonkeyHome
-0011 set -x; handlerActivityManager.sh  av_record stop
+# Start Audio record usecase
+0007 set -x; handlerActivityManager.sh audio_record start && sleep 1
+0008 set -x; handlerAndroidMonkey.sh keypad 3 800 KeyMonkeyDpadLeft
+0009 set -x; handlerAndroidMonkey.sh keypad 3 800 KeyMonkeyDpadDown
+0010 set -x; handlerAndroidMonkey.sh keypad 1 800 KeyMonkeyDpadCenter && sleep 10
 
 # Suspend/Resume for 5 seconds
-0012 set -x; handlerAndroidPM.sh suspend android timeout 5
-0013 set -x; handlerAndroidPM.sh resume android
+0011 set -x; handlerAndroidPM.sh suspend android force 5
+0012 set -x; handlerAndroidPM.sh resume android
 
 # Save OSWR and DEVICE-OFF stats after the MM usecase
-0014 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET" "after"
-0015 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET-LOGIC-OFF" "after"
-0016 set -x; handlerPowerTransitionStats.sh log "DEVICE-OFF" "DEVICE-OFF" "after"
+0013 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET" "after"
+0014 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET-LOGIC-OFF" "after"
+0015 set -x; handlerPowerTransitionStats.sh log "DEVICE-OFF" "DEVICE-OFF" "after"
 
 # Verify OSWR and DEVICE-OFF counters increased after suspend/resume
-0017 set -x; handlerPowerTransitionStats.sh compare "core_pwrdm" "RET" "before" "after"
-0018 set -x; handlerPowerTransitionStats.sh compare "core_pwrdm" "RET-LOGIC-OFF" "before" "after"
-0019 set -x; handlerPowerTransitionStats.sh compare "DEVICE-OFF" "DEVICE-OFF" "before" "after"
+0016 set -x; handlerPowerTransitionStats.sh compare "core_pwrdm" "RET" "before" "after"
+0017 set -x; handlerPowerTransitionStats.sh compare "core_pwrdm" "RET-LOGIC-OFF" "before" "after"
+0018 set -x; handlerPowerTransitionStats.sh compare "DEVICE-OFF" "DEVICE-OFF" "before" "after"
 
-# hack - remove video recorded
-0020 set -x; rm /sdcard/DCIM/Camera/VID*.mp4
+0019 set -x; handlerActivityManager.sh audio_record stop & sleep 2
 
-0021 set -x; handlerAndroidSqlite3.sh set "system" "screen_off_timeout" "1800000"
+# hack - remove messages recorded
+0020 set -x; rm /sdcard/recording*.3gpp
 
-
-# End L_DD_POWER_0004_0030
+# End L_DD_POWER_0004_0024

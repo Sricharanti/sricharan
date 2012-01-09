@@ -1,11 +1,11 @@
 ###############################################################################
 # Scenario: L_DD_POWER_0004_0031
 # Author  : Leed Aguilar
-# Date    : 02/10/11
-# Testing : Run and complete AV Record usecase then perform suspend/resume
-#           via timeout: Boot the platform, release wakelocks, let the system
-#	    go to suspend via timeout and then resume to ensure that system
-#	    works properly. Repeat this process 200 times
+# Date    : 11/11/10
+# Testing : Execute Audio Record usecase then perform suspend/resume in suspend
+#           path (pressing Power/F2 key) during the usecase: Boot the platform,
+#           release wakelocks, press power key to suspend and then resume to
+#           ensure that system works properly. Repeat this process 200 times
 # Results : At resume, you should get the console prompt back and there should
 #           be any lockup and OSWR and DEVICE-OFF counters should increase
 ###############################################################################
@@ -15,21 +15,23 @@
 0000 set -x; is_android_ready.sh
 
 # Set the max screen timeout (30 min)
-0001 set -x; handlerAndroidSqlite3.sh set "system" "screen_off_timeout" "15000"
+0001 set -x; handlerAndroidSqlite3.sh set "system" "screen_off_timeout" "1800000"
 
 # set a dummy wakelock to avoid going to suspend
 0002 set -x; handlerAndroidPM.sh wakelock hold dummy
 
-# Iterate 200 times the following process:
-# a) set screen timeout to the max value
-# b) start/stop AV record usecase
-# c) set screen timeout the minimun value
-# d) suspend the system via timeout
-# e) resume and verify that system works fine
-# f) check for OSWR and Device OFF counters
+# Verify that the screen is ON
+0003 set -x; android_display_switch.sh ON
 
-0003 set -x; handlerCmd.sh iterate 'handlerPowerTransitionStats.sh log "core_pwrdm" "RET" "before"; handlerPowerTransitionStats.sh log "core_pwrdm" "RET-LOGIC-OFF" "before"; handlerPowerTransitionStats.sh log "DEVICE-OFF" "DEVICE-OFF" "before"; android_display_switch.sh ON; handlerActivityManager.sh  av_record start; sleep 3; handlerAndroidMonkey.sh keypad 1 1000 KeyMonkeyDpadCenter; sleep 15; handlerAndroidMonkey.sh keypad 1 1000 KeyMonkeyDpadCenter; sleep 1; handlerAndroidMonkey.sh keypad 1 1000 KeyMonkeyHome; handlerActivityManager.sh  av_record stop; handlerAndroidPM.sh suspend android timeout 5; handlerAndroidPM.sh resume android; handlerPowerTransitionStats.sh log "core_pwrdm" "RET" "after"; handlerPowerTransitionStats.sh log "core_pwrdm" "RET-LOGIC-OFF" "after"; handlerPowerTransitionStats.sh log "DEVICE-OFF" "DEVICE-OFF" "after"; handlerPowerTransitionStats.sh compare "core_pwrdm" "RET-LOGIC-OFF" "before" "after"; handlerPowerTransitionStats.sh compare "DEVICE-OFF" "DEVICE-OFF" "before" "after"; rm /sdcard/DCIM/Camera/VID*.mp4' 200 2
+# Iterate the following process 200 times
+# a) start audio record usecase
+# b) stop audio record usecase
+# c) suspend the system in suspend path
+# d) resume the system
 
-0004 set -x; handlerAndroidSqlite3.sh set "system" "screen_off_timeout" "1800000"
+0004 set -x; handlerCmd.sh iterate 'handlerPowerTransitionStats.sh log "core_pwrdm" "RET" "before"; handlerPowerTransitionStats.sh log "core_pwrdm" "RET-LOGIC-OFF" "before"; handlerPowerTransitionStats.sh log "DEVICE-OFF" "DEVICE-OFF" "before"; handlerActivityManager.sh audio_record start; sleep 1; handlerActivityManager.sh audio_record start && sleep 1; handlerAndroidMonkey.sh keypad 3 800 KeyMonkeyDpadLeft; handlerAndroidMonkey.sh keypad 3 800 KeyMonkeyDpadDown; handlerAndroidMonkey.sh keypad 1 800 KeyMonkeyDpadCenter; sleep 10; handlerAndroidMonkey.sh keypad 3 800 KeyMonkeyDpadDown; handlerAndroidMonkey.sh keypad 1 800 KeyMonkeyDpadCenter; handlerAndroidMonkey.sh keypad 1 800 KeyMonkeyHome; handlerActivityManager.sh audio_record stop ; sleep 2;  handlerAndroidPM.sh suspend android force 5; handlerAndroidPM.sh resume android; handlerPowerTransitionStats.sh log "core_pwrdm" "RET" "after"; handlerPowerTransitionStats.sh log "core_pwrdm" "RET-LOGIC-OFF" "after"; handlerPowerTransitionStats.sh log "DEVICE-OFF" "DEVICE-OFF" "after"; handlerPowerTransitionStats.sh compare "core_pwrdm" "RET" "before" "after"; handlerPowerTransitionStats.sh compare "core_pwrdm" "RET-LOGIC-OFF" "before" "after"; handlerPowerTransitionStats.sh compare "DEVICE-OFF" "DEVICE-OFF" "before" "after"; android_display_switch.sh ON' 200 2
+
+# hack - remove messages recorded
+0023 set -x; rm /sdcard/recording*.3gpp
 
 # End L_DD_POWER_0004_0031

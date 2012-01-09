@@ -1,8 +1,8 @@
 ###############################################################################
-# Scenario: L_DD_POWER_0004_0032
+# Scenario: L_DD_POWER_0004_0038
 # Author  : Leed Aguilar
 # Date    : 02/10/11
-# Testing : Run and complete AV Record usecase then perform suspend/resume
+# Testing : Run and complete Image Capture usecase then perform suspend/resume
 #           in suspend path (pressing Power/F2 key): Boot the platform, release
 #           wakelocks, press power key to suspend and then resume to ensure that
 #           system works properly
@@ -10,7 +10,7 @@
 #           be any lockup and OSWR and DEVICE-OFF counters should increase
 ###############################################################################
 
-# Begin L_DD_POWER_0004_0032
+# Begin L_DD_POWER_0004_0038
 
 0000 set -x; is_android_ready.sh
 
@@ -28,31 +28,32 @@
 0005 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET-LOGIC-OFF" "before"
 0006 set -x; handlerPowerTransitionStats.sh log "DEVICE-OFF" "DEVICE-OFF" "before"
 
-# Start AV Record usecase
-0007 set -x; handlerActivityManager.sh  av_record start && sleep 3
+# Start Image Capture usecase and take 3 pictures
+0007 set -x; handlerActivityManager.sh image_capture start && sleep 5
 0008 set -x; handlerAndroidMonkey.sh keypad 1 1000 KeyMonkeyDpadRight
-0009 set -x; handlerAndroidMonkey.sh keypad 1 1000 KeyMonkeyDpadCenter && sleep 15
+0009 set -x; handlerAndroidMonkey.sh keypad 1 1000 KeyMonkeyDpadCenter && sleep 2
+0010 set -x; handlerAndroidMonkey.sh keypad 1 1000 KeyMonkeyDpadCenter && sleep 2
+0011 set -x; handlerAndroidMonkey.sh keypad 1 1000 KeyMonkeyDpadCenter && sleep 2
 
-# Stop AV record usecase and then go to Home screen
-0010 set -x; handlerAndroidMonkey.sh keypad 1 1000 KeyMonkeyDpadCenter && sleep 1
-0011 set -x; handlerAndroidMonkey.sh keypad 1 1000 KeyMonkeyHome
-0012 set -x; handlerActivityManager.sh  av_record stop
+# Stop Camera application
+0012 set -x; handlerAndroidMonkey.sh keypad 1 1000 KeyMonkeyHome
+0013 set -x; handlerActivityManager.sh image_capture stop
 
 # Suspend/Resume for 5 seconds
-0013 set -x; handlerAndroidPM.sh suspend android force 5
-0014 set -x; handlerAndroidPM.sh resume android
+0014 set -x; handlerAndroidPM.sh suspend android force 5
+0015 set -x; handlerAndroidPM.sh resume android
 
 # Save OSWR and DEVICE-OFF stats after the MM usecase
-0015 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET" "after"
-0016 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET-LOGIC-OFF" "after"
-0017 set -x; handlerPowerTransitionStats.sh log "DEVICE-OFF" "DEVICE-OFF" "after"
+0016 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET" "after"
+0017 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET-LOGIC-OFF" "after"
+0018 set -x; handlerPowerTransitionStats.sh log "DEVICE-OFF" "DEVICE-OFF" "after"
 
 # Verify OSWR and DEVICE-OFF counters increased after suspend/resume
-0018 set -x; handlerPowerTransitionStats.sh compare "core_pwrdm" "RET" "before" "after"
-0019 set -x; handlerPowerTransitionStats.sh compare "core_pwrdm" "RET-LOGIC-OFF" "before" "after"
-0019 set -x; handlerPowerTransitionStats.sh compare "DEVICE-OFF" "DEVICE-OFF" "before" "after"
+0019 set -x; handlerPowerTransitionStats.sh compare "core_pwrdm" "RET" "before" "after"
+0020 set -x; handlerPowerTransitionStats.sh compare "core_pwrdm" "RET-LOGIC-OFF" "before" "after"
+0021 set -x; handlerPowerTransitionStats.sh compare "DEVICE-OFF" "DEVICE-OFF" "before" "after"
 
-# hack - remove video recorded
-0021 set -x; rm /sdcard/DCIM/Camera/VID*.mp4
+# hack - remove images captured
+0022 set -x; rm /sdcard/DCIM/Camera/IMG*.jpg
 
-# End L_DD_POWER_0004_0032
+# End L_DD_POWER_0004_0038
