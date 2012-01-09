@@ -321,7 +321,6 @@ case $operation in
 		handlerInputSubsystem.sh "keypad" "KeyCodePowerKey" 1 1 1
 		sleep 1
 		input keyevent $KeyMonkeyMenu
-		input keyevent $KeyMonkeyHome
 		;;
 	"kernel")
 		showInfo "Kernel: resuming the system"
