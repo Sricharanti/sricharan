@@ -20,9 +20,6 @@
 # set a dummy wakelock to avoid going to suspend
 0002 set -x; handlerAndroidPM.sh wakelock hold dummy
 
-# Verify that the screen is ON
-0003 set -x; android_display_switch.sh ON
-
 # Iterate 200 times the following process:
 # a) set screen timeout to the max value
 # b) start audio playback usecase
@@ -31,8 +28,8 @@
 # e) suspend the system via timeout
 # f) resume and verify that system works fine
 
-0004 set -x; handlerCmd.sh iterate 'handlerPowerTransitionStats.sh log "core_pwrdm" "RET" "before"; handlerPowerTransitionStats.sh log "core_pwrdm" "RET-LOGIC-OFF" "before"; handlerPowerTransitionStats.sh log "DEVICE-OFF" "DEVICE-OFF" "before"; handlerActivityManager.sh audio_playback start $MP3_FILE; sleep 15; android_display_switch.sh ON; handlerAndroidMonkey.sh keypad 1 800 KeyMonkeyPlayPause; sleep 1; handlerAndroidMonkey.sh keypad 1 800 KeyMonkeyHome; sleep 2; handlerActivityManager.sh audio_playback stop; handlerAndroidPM.sh suspend android timeout 5; handlerAndroidPM.sh resume android; handlerPowerTransitionStats.sh log "core_pwrdm" "RET" "after"; handlerPowerTransitionStats.sh log "core_pwrdm" "RET-LOGIC-OFF" "after"; handlerPowerTransitionStats.sh log "DEVICE-OFF" "DEVICE-OFF" "after"; handlerPowerTransitionStats.sh compare "core_pwrdm" "RET" "before" "after"; handlerPowerTransitionStats.sh compare "core_pwrdm" "RET-LOGIC-OFF" "before" "after"; handlerPowerTransitionStats.sh compare "DEVICE-OFF" "DEVICE-OFF" "before" "after"' 200 2
+0003 set -x; handlerCmd.sh iterate 'handlerPowerTransitionStats.sh log "core_pwrdm" "RET" "before"; handlerPowerTransitionStats.sh log "core_pwrdm" "RET-LOGIC-OFF" "before"; handlerPowerTransitionStats.sh log "DEVICE-OFF" "DEVICE-OFF" "before"; android_display_switch.sh ON; handlerActivityManager.sh audio_playback start $MP3_FILE; sleep 15; android_display_switch.sh ON; handlerAndroidMonkey.sh keypad 1 800 KeyMonkeyPlayPause; sleep 1; handlerAndroidMonkey.sh keypad 1 800 KeyMonkeyHome; sleep 2; handlerActivityManager.sh audio_playback stop; handlerAndroidPM.sh suspend android timeout 5; handlerAndroidPM.sh resume android; handlerPowerTransitionStats.sh log "core_pwrdm" "RET" "after"; handlerPowerTransitionStats.sh log "core_pwrdm" "RET-LOGIC-OFF" "after"; handlerPowerTransitionStats.sh log "DEVICE-OFF" "DEVICE-OFF" "after"; handlerPowerTransitionStats.sh compare "core_pwrdm" "RET" "before" "after"; handlerPowerTransitionStats.sh compare "core_pwrdm" "RET-LOGIC-OFF" "before" "after"; handlerPowerTransitionStats.sh compare "DEVICE-OFF" "DEVICE-OFF" "before" "after"' 200 2
 
-0005 set -x; handlerAndroidSqlite3.sh set "system" "screen_off_timeout" "1800000"
+0004 set -x; handlerAndroidSqlite3.sh set "system" "screen_off_timeout" "1800000"
 
 # End L_DD_POWER_0004_0019
