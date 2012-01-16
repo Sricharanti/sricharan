@@ -33,7 +33,7 @@ static int __init gptimer_request_init(void)
 {
 	struct clk *gt_fclk;
 	uint32_t gt_rate;
-	unsigned int timer_count;
+	unsigned int timer_count1, timer_count2;
 
 	/*Requesting for any available timer*/
 	timer_ptr = omap_dm_timer_request();
@@ -61,13 +61,13 @@ static int __init gptimer_request_init(void)
 	printk(KERN_INFO "GP Timer initialized and started (%lu Hz, IRQ %d)\n",
 		(long unsigned)gt_rate, timer_irq);
 
-	timer_count = omap_dm_timer_read_counter(timer_ptr);
-	printk(KERN_INFO "Timer count before delay: %u\n", timer_count);
+	timer_count1 = omap_dm_timer_read_counter(timer_ptr);
 
 	ssleep(delay);
 
-	timer_count = omap_dm_timer_read_counter(timer_ptr);
-	printk(KERN_INFO "Timer count after delay: %u\n", timer_count);
+	timer_count2 = omap_dm_timer_read_counter(timer_ptr);
+	printk(KERN_INFO "Timer count before delay: %u\n", timer_count1);
+	printk(KERN_INFO "Timer count after delay: %u\n", timer_count2);
 
 	return 0;
 }
