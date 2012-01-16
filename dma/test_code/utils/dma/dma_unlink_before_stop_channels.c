@@ -71,6 +71,7 @@ int verify_buffers(struct dma_buffers_info *buffers) {
          * Increment the pointer to the next data, only the destination
          * since we are using the constant addressing
          */
+	src_address++;
         dest_address++;
     }
     return 0;
@@ -94,6 +95,7 @@ void dma_callback(int transfer_id, u16 transfer_status, void *data) {
                 " received in callback (%d)\n", transfer->transfer_id,
                 transfer_id);
        }
+	unmap_phys_buffers(&transfer->buffers);
        /* Check the transfer status is acceptable */
        if((transfer_status & OMAP_DMA_BLOCK_IRQ) || (transfer_status == 0)){
            /* Verify the contents of the buffer are equal */
@@ -169,7 +171,8 @@ static int __init dma_module_init(void) {
            transfers[i].data_burst = OMAP_DMA_DATA_BURST_DIS;
            transfers[i].data_type = OMAP_DMA_DATA_TYPE_S8;
            transfers[i].endian_type = DMA_TEST_LITTLE_ENDIAN;
-           transfers[i].addressing_mode = OMAP_DMA_AMODE_CONSTANT;
+	   transfers[i].addressing_mode = OMAP_DMA_AMODE_POST_INC;
+	   transfers[i].dst_addressing_mode = OMAP_DMA_AMODE_POST_INC;
            transfers[i].priority = DMA_CH_PRIO_HIGH;
            transfers[i].buffers.buf_size = (10240 * (i+1)*(i+1)) + i % 2;
 	   /* Request a dma transfer */
