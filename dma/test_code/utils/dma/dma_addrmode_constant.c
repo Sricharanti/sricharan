@@ -25,6 +25,7 @@
 #define TRANSFER_COUNT 13
 #define TRANSFER_POLL_COUNT 60
 #define TRANSFER_POLL_TIME 1500
+#define COLOR_PATTERN	0xA5
 
 static struct dma_transfer transfers[TRANSFER_COUNT];
 
@@ -55,14 +56,13 @@ static void check_test_passed(void){
  */
 int verify_buffers(struct dma_buffers_info *buffers) {
     int i;
-    u8 *src_address = (u8*) buffers->src_buf;
     u8 *dest_address = (u8*) buffers->dest_buf;
 
 	for (i = 0; i < buffers->buf_size; i++) {
-		if (src_address[i] != dest_address[i]) {
+		if (COLOR_PATTERN != dest_address[i]) {
 			printk(KERN_ERR "\nError: Data mismatch\n");
-			printk(KERN_ERR "src_buf[%d]=%d dest_buf[%d]=%d\n",
-			i, src_address[i], i, dest_address[i]);
+			printk(KERN_ERR "COLOR_PATTERN %x dest_buf[%d]=%x\n",
+			COLOR_PATTERN, i, dest_address[i]);
 			return 1;
 		}
 	}
@@ -179,7 +179,9 @@ static int __init dma_module_init(void) {
                set_test_passed(0);
                return 1;
            }
-           fill_source_buffer(&(transfers[i].buffers));
+		/* Initialise a constant color pattern for the source */
+		omap_set_dma_color_mode(transfers[i].transfer_id,
+				OMAP_DMA_CONSTANT_FILL, COLOR_PATTERN);
 
            /* Setup the dma transfer parameters */
            setup_dma_transfer(&transfers[i]);
