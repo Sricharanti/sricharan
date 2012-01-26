@@ -81,7 +81,7 @@ APPLICABLE_TESTS :=	benchmarks dma ethernet usb_host gpio hsuart i2c \
 			keypad  mcspi mmc vfp \
 			realtimeclock timer-32k touchscreen watchdog pmd\
 			accelerometer ambient_light led oskernel \
-			compass pressure proximity temperature gyro \
+			compass pressure proximity temperature \
 			vibrator
 
 #sfh7741 split out to compass, pressure, proximity, temperature
