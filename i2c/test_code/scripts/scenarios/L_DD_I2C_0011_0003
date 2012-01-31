@@ -1,0 +1,19 @@
+#######################################
+##Scenario: L_DD_I2C_0011_0003
+## Author: Mariia Nagul
+## Date: 31 Jan 2012
+## Testing: Read all phoenix addressable registers available in slave id 0x48-0x4a multiple times,
+## Also slaves on I2C bus 2,3,4
+#######################################
+
+# Begin L_DD_I2C_0011_0003
+
+01 set -x; i2cdump -f -y 0x1 0x48
+
+02 set -x; i2cdump -f -y 0x2 0x4B
+
+03 set -x; i2cdump -f -y 0x4 0x1E
+
+04 set -x; i2cdump -f -y 0x4 0x1C
+
+# End L_DD_I2c_0011_0003

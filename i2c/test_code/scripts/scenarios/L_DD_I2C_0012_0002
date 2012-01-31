@@ -1,0 +1,24 @@
+#######################################
+## Scenario: L_DD_I2C_0012_0002
+## Author: Mariia nagul
+## Date: 31 Jan 2012
+## Testing: Do a transaction (Read/Write) to an arbitrary Slave ID by using any random slave address
+## (which actually does not exist on the I2C Bus
+## Should cause errors
+#######################################
+
+# Begin L_DD_I2C_0012_0002
+
+01 set -x; i2cdump -f -y 0x1 0x70 && [ $?  -ne 0 ] && exit 0
+
+02 set -x; i2cset -f -y 1 0x70 0x2 0x3  && [ $?  -ne 0 ] && exit 0
+
+03 set -x; i2cdump -f -y 0x1 0x70 && [ $?  -ne 0 ] && exit 0
+
+04 set -x; i2cdump -f -y 0x4 0x4a && [ $?  -ne 0 ] && exit 0
+
+05 set -x; i2cset -f -y 4 0x4a 0x2 0x3 && [ $?  -ne 0 ] && exit 0
+
+06 set -x; i2cdump -f -y 0x4 0x4a && [ $?  -ne 0 ] && exit 0
+
+# End L_DD_I2c_0012_0002

@@ -1,0 +1,12 @@
+#######################################
+## Sceanrio: L_DD_I2C_0012_0001
+## Author: Mariia nagul
+## Date: 31 Jan 2012
+## Testing: With an ongoing transfer, start another transfer on the same I2C bus
+#######################################
+
+# Begin L_DD_I2C_0012_0001
+
+01 set -x; i2cset -f -y 1 0x48 0x2 0x3 && i2cset -f -y 1 0x48 0x2 0x3
+
+# End L_DD_I2C_0012_0001
