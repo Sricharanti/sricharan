@@ -118,7 +118,10 @@ export SYSFS_H2W_STATE=$SYSFS_DEV_VIRTUAL/switch/h2w/state
 export SYSFS_KERNEL_UEVENT_HELPER=/sys/kernel/uevent_helper
 export SYSFS_KERNEL_UEVENT_SEQNUM=/sys/kernel/uevent_seqnum
 export SYSFS_KERNEL_DEBUG=/sys/kernel/debug
-
+export SYSFS_DVFS=$SYSFS_KERNEL_DEBUG/dvfs
+export SYSFS_SR=$SYSFS_KERNEL_DEBUG/smartreflex
+export SYSFS_CPUFREQ=/sys/devices/system/cpu/cpufreq
+export SYSFS_ABB=$SYSFS_KERNEL_DEBUG/pm_debug
 # /sys/kernel/ipv4
 # /sys/kernel/mm
 # /sys/kernel/slab

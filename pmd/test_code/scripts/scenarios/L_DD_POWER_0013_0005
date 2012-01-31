@@ -1,0 +1,25 @@
+##############################################################################
+# Scenario: L_DD_POWER_0013_0005
+# Author  : Mariia Nagul
+# Date    : Jan 30th, 2010
+# Testing : Power sysfs world  Presence Test - 
+#           Check for sys fs entries for each feature enabled like dvfs, SR, cpufreq, ABB.
+################################################################################
+
+# Begin L_DD_POWER_0013_0005
+
+. $UTILS_DIR/configuration/sysfs.configuration
+
+# Testing for dvfs sysfs en try
+01 set -x;  echo $SYSFS_DVFS ; [ -d $SYSFS_DVFS ]  && echo "DVFS sysfs entry exists" ||  { echo "NO DVFS entry found at $SYSFS_DVFS" ; exit 1; }
+
+# Testing for SR sysfs entry
+02 set -x; echo $SYSFS_SR ;[ -d $SYSFS_SR ] && echo "SR sysfs entry exist" || { echo "NO SR entry found at $SYSFS_SR" ; exit 1; }
+
+# Testing for cpufreq sysfs entry
+03 set -x; [ -d $SYSFS_CPUFREQ ] && echo "Cpufreq sysfs entry exist"  ||  { echo "NO SYSFS_CPUFREQ entry found at $SYSFS_CPUFREQ" ; exit 1; }
+
+# Testing for ABB sysfs entry
+04 set -x; [ -d $SYSFS_ABB ] && echo "ABB sysfs entry exist"  || { echo "NO ABB entry found at $SYSFS_ABB" ; exit 1; }
+
+# End L_DD_POWER_0013_0005
