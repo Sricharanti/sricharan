@@ -1,0 +1,16 @@
+###############################################
+# Scenario: SD_NODDR_HS_3.0_HOTPLUG_CONFIG
+# Author  : Viswanath Puttagunta
+# Date    : Tue Mar 27 2012
+###############################################
+
+# Begin SD_NODDR_HS_3.0_HOTPLUG_CONFIG
+
+01 set -x; sd_mount_assert.sh $EXT_SD_FOLDER 0
+02 set -x; echo "Now plug in the NODDR_HS_3.0 compatible SD card"
+03 set -x; echo "Within 10 seconds"
+04 set -x; sleep 10
+05 set -x; sd_mount_assert.sh $EXT_SD_FOLDER 1
+02 set -x; mmc_freq_bus.sh $MMCSD_REGS_FILE 0 2 3.0
+
+# End SD_NODDR_HS_3.0_HOTPLUG_CONFIG
