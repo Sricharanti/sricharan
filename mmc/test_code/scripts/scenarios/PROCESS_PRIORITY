@@ -1,0 +1,29 @@
+###############################################################################
+# Scenario: PROCESS_PRIORITY
+# Author  : Viswanath, Puttagunta
+# Date    : Mar 28, 2012
+###############################################################################
+
+# Begin PROCESS_PRIORITY
+
+01  set -x; handlerProcessPriority.sh "add" "1" "dd if=/dev/urandom of=$MSD_TEST_FOLDER/file.1 bs=1M count=50 && sync" "-20"
+02  set -x; handlerProcessPriority.sh "add" "2" "dd if=/dev/urandom of=$MSD_TEST_FOLDER/file.2 bs=1M count=50 && sync" "+20"
+03  set -x; handlerProcessPriority.sh "execute" "5"
+
+04  set -x; handlerProcessPriority.sh "add" "1" "dd if=/dev/urandom of=$MSD_TEST_FOLDER/file.1 bs=1M count=50 && sync" "+20"
+05  set -x; handlerProcessPriority.sh "add" "2" "dd if=/dev/urandom of=$MSD_TEST_FOLDER/file.2 bs=1M count=50 && sync" "-20"
+06  set -x; handlerProcessPriority.sh "execute" "5"
+
+07  set -x; handlerCmd.sh "run" "dd if=/dev/urandom of=$MSD_TEST_FOLDER/file.temporal bs=1M count=100 && sync"
+08  set -x; handlerProcessPriority.sh "add" "1" "cp $MSD_TEST_FOLDER/file.temporal $MSD_TEST_FOLDER/file.1 && sync" "-20"
+09  set -x; handlerProcessPriority.sh "add" "2" "cp $MSD_TEST_FOLDER/file.temporal $MSD_TEST_FOLDER/file.2 && sync" "+20"
+10  set -x; handlerProcessPriority.sh "execute" "5"
+11  set -x; handlerCmd.sh "run" "cmp $MSD_TEST_FOLDER/file.1 $MSD_TEST_FOLDER/file.2"
+
+12  set -x; handlerCmd.sh "run" "dd if=/dev/urandom of=$MSD_TEST_FOLDER/file.temporal bs=1M count=100 && sync"
+13  set -x; handlerProcessPriority.sh "add" "1" "cp $MSD_TEST_FOLDER/file.temporal $MSD_TEST_FOLDER/file.1 && sync" "+20"
+14  set -x; handlerProcessPriority.sh "add" "2" "cp $MSD_TEST_FOLDER/file.temporal $MSD_TEST_FOLDER/file.2 && sync" "-20"
+15  set -x; handlerProcessPriority.sh "execute" "5"
+16  set -x; handlerProcessPriority.sh "run" "cmp $MSD_TEST_FOLDER/file.1 $MSD_TEST_FOLDER/file.2"
+
+# End PROCESS_PRIORITY
