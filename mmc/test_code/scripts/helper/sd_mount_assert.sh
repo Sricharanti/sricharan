@@ -2,15 +2,32 @@
 ###############################################################
 # Name: sd_mount_assert.sh
 # Description: Helper function to check if SD card is mounted
-#		at correct location
-# Usage: Make sure SD card is plugged in and Android is booted
-#        # sd_mount_assert
-# Author: Viswanath, Puttagunt
+#		at correct location or not.
+# Usage:  # sd_mount_assert /mnt/ext_sdcard 1
+#	    Returns 0 if SD card mounted properly. 1 if is not.
+#
+#	  # sd_mount_assert /mnt/ext_sdcard 0
+#	    Returns 1 if SD card is mounted properly. 0 if not.
+# Author: Viswanath, Puttagunta
 ###############################################################
 
-if [ -z "$(mount | grep "/mnt/ext_sdcard")" ]; then
-	echo "SD card not mounted"
+MOUNT_POINT=$1
+MOUNTED=$2
+
+if [ $MOUNTED = "1" ]; then
+# Make sure SD card is properly mounted
+	if [ -z "$(mount | grep "$MOUNT_POINT")" ]; then
+		echo "SD card not mounted"
+		exit 1
+	fi
+	echo "SD Card Mounted"
+	exit 0
+fi
+
+# Make sure SD card is not mounted
+if [ -n "$(mount | grep "$MOUNT_POINT")" ]; then
+        echo "SD card mounted"
 	exit 1
 fi
-echo "SD card mounted"
+echo "SD Card not mounted"
 exit 0

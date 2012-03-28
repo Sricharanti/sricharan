@@ -6,7 +6,7 @@
 
 # Begin SD_NODDR_HS_3.0_COLDPLUG_CONFIG
 
-01 set -x; sd_mount_assert.sh
-02 set -x; mmc_freq_bus.sh /d/mmc1/regs 0 2 3.0
+01 set -x; sd_mount_assert.sh $EXT_SD_FOLDER 1
+02 set -x; mmc_freq_bus.sh $MMCSD_REGS_FILE 0 2 3.0
 
 # End  SD_NODDR_HS_3.0_COLDPLUG_CONFIG

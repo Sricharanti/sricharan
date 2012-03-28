@@ -47,9 +47,23 @@ handlerFilesystem.sh getType
 FS_TYPE=`cat $HFS_FS_TYPE`
 
 if [ "$FS_TYPE" = "android" ]; then
+	export EXT_SD_FOLDER="/mnt/ext_sdcard"
+	export USERDATA_FOLDER="/data"
+	if [ "$MSD_TEST_FOLDER" = "" ]; then
+		if [ "$SLOT" = "1" ]; then
+			export MSD_TEST_FOLDER=$EXT_SD_FOLDER
+		elif [ "$SLOT" = "0" ]; then
+			export MSD_TEST_FOLDER=$USERDATA_FOLDER
+		else
+			echo "Invalid SLOT=$SLOT"
+			exit 1
+		fi
+		echo "Using default MSD_TEST_FOLDER=$MSD_TEST_FOLDER"
+	fi
 	export MMCSD_BLOCK_FOLDER=/dev/block
 fi
 
+export MMCSD_REGS_FILE="/sys/kernel/debug/mmc$SLOT/regs"
 export MMCSD_DEVFS_NAME=mmcblk$SLOT
 export MMCSD_DEVFS_ENTRY=$MMCSD_BLOCK_FOLDER/${MMCSD_DEVFS_NAME}
 
