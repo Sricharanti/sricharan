@@ -1,0 +1,22 @@
+###############################################################################
+# Scenario: PROCESS_PARALLELISM
+# Author  : Viswanath, Puttagunta
+# Date    : Mar 28, 2012
+###############################################################################
+
+# Begin PROCESS_PARALLELISM
+
+01  set -x; handlerProcessParallelism.sh "clean"
+02  set -x; handlerProcessParallelism.sh "add" "dd if=/dev/urandom of=$MSD_TEST_FOLDER/tmp.01 bs=1M count=10"
+03  set -x; handlerProcessParallelism.sh "add" "dd if=/dev/urandom of=$MSD_TEST_FOLDER/tmp.02 bs=1M count=10"
+04  set -x; handlerProcessParallelism.sh "add" "dd if=/dev/urandom of=$MSD_TEST_FOLDER/tmp.03 bs=1M count=10"
+05  set -x; handlerProcessParallelism.sh "add" "dd if=/dev/urandom of=$MSD_TEST_FOLDER/tmp.04 bs=1M count=10"
+06  set -x; handlerProcessParallelism.sh "add" "dd if=/dev/urandom of=$MSD_TEST_FOLDER/tmp.05 bs=1M count=10"
+07  set -x; handlerProcessParallelism.sh "add" "dd if=/dev/urandom of=$MSD_TEST_FOLDER/tmp.06 bs=1M count=10"
+08  set -x; handlerProcessParallelism.sh "add" "dd if=/dev/urandom of=$MSD_TEST_FOLDER/tmp.07 bs=1M count=10"
+09  set -x; handlerProcessParallelism.sh "add" "dd if=/dev/urandom of=$MSD_TEST_FOLDER/tmp.08 bs=1M count=10"
+10  set -x; handlerProcessParallelism.sh "add" "dd if=/dev/urandom of=$MSD_TEST_FOLDER/tmp.09 bs=1M count=10"
+11  set -x; handlerProcessParallelism.sh "add" "dd if=/dev/urandom of=$MSD_TEST_FOLDER/tmp.10 bs=1M count=10"
+12  set -x; handlerProcessParallelism.sh "execute"
+
+# End PROCESS_PARALLELISM
