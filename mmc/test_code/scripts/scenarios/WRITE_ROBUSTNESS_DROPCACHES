@@ -1,0 +1,11 @@
+##################################################
+# Scenario: WRITE_ROBUSTNESS_DROPCACHES
+# Author:   Viswanath Puttagunta
+# Date:     Mar 27, 2012
+#################################################
+
+# Begin WRITE_ROBUSTNESS_DROPCACHES
+
+01 set -x; $MMCSD_DIR_HELPER/rw_robustness.sh write $MSD_TEST_FOLDER 3600 1024000 250 1
+
+# End WRITE_ROBUSTNESS_DROPCACHES
