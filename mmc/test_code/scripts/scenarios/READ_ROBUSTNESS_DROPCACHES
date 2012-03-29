@@ -1,0 +1,11 @@
+##################################################
+# Scenario: READ_ROBUSTNESS_DROPCACHES
+# Author:   Viswanath Puttagunta
+# Date:     Mar 27, 2012
+#################################################
+
+# Begin READ_ROBUSTNESS_DROPCACHES
+
+01 set -x; $MMCSD_DIR_HELPER/rw_robustness.sh read $MSD_TEST_FOLDER 3600 1024000 250 1
+
+# End READ_ROBUSTNESS_DROPCACHES
