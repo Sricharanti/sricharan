@@ -1,0 +1,15 @@
+###############################################################################
+# Scenario: IRQ_AFFINITY
+# Author  : Viswanath Puttagunta
+# Date    : Mar 29, 2012
+###############################################################################
+
+# Begin IRQ_AFFINITY
+
+01  set -x; handlerCmd.sh "run" "dd if=/dev/urandom of=$MSD_TEST_FOLDER/file.temporal bs=1M count=250 && sync"
+02  set -x; handlerIrqAffinity.sh "switch" "cp $MSD_TEST_FOLDER/file.temporal $MSD_TEST_FOLDER/file.cp" "10" "5" "$MSD_IRQ_NUM"
+03  set -x; handlerIrqAffinity.sh "switch" "dd if=$MSD_TEST_FOLDER/file.temporal of=$MSD_TEST_FOLDER/file.dd" "10" "5" "$MSD_IRQ_NUM"
+04  set -x; handlerIrqAffinity.sh "switch" "dd if=/dev/urandom of=$MSD_TEST_FOLDER/file.urandom bs=1M count=2000" "10" "5" "$MSD_IRQ_NUM"
+05  set -x; handlerCmd.sh "run" "cmp $MSD_TEST_FOLDER/file.cp $MSD_TEST_FOLDER/file.dd"
+
+# End IRQ_AFFINITY

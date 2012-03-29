@@ -82,10 +82,15 @@ export MMCSD_MOUNTPOINT_2_LOG=$MMCSD_DIR_TMP/mmcsd.mountpoint.2
 export MMCSD_MOUNTPOINT_1=/media/mmcsdp`echo "$SLOT+1" | bc`
 export MMCSD_MOUNTPOINT_2=/media/mmcsdp`echo "$SLOT+2" | bc`
 
+#Eventually, we should not be using MMC_IRQ_NUM
+#and only use MSD_IRQ_NUM: Mass Storage Dev irq num
+#as same test can be expanded to SATA for example
 if [ "$SLOT" = "0" ]; then
 	export MMC_IRQ_NUM=118
+	export MSD_IRQ_NUM=118
 elif [ "$SLOT" = "1" ]; then
 	export MMC_IRQ_NUM=115
+	export MSD_IRQ_NUM=115
 fi
 
 export MMCSD_TMPFS_MOUNTPOINT=/media/tmpfs
