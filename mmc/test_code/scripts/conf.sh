@@ -61,6 +61,8 @@ if [ "$FS_TYPE" = "android" ]; then
 		echo "Using default MSD_TEST_FOLDER=$MSD_TEST_FOLDER"
 	fi
 	export MMCSD_BLOCK_FOLDER=/dev/block
+	export WAKELOCK_FILE="/sys/power/wake_lock"
+	export WAKEUNLOCK_FILE="/sys/power/wake_unlock"
 fi
 
 export MMCSD_REGS_FILE="/sys/kernel/debug/mmc$SLOT/regs"
@@ -88,10 +90,13 @@ export MMCSD_MOUNTPOINT_2=/media/mmcsdp`echo "$SLOT+2" | bc`
 if [ "$SLOT" = "0" ]; then
 	export MMC_IRQ_NUM=118
 	export MSD_IRQ_NUM=118
+	export MSD_PWRDM="l3init_pwrdm"
 elif [ "$SLOT" = "1" ]; then
 	export MMC_IRQ_NUM=115
 	export MSD_IRQ_NUM=115
+	export MSD_PWRDM="l3init_pwrdm"
 fi
+export PMDEBUG_COUNT_FILE="/sys/kernel/debug/pm_debug/count"
 
 export MMCSD_TMPFS_MOUNTPOINT=/media/tmpfs
 

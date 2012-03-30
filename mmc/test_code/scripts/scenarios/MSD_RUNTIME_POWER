@@ -1,0 +1,12 @@
+###############################################################################
+# Scenario: MSD_RUNTIME_POWER
+# Author  : Viswanath Puttagunta
+# Date    : Mar 30, 2012
+###############################################################################
+
+# Begin MSD_RUNTIME_POWER
+
+01  set -x; echo msd > $WAKELOCK_FILE
+02  set -x; handler_msdruntime.sh $MSD_TEST_FOLDER $MSD_PWRDM $PMDEBUG_COUNT_FILE
+03  set -x; echo msd > $WAKEUNLOCK_FILE
+# End MSD_RUNTIME_POWER
