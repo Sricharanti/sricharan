@@ -404,6 +404,22 @@ elif [ `cat /proc/cpuinfo | grep -ic Zoom3` -gt 0 ]; then
 	export omapKeypadEvent="/dev/input/event0"
 	export touchPoint1Event="/dev/input/event1"
 
+elif [ `cat $SYSFS_SOC_FAMILY | grep -wc "OMAP5430"` -ge 1 ]; then
+
+	# OMAP4 Keypad (on board keypad)
+	export omapKeypadEvent="/dev/input/event1"
+	# PALMAS Power Button event
+	export omapPowerButtonEvent="/dev/input/event8"
+
+	export KeyCodeHome=102
+	export KeyCodeBack=231
+	export KeyCodeCall=231
+	export KeyCodeEndCall=107
+	export KeyCodeMenu=107
+	export KeyCodeVolumeUp=115
+	export KeyCodeVolumeDown=114
+	export KeyCodePowerKey=116 # specific for event	8
+
 fi
 
 # End of file
