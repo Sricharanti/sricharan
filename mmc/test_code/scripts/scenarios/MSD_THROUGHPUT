@@ -1,0 +1,9 @@
+###############################################################################
+# Scenario: MSD_THROUGHPUT
+# Author  : Viswanath Puttagunta
+# Date    : April 2, 2012
+###############################################################################
+
+# Begin MSD_THROUGHPUT
+01  set -x; handler_throughput.sh $MSD_RAW_BLOCK $MSD_TEST_FOLDER
+# End MSD_THROUGHPUT

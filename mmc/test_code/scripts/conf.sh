@@ -63,6 +63,14 @@ if [ "$FS_TYPE" = "android" ]; then
 	export MMCSD_BLOCK_FOLDER=/dev/block
 	export WAKELOCK_FILE="/sys/power/wake_lock"
 	export WAKEUNLOCK_FILE="/sys/power/wake_unlock"
+	if [ "$SLOT" = "1" ]; then
+		export MSD_RAW_BLOCK="/dev/block/mmcblk1"
+	elif [ "$SLOT" = "0" ]; then
+		export MSD_RAW_BLOCK="/dev/block/mmcblk0"
+	else
+		echo "Bad slot"
+		exit 1
+	fi
 fi
 
 export MMCSD_REGS_FILE="/sys/kernel/debug/mmc$SLOT/regs"
