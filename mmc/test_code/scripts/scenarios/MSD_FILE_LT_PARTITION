@@ -1,0 +1,9 @@
+###############################################################################
+# Scenario: MSD_FILE_LT_PARTITION
+# Author  : Viswanath Puttagunta
+# Date    : April 2, 2012
+###############################################################################
+
+# Begin MSD_FILE_LT_PARTITION
+02  set -x; handler_filegtpart.sh $MSD_TEST_FOLDER_SM
+# End MSD_FILE_LT_PARTITION

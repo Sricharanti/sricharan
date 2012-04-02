@@ -49,11 +49,14 @@ FS_TYPE=`cat $HFS_FS_TYPE`
 if [ "$FS_TYPE" = "android" ]; then
 	export EXT_SD_FOLDER="/mnt/ext_sdcard"
 	export USERDATA_FOLDER="/data"
+	export CACHE_FOLDER="/cache"
 	if [ "$MSD_TEST_FOLDER" = "" ]; then
 		if [ "$SLOT" = "1" ]; then
 			export MSD_TEST_FOLDER=$EXT_SD_FOLDER
+			export MSD_TEST_FOLDER_SM=$EXT_SD_FOLDER
 		elif [ "$SLOT" = "0" ]; then
 			export MSD_TEST_FOLDER=$USERDATA_FOLDER
+			export MSD_TEST_FOLDER_SM=$CACHE_FOLDER
 		else
 			echo "Invalid SLOT=$SLOT"
 			exit 1
