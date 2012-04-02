@@ -1,0 +1,11 @@
+###############################################################################
+# Scenario: MSD_THROUGHPUT_PERFORMANCE
+# Author  : Viswanath Puttagunta
+# Date    : April 2, 2012
+###############################################################################
+
+# Begin MSD_THROUGHPUT_PERFORMANCE
+01  set -x; echo performance > $CPU0_GOVFILE
+02  set -x; handler_throughput.sh $MSD_RAW_BLOCK $MSD_TEST_FOLDER
+03  set -x; echo $DEFAULT_GOVERNOR > $CPU0_GOVFILE
+# End MSD_THROUGHPUT_PERFORMANCE

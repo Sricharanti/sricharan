@@ -76,6 +76,8 @@ fi
 export MMCSD_REGS_FILE="/sys/kernel/debug/mmc$SLOT/regs"
 export MMCSD_DEVFS_NAME=mmcblk$SLOT
 export MMCSD_DEVFS_ENTRY=$MMCSD_BLOCK_FOLDER/${MMCSD_DEVFS_NAME}
+export CPU0_GOVFILE="/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor"
+export DEFAULT_GOVERNOR=$(cat $CPU0_GOVFILE)
 
 
 if [ "$SLOT" = "1" ]
