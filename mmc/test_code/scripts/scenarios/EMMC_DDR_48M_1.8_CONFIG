@@ -1,0 +1,11 @@
+###############################################
+# Scenario: EMMC_DDR_48M_1.8_CONFIG
+# Author  : Viswanath Puttagunta
+# Date    : Mon Mar 26 11:12:00 CST 2012
+###############################################
+
+# Begin EMMC_DDR_48M_1.8_CONFIG
+
+01 set -x; mmc_freq_bus.sh $MMCSD_REGS_FILE 1 2 1.8
+
+# End  EMMC_DDR_48M_1.8_CONFIG

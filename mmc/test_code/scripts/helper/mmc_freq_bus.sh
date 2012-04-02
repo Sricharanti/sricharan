@@ -37,7 +37,7 @@ HCTL_REG=$(cat $REGS_FILE | grep "HCTL:" | awk '{print$2}')
 echo HCTL_REG=$HCTL_REG
 VOLT=$(( ($HCTL_REG >> 9) & 0x7))
 echo VOLT=$VOLT
-MMC_VOLT_LOCAL=$(echo ${MMC_VOLT[6]})
+MMC_VOLT_LOCAL=$(echo ${MMC_VOLT[$VOLT]})
 if [ "$VOLT_DESIRED" != $MMC_VOLT_LOCAL ]; then
 	echo "VOLT Test Failed"
 	exit 1
