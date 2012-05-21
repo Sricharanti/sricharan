@@ -30,6 +30,10 @@
 
 #define PROC_FILE "driver/gpio_test_result"
 
+#ifndef CONFIG_ARCH_OMAP5
+#define cpu_is_omap54xx() NULL
+#endif
+
 static uint test;
 static uint gpio;
 static uint value;
