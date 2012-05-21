@@ -174,28 +174,29 @@ static void gpio_test7(void)
 
 	if (cpu_is_omap34xx()) {
 		/* Initialise base addresses for each bank */
-		bank_base_addr[0] = OMAP2_L4_IO_ADDRESS(0x48310000);
-		bank_base_addr[1] = OMAP2_L4_IO_ADDRESS(0x49050000);
-		bank_base_addr[2] = OMAP2_L4_IO_ADDRESS(0x49052000);
-		bank_base_addr[3] = OMAP2_L4_IO_ADDRESS(0x49054000);
-		bank_base_addr[4] = OMAP2_L4_IO_ADDRESS(0x49056000);
-		bank_base_addr[5] = OMAP2_L4_IO_ADDRESS(0x49058000);
+		bank_base_addr[0] = ioremap_nocache(0x48310000, SZ_4K);
+		bank_base_addr[1] = ioremap_nocache(0x49050000, SZ_4K);
+		bank_base_addr[2] = ioremap_nocache(0x49052000, SZ_4K);
+		bank_base_addr[3] = ioremap_nocache(0x49054000, SZ_4K);
+		bank_base_addr[4] = ioremap_nocache(0x49056000, SZ_4K);
+		bank_base_addr[5] = ioremap_nocache(0x49058000, SZ_4K);
 	} else if (cpu_is_omap44xx()) {
-		bank_base_addr[0] = OMAP2_L4_IO_ADDRESS(0x4a310000);
-		bank_base_addr[1] = OMAP2_L4_IO_ADDRESS(0x48055000);
-		bank_base_addr[2] = OMAP2_L4_IO_ADDRESS(0x48057000);
-		bank_base_addr[3] = OMAP2_L4_IO_ADDRESS(0x48059000);
-		bank_base_addr[4] = OMAP2_L4_IO_ADDRESS(0x4805B000);
-		bank_base_addr[5] = OMAP2_L4_IO_ADDRESS(0x4805D000);
+		bank_base_addr[0] = ioremap_nocache(0x4a310000, SZ_4K);
+		bank_base_addr[1] = ioremap_nocache(0x48055000, SZ_4K);
+		bank_base_addr[2] = ioremap_nocache(0x48057000, SZ_4K);
+		bank_base_addr[3] = ioremap_nocache(0x48059000, SZ_4K);
+		bank_base_addr[4] = ioremap_nocache(0x4805B000, SZ_4K);
+		bank_base_addr[5] = ioremap_nocache(0x4805D000, SZ_4K);
 	} else if (cpu_is_omap54xx()) {
-		bank_base_addr[0] = OMAP2_L4_IO_ADDRESS(0x4ae10000);
-		bank_base_addr[1] = OMAP2_L4_IO_ADDRESS(0x48055000);
-		bank_base_addr[2] = OMAP2_L4_IO_ADDRESS(0x48057000);
-		bank_base_addr[3] = OMAP2_L4_IO_ADDRESS(0x48059000);
-		bank_base_addr[4] = OMAP2_L4_IO_ADDRESS(0x4805B000);
-		bank_base_addr[5] = OMAP2_L4_IO_ADDRESS(0x4805D000);
-		bank_base_addr[6] = OMAP2_L4_IO_ADDRESS(0x48051000);
-		bank_base_addr[7] = OMAP2_L4_IO_ADDRESS(0x48053000);
+		bank_base_addr[0] = ioremap_nocache(0x4ae10000, SZ_4K);
+		bank_base_addr[1] = ioremap_nocache(0x48055000, SZ_4K);
+		bank_base_addr[2] = ioremap_nocache(0x48057000, SZ_4K);
+		bank_base_addr[3] = ioremap_nocache(0x48059000, SZ_4K);
+		bank_base_addr[4] = ioremap_nocache(0x4805B000, SZ_4K);
+		bank_base_addr[5] = ioremap_nocache(0x4805D000, SZ_4K);
+		bank_base_addr[6] = ioremap_nocache(0x48051000, SZ_4K);
+		bank_base_addr[7] = ioremap_nocache(0x48053000, SZ_4K);
+
 	} else {
 		printk(KERN_ERR "This GPIO test case not supported"
 				" for this architecture\n");
