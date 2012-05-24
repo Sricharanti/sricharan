@@ -161,8 +161,8 @@ export DSP_FREQ=$DSP_FREQ_TMP/dpll2_ck/dpll2_m2_ck/iva2_ck/rate
 # Timer Driver Specific
 #-----------------------------------------------------------------------------------`
 
-GPTIMER=`dmesg | grep -i gptimer`
-export RESERVED_GPTIMER=`echo $GPTIMER | awk '{print $4}'| cut -c '8'`
+GPTIMER=`dmesg | grep -r GPTIMER |  cut -d ":" -f2`
+export RESERVED_GPTIMER=`echo $GPTIMER | awk '{print $1}'| cut -c '8'`
 export MAXGPTIMERS=12
 
 #-----------------------------------------------------------------------------------
