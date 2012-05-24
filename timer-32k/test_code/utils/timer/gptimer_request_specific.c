@@ -51,16 +51,7 @@ static int __init gptimer_request_init(void)
 		return -1;
 	}
 	 /*Set the clock source*/
-#ifdef CONFIG_ARCH_OMAP4
-	if (gptimer_id > 4 && gptimer_id < 9) {
-		/* K2.6.39 doesn't support OMAP_TIMER_SRC_EXT_CLK (2) yet */
-		/* omap_dm_timer_set_source(timer_ptr, 2); */
-		printk(KERN_ERR "GPtimers 5-8 are not available\n");
-		return -1;
-	}
-	else
-#endif
-		omap_dm_timer_set_source(timer_ptr, OMAP_TIMER_SRC_SYS_CLK);
+	omap_dm_timer_set_source(timer_ptr, OMAP_TIMER_SRC_SYS_CLK);
 
 	/*Figure out what IRQ our timer triggers*/
 	timer_irq = omap_dm_timer_get_irq(timer_ptr);
