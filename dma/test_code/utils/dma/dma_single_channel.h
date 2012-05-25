@@ -30,6 +30,7 @@
 #include <asm/io.h>
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,32))
  #include <plat/dma.h>
+ #include <plat/hardware.h>
 #elif (LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,27))
  #include <mach/dma.h>
 #else
