@@ -35,14 +35,12 @@ SCENARIOS	:= scripts/scenarios
 OLD_KDIR:=$(shell cat .config | grep KDIR | cut -d'=' -f2)
 OLD_SUITES:=$(shell cat .config | grep TESTSUITES | cut -d'=' -f2)
 
-ifdef CONFIG_ARCH_OMAP1
-TARGET_PLATFORM:=OMAP_1710
-else
+ifdef CONFIG_ARCH_OMAP2PLUS
 TARGET_PLATFORM:=OMAP2PLUS
-endif
-
-ifdef CONFIG_ARCH_OMAP4
-TARGET_PLATFORM:=OMAP_4430
+else
+#TODO: If it is needed, here is where other OMAP flags should be
+# evaluated for those defconfigs without multi-omap support
+TARGET_PLATFORM:=OMAP_VARIANT
 endif
 
 ifdef CONFIG_ANDROID
@@ -77,24 +75,39 @@ $(warning TESTSUITES was not specified. Defaulting to "all")
 TESTSUITES:=all
 endif
 
-APPLICABLE_TESTS :=	benchmarks dma ethernet usb_host gpio hsuart i2c \
-			keypad  mcspi mmc vfp \
-			realtimeclock timer-32k touchscreen watchdog pmd\
-			accelerometer ambient_light led oskernel \
-			compass pressure proximity temperature \
-			vibrator
+# Benchmarks tools
+APPLICABLE_TESTS := benchmarks
 
-#sfh7741 split out to compass, pressure, proximity, temperature
+# System Management
+APPLICABLE_TESTS += oskernel realtimeclock watchdog timer-32k dma catchall
 
+# UI input
+APPLICABLE_TESTS += keypad touchscreen
 
-ifdef CONFIG_ARCH_OMAP3
-APPLICABLE_TESTS +=     camera audio-alsa framebuffer video nand
-endif
+# UI Output
+APPLICABLE_TESTS += led sgx
+
+# Basic Connectivity
+APPLICABLE_TESTS += usb_device usb_ehci usb_host usb_ohci hsuart ethernet
+
+# Audio subsystem
+APPLICABLE_TESTS += audio-alsa
+
+# File system
+APPLICABLE_TESTS += mmc mtd
+
+# Power and Energy Management
+APPLICABLE_TESTS += battery pmd vibrator
+
+# Peripheral connectors
+APPLICABLE_TESTS += gpio mcspi i2c
+
+# Sensor devices
+APPLICABLE_TESTS += accelerometer ambient_light compass pressure proximity \
+		    temperature
+
 ifdef CONFIG_ANDROID
-APPLICABLE_TESTS +=     android
-endif
-ifneq ($(or $(CONFIG_MACH_OMAP_3630SDP), $(CONFIG_MACH_OMAP_3430SDP)),)
-APPLICABLE_TESTS +=     norflash
+APPLICABLE_TESTS += android
 endif
 
 ifeq ($(TESTSUITES),all)
