@@ -173,7 +173,7 @@ static int gpio_keep_reading(void *no_of_iterations)
 static void gpio_test7(void)
 {
 	int ret, request_status[32], i, j;
-	u32 *bank_base_addr[6], mod_status, bank_status;
+	u32 *bank_base_addr[8], mod_status, bank_status;
 	int bank_count;
 
 	if (cpu_is_omap34xx()) {
@@ -229,12 +229,16 @@ static void gpio_test7(void)
 				gpio_free(j+i*32);
 		}
 		/* Read GPIO_CTRL to verify the module status */
-		if (cpu_is_omap34xx())
+		if (cpu_is_omap34xx()) {
 			mod_status = __raw_readl(bank_base_addr[i] + 0xc)
 						& 0x1;
-		else if (cpu_is_omap44xx() || cpu_is_omap54xx())
-			mod_status = __raw_readl(bank_base_addr[i] + 0x4c)
-						& 0x1;
+		} else if (cpu_is_omap44xx() || cpu_is_omap54xx()) {
+			if (bank_status)
+				mod_status =
+				__raw_readl(bank_base_addr[i] + 0x130) & 0x1;
+			else
+				mod_status = 1;
+		}
 		if (mod_status)
 			printk(KERN_INFO "GPIO Module %d disable Success"
 				"\n\n", i);
