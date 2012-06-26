@@ -1,0 +1,61 @@
+##############################################################################
+#
+# Author  : Leed Aguilar <leed.aguilar@ti.com>
+# Monkey  : Touch dragging for playback usecases in Tablet2 with ICS
+#
+###############################################################################
+
+<pre>
+type= raw data
+count= 10
+speed= 1.0
+start data >>
+
+
+captureDispatchPointer(0,0,0,1200,730,0,0,0,0,0,0,0)
+UserWait(1500)
+captureDispatchPointer(0,0,2,100,730,0,0,0,0,0,0,0)
+UserWait(1500)
+captureDispatchPointer(0,0,2,1200,730,0,0,0,0,0,0,0)
+UserWait(1500)
+captureDispatchPointer(0,0,2,100,730,0,0,0,0,0,0,0)
+UserWait(1500)
+captureDispatchPointer(0,0,2,1200,730,0,0,0,0,0,0,0)
+UserWait(1500)
+captureDispatchPointer(0,0,2,100,730,0,0,0,0,0,0,0)
+UserWait(1500)
+captureDispatchPointer(0,0,2,1200,730,0,0,0,0,0,0,0)
+UserWait(1500)
+captureDispatchPointer(0,0,2,100,730,0,0,0,0,0,0,0)
+UserWait(1500)
+captureDispatchPointer(0,0,2,1200,730,0,0,0,0,0,0,0)
+UserWait(1500)
+captureDispatchPointer(0,0,2,100,730,0,0,0,0,0,0,0)
+UserWait(1500)
+captureDispatchPointer(0,0,2,1200,730,0,0,0,0,0,0,0)
+UserWait(1500)
+captureDispatchPointer(0,0,0,100,730,0,0,0,0,0,0,0)
+UserWait(1500)
+captureDispatchPointer(0,0,2,1200,730,0,0,0,0,0,0,0)
+UserWait(1500)
+captureDispatchPointer(0,0,2,100,730,0,0,0,0,0,0,0)
+UserWait(1500)
+captureDispatchPointer(0,0,2,1200,730,0,0,0,0,0,0,0)
+UserWait(1500)
+captureDispatchPointer(0,0,2,100,730,0,0,0,0,0,0,0)
+UserWait(1500)
+captureDispatchPointer(0,0,2,1200,730,0,0,0,0,0,0,0)
+UserWait(1500)
+captureDispatchPointer(0,0,2,100,730,0,0,0,0,0,0,0)
+UserWait(1500)
+captureDispatchPointer(0,0,2,1200,730,0,0,0,0,0,0,0)
+UserWait(1500)
+captureDispatchPointer(0,0,2,100,730,0,0,0,0,0,0,0)
+UserWait(1500)
+captureDispatchPointer(0,0,2,1200,730,0,0,0,0,0,0,0)
+UserWait(1500)
+captureDispatchPointer(0,0,2,100,730,0,0,0,0,0,0,0)
+UserWait(1500)
+captureDispatchPointer(0,0,1,1200,730,0,0,0,0,0,0,0)
+UserWait(1500)
+
