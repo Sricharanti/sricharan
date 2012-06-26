@@ -1,0 +1,259 @@
+<?xml version="1.0"?>
+<titan>
+
+	<test id="L_DD_ANDROIDUI_0001">
+
+		<information>
+			<autor> Leed Aguilar </autor>
+			<description> Android UI DEMO </description>
+			<dateofcreation> 02/06/2012 </dateofcreation>
+		</information>
+
+		<run>
+			<action>
+				<command>/testsuites/android/scripts/test_runner.sh L_DD_ANDROIDUI_0001</command>
+			</action>
+			<action>
+				<command>rm /testsuites/android/scripts/log.*</command>
+			</action>
+		</run>
+
+		<pass>
+			<output>
+				<value>stat=0</value>
+			</output>
+		</pass>
+
+		<fail>
+			<timeout time="300"/>
+			<output>
+				<regularexpression>stat=[^0]\d*</regularexpression>
+			</output>
+		</fail>
+
+	</test>
+	<test id="L_DD_AUDIOPLAYBACK_0001">
+
+		<information>
+			<autor> Leed Aguilar </autor>
+			<description> Android Audio playback DEMO </description>
+			<dateofcreation> 02/06/2012 </dateofcreation>
+		</information>
+
+		<run>
+			<action>
+				<command>/testsuites/android/scripts/test_runner.sh L_DD_AUDIOPLAYBACK_0001</command>
+			</action>
+			<action>
+				<command>rm /testsuites/android/scripts/log.*</command>
+			</action>
+		</run>
+
+		<pass>
+			<output>
+				<value>stat=0</value>
+			</output>
+		</pass>
+
+		<fail>
+			<timeout time="300"/>
+			<output>
+				<regularexpression>stat=[^0]\d*</regularexpression>
+			</output>
+		</fail>
+
+	</test>
+
+	<test id="L_DD_WALLPAPER_0001">
+
+		<information>
+			<autor> Leed Aguilar </autor>
+			<description> Android Display 2D Wallpaper DEMO </description>
+			<dateofcreation> 02/06/2012 </dateofcreation>
+		</information>
+
+		<run>
+			<action>
+				<command>/testsuites/android/scripts/test_runner.sh L_DD_WALLPAPER_0001</command>
+			</action>
+			<action>
+				<command>rm /testsuites/android/scripts/log.*</command>
+			</action>
+		</run>
+
+		<pass>
+			<output>
+				<value>stat=0</value>
+			</output>
+		</pass>
+
+		<fail>
+			<timeout time="300"/>
+			<output>
+				<regularexpression>stat=[^0]\d*</regularexpression>
+			</output>
+		</fail>
+
+	</test>
+
+	<test id="L_DD_WALLPAPER_0002">
+
+		<information>
+			<autor> Leed Aguilar </autor>
+			<description> Android Display 3D Wallpaper DEMO </description>
+			<dateofcreation> 02/06/2012 </dateofcreation>
+		</information>
+
+		<run>
+			<action>
+				<command>/testsuites/android/scripts/test_runner.sh L_DD_WALLPAPER_0002</command>
+			</action>
+			<action>
+				<command>rm /testsuites/android/scripts/log.*</command>
+			</action>
+		</run>
+
+		<pass>
+			<output>
+				<value>stat=0</value>
+			</output>
+		</pass>
+
+		<fail>
+			<timeout time="300"/>
+			<output>
+				<regularexpression>stat=[^0]\d*</regularexpression>
+			</output>
+		</fail>
+
+	</test>
+
+	<test id="L_DD_AVPLAYBACK_0001">
+
+		<information>
+			<autor> Leed Aguilar </autor>
+			<description> Android AV playback DEMO </description>
+			<dateofcreation> 02/06/2012 </dateofcreation>
+		</information>
+
+		<run>
+			<action>
+				<command>/testsuites/android/scripts/test_runner.sh L_DD_AVPLAYBACK_0001</command>
+			</action>
+			<action>
+				<command>rm /testsuites/android/scripts/log.*</command>
+			</action>
+		</run>
+
+		<pass>
+			<output>
+				<value>stat=0</value>
+			</output>
+		</pass>
+
+		<fail>
+			<timeout time="300"/>
+			<output>
+				<regularexpression>stat=[^0]\d*</regularexpression>
+			</output>
+		</fail>
+
+	</test>
+
+	<test id="L_DD_IMAGECAPTURE_0001">
+
+		<information>
+			<autor> Leed Aguilar </autor>
+			<description> Android Image Capture DEMO </description>
+			<dateofcreation> 02/06/2012 </dateofcreation>
+		</information>
+
+		<run>
+			<action>
+				<command>/testsuites/android/scripts/test_runner.sh L_DD_IMAGECAPTURE_0001</command>
+			</action>
+			<action>
+				<command>rm /testsuites/android/scripts/log.*</command>
+			</action>
+		</run>
+
+		<pass>
+			<output>
+				<value>stat=0</value>
+			</output>
+		</pass>
+
+		<fail>
+			<timeout time="300"/>
+			<output>
+				<regularexpression>stat=[^0]\d*</regularexpression>
+			</output>
+		</fail>
+
+	</test>
+
+	<test id="L_DD_AUDIORECORD_0001">
+
+		<information>
+			<autor> Leed Aguilar </autor>
+			<description> Android Audio Record DEMO </description>
+			<dateofcreation> 02/06/2012 </dateofcreation>
+		</information>
+
+		<run>
+			<action>
+				<command>/testsuites/android/scripts/test_runner.sh L_DD_AUDIORECORD_0001</command>
+			</action>
+			<action>
+				<command>rm /testsuites/android/scripts/log.*</command>
+			</action>
+		</run>
+
+		<pass>
+			<output>
+				<value>stat=0</value>
+			</output>
+		</pass>
+
+		<fail>
+			<timeout time="300"/>
+			<output>
+				<regularexpression>stat=[^0]\d*</regularexpression>
+			</output>
+		</fail>
+
+	</test>
+
+	<test id="L_DD_AVRECORD_0001">
+
+		<information>
+			<autor> Leed Aguilar </autor>
+			<description> Android AV Record DEMO </description>
+			<dateofcreation> 02/06/2012 </dateofcreation>
+		</information>
+
+		<run>
+			<action>
+				<command>/testsuites/android/scripts/test_runner.sh L_DD_AVRECORD_0001</command>
+			</action>
+			<action>
+				<command>rm /testsuites/android/scripts/log.*</command>
+			</action>
+		</run>
+
+		<pass>
+			<output>
+				<value>stat=0</value>
+			</output>
+		</pass>
+
+		<fail>
+			<timeout time="300"/>
+			<output>
+				<regularexpression>stat=[^0]\d*</regularexpression>
+			</output>
+		</fail>
+
+	</test>
+
+</titan>

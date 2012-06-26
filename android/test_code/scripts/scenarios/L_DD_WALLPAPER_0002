@@ -1,0 +1,31 @@
+###############################################################################
+# Scenario: L_GFX_Android_Wallpaper_0001
+# Author  : Leed Aguilar
+# Date    : 02/28/2001
+# Testing : Setting all the Available Android Wallpapers
+# Results : No system crash or lock-up should happen
+###############################################################################
+
+# Begin L_GFX_Android_Wallpaper_0001
+
+0001 set -x; is_android_ready.sh
+
+# set a dummy wakelock to avoid going to suspend
+0002 set -x; handlerAndroidPM.sh wakelock hold dummy
+
+0004 set -x; handlerInputSubsystem.sh "keypad" "KeyCodePowerKey" 1 1 1 && sleep 2
+
+# 0001-0003 are only for Demo purposes. They can be deleted
+0001 set -x; wakeup_display.sh && sleep 1
+0002 handlerAndroidMonkey.sh run 1 $UTILS_DIR_MONKEY/t2.ics.unlock.screen
+#0003 handlerAndroidMonkey.sh run 1 $UTILS_DIR_MONKEY/t2.ics.set.max.screen.timeout.value && sleep 1
+
+# Set the max screen timeout (30 min)
+0002 set -x; handlerAndroidSqlite3.sh set "system" "screen_off_timeout" "1800000"
+
+# Verify that the screen is ON
+0003 set -x; android_display_switch.sh ON
+
+0004 set -x; select_android_wallpaper.sh "3D" "multi" $SGX_TOTAL_LIVE_WALLPAPERS
+
+# End L_GFX_Android_Wallpaper_0001

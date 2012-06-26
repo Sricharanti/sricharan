@@ -1,0 +1,43 @@
+###############################################################################
+# Scenario: L_DD_POWER_0004_0024
+# Author  : Leed Aguilar
+# Date    : 11/11/10
+# Testing : Execute Audio Record usecase then perform suspend/resume in suspend
+#           path (pressing Power/F2 key) during the usecase: Boot the platform,
+#           release wakelocks, press power key to suspend and then resume to
+#           ensure that system works properly
+# Results : At resume, you should get the console prompt back and there should
+#           be any lockup and OSWR and DEVICE-OFF counters should increase
+###############################################################################
+
+# Begin L_DD_POWER_0004_0024
+
+0000 set -x; is_android_ready.sh
+
+# Set the max screen timeout (30 min)
+0001 set -x; handlerAndroidSqlite3.sh set "system" "screen_off_timeout" "1800000"
+
+# set a dummy wakelock to avoid going to suspend
+0002 set -x; handlerAndroidPM.sh wakelock hold dummy
+
+# Verify that the screen is ON
+0003 set -x; android_display_switch.sh ON
+
+# Start Audio record usecase
+0007 set -x; handlerActivityManager.sh audio_record start && sleep 1
+0008 set -x; handlerAndroidMonkey.sh keypad 3 800 KeyMonkeyDpadLeft
+0009 set -x; handlerAndroidMonkey.sh keypad 3 800 KeyMonkeyDpadDown
+0010 set -x; handlerAndroidMonkey.sh keypad 1 800 KeyMonkeyDpadCenter && sleep 27
+
+0010 set -x; input keyevent 20 && sleep 2
+0010 set -x; input keyevent 23 && sleep 3
+0010 set -x; input keyevent 20 && sleep 2
+0010 set -x; input keyevent 21 && sleep 4
+0010 set -x; input keyevent 23 && sleep 4
+
+0019 set -x; handlerActivityManager.sh audio_record stop & sleep 2
+
+# hack - remove messages recorded
+0020 set -x; rm /sdcard/recording*.3gpp
+
+# End L_DD_POWER_0004_0024
