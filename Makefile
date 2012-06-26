@@ -85,7 +85,7 @@ APPLICABLE_TESTS += oskernel realtimeclock watchdog timer-32k dma catchall
 APPLICABLE_TESTS += keypad touchscreen
 
 # UI Output
-APPLICABLE_TESTS += led sgx
+APPLICABLE_TESTS += led
 
 # Basic Connectivity
 APPLICABLE_TESTS += usb_device usb_ehci usb_host usb_ohci hsuart ethernet
