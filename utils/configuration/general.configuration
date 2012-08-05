@@ -132,7 +132,18 @@ if [ `cat /proc/cpuinfo| grep -ic OMAP4` -ne 0 ];then
 	export INT_24XX_I2C2_IRQ=89
 	export INT_34XX_I2C3_IRQ=93
 	export INT_44XX_I2C4_IRQ=94
-
+elif [ `cat /proc/cpuinfo| grep -ic OMAP5` -ne 0 ];then
+	export I2C_HIGH_SPEED_MODE=2100
+	export I2C_ADDRESSES="0x48 0x49 0x4A"
+	export I2C_REG_1=0x48
+	export I2C_REG_1_VALUE_INITIAL=0x18
+	export I2C_REG_2=0x48
+	export I2C_REG_2_VALUE_INITIAL=0x18
+	export INT_24XX_I2C1_IRQ=88
+	export INT_24XX_I2C2_IRQ=89
+	export INT_34XX_I2C3_IRQ=92
+	export INT_44XX_I2C4_IRQ=93
+	export INT_54XX_I2C5_IRQ=94
 else
 	export I2C_HIGH_SPEED_MODE=2600
 	export I2C_ADDRESSES="0x48 0x49 0x4A 0x4B"
