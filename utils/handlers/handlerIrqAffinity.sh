@@ -73,7 +73,7 @@ fi
 
 if [ "$LOCAL_OPERATION" = "switch" ]; then
 
-	$LOCAL_COMMAND_LINE &
+	eval $LOCAL_COMMAND_LINE &
 	LOCAL_COMMAND_PID=`echo $!`
 
 	count=1
