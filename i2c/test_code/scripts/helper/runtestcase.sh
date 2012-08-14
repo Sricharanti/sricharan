@@ -72,7 +72,7 @@ case "$TESTCASEID" in
 	;;
 	#Two writes in parallel
 	9)
-		verifyspeed.sh && (($UTILS_DIR_HANDLERS/handlerCpuAffinity.sh "switch" "i2cset  -r  -y -f  1 0x48  0x2  0x3 b 0 50" "5" "15" &) && $UTILS_DIR_HANDLERS/handlerCpuAffinity.sh "switch" "i2cset  -r  -y -f  1 0x48  0x2  0x3 b 0 50" "5" "15" &) && wait.sh handlerCpuAffinity.sh 5  || exit 1
+		verifyspeed.sh && (($UTILS_DIR_HANDLERS/handlerCpuAffinity.sh "switch" "sleep 1; i2cset  -r  -y -f  1 0x48  0x2  0x3 b" "5" "15" &) && $UTILS_DIR_HANDLERS/handlerCpuAffinity.sh "switch" "sleep 1; i2cset  -r  -y -f  1 0x48  0x2  0x3 b" "5" "15" &) && wait.sh handlerCpuAffinity.sh 5  || exit 1
 	;;
 	# Write while the CPU affinity is switched
 	10)
