@@ -1,0 +1,15 @@
+#######################################
+##Scenario: L_DD_I2C_0015_0001
+## Author: Andrii Danylov
+## Date: 15 Aug 2012
+## Testing: I2C: Verify that i2c controller interrupts are only generated when the i2c module is in use or activated
+## 1) From all i2c controllers verify one in which the clients connected can be disabled
+## 2) Once all the i2c clients for that specific i2c bus are disabled verify the number of irq do not increment for a period of time
+## 3) Enable any of the clients connected to the i2c bus and verify interrupts are incrementing
+#######################################
+
+# Begin L_DD_I2C_0015_0001
+
+01 set -x; runtestcase.sh 13 && exit 0 || exit 1
+
+# End L_DD_I2c_0015_0001

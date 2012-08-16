@@ -84,6 +84,9 @@ case "$TESTCASEID" in
 	12)
                 verifyspeed.sh &&  $UTILS_DIR_HANDLERS/handlerIrqAffinity.sh "switch" "i2cdump  -y -f  1 0x48  b  0 0x4E 25" "5" "15" "88" || exit 1
 	;;
+	13)
+                verifyspeed.sh &&  $UTILS_DIR_HANDLERS/handlerIrqSupport.sh "get" "i2cdump -f -y 0x1 0x48 b" "10" "20" "88" || exit 1
+	;;
 	*)
 		echo "No Test Case ID Found!";
 		exit 1
