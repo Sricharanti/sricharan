@@ -1,0 +1,12 @@
+###################################################################################################################
+# Scenario: L_DD_AUDIO-ALSA_30572
+# Author  : Misael Lopez Cruz
+# Date    : Aug 27, 2012
+# Description: 48 hrs continuous playback robustness
+###################################################################################################################
+
+0001	echo "L_DD_AUDIO-ALSA_30572"
+0002	audio-tool save $TMPBASE/audio.cfg && audio-tool reset
+0003	audio-tool config play Multimedia Headset enable
+0004	audio-tool tone sine 1000 16 -c 2 -r 44100 -b 16 -d 0 -t 172800
+0005	audio-tool restore $TMPBASE/audio.cfg

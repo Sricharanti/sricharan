@@ -1,0 +1,14 @@
+###################################################################################################################
+# Scenario: L_DD_AUDIO-ALSA_21414
+# Author  : Misael Lopez Cruz
+# Date    : Aug 27, 2012
+# Description:
+###################################################################################################################
+
+0001	echo "L_DD_AUDIO-ALSA_21414"
+0002	audio-tool save $TMPBASE/audio.cfg && audio-tool reset
+0003	audio-tool config play Voice Handsfree enable
+0004	audio-tool tone sine 1000 16 -c 2 -r 8000 -b 16 -d 2 -t 5
+0005	audio-tool tone sine 1000 16 -c 2 -r 16000 -b 16 -d 2 -t 5
+0006	audio-tool tone sine 1000 16 -c 2 -r 48000 -b 16 -d 2 -t 5
+0007	audio-tool restore $TMPBASE/audio.cfg

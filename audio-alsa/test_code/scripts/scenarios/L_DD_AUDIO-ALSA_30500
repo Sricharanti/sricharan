@@ -1,0 +1,39 @@
+###################################################################################################################
+# Scenario: L_DD_AUDIO-ALSA_30500
+# Author  : Misael Lopez Cruz
+# Date    : Aug 27, 2012
+# Description:
+###################################################################################################################
+
+0001	echo "L_DD_AUDIO-ALSA_30500"
+0002	audio-tool save $TMPBASE/audio.cfg && audio-tool reset
+0003	audio-tool config play Multimedia Headset enable
+0004	set -x; handlerProcessParallelism.sh "clean"
+0005	set -x; handlerProcessParallelism.sh "add" "audio-tool tone sine 1000 16 -c 2 -r 48000 -b 16 -d 0 -t 22"
+0006	set -x; handlerProcessParallelism.sh "add" "sleep 2; audio-tool mix 'DL1 Media Playback Volume' 110"
+0007	set -x; handlerProcessParallelism.sh "add" "sleep 4; audio-tool mix 'DL1 Media Playback Volume' 100"
+0008	set -x; handlerProcessParallelism.sh "add" "sleep 6; audio-tool mix 'DL1 Media Playback Volume' 90"
+0009	set -x; handlerProcessParallelism.sh "add" "sleep 8; audio-tool mix 'DL1 Media Playback Volume' 80"
+0010	set -x; handlerProcessParallelism.sh "add" "sleep 10; audio-tool mix 'DL1 Media Playback Volume' 70"
+0011	set -x; handlerProcessParallelism.sh "add" "sleep 12; audio-tool mix 'DL1 Media Playback Volume' 80"
+0012	set -x; handlerProcessParallelism.sh "add" "sleep 14; audio-tool mix 'DL1 Media Playback Volume' 90"
+0013	set -x; handlerProcessParallelism.sh "add" "sleep 16; audio-tool mix 'DL1 Media Playback Volume' 100"
+0014	set -x; handlerProcessParallelism.sh "add" "sleep 18; audio-tool mix 'DL1 Media Playback Volume' 110"
+0015	set -x; handlerProcessParallelism.sh "add" "sleep 20; audio-tool mix 'DL1 Media Playback Volume' 120"
+0016	set -x; handlerProcessParallelism.sh "execute"
+0017	audio-tool reset
+0018	audio-tool config play Multimedia Handsfree enable
+0019	set -x; handlerProcessParallelism.sh "clean"
+0020	set -x; handlerProcessParallelism.sh "add" "audio-tool tone sine 1000 16 -c 2 -r 48000 -b 16 -d 0 -t 22"
+0021	set -x; handlerProcessParallelism.sh "add" "sleep 2; audio-tool mix 'DL2 Media Playback Volume' 110"
+0022	set -x; handlerProcessParallelism.sh "add" "sleep 4; audio-tool mix 'DL2 Media Playback Volume' 100"
+0023	set -x; handlerProcessParallelism.sh "add" "sleep 6; audio-tool mix 'DL2 Media Playback Volume' 90"
+0024	set -x; handlerProcessParallelism.sh "add" "sleep 8; audio-tool mix 'DL2 Media Playback Volume' 80"
+0025	set -x; handlerProcessParallelism.sh "add" "sleep 10; audio-tool mix 'DL2 Media Playback Volume' 70"
+0026	set -x; handlerProcessParallelism.sh "add" "sleep 12; audio-tool mix 'DL2 Media Playback Volume' 80"
+0027	set -x; handlerProcessParallelism.sh "add" "sleep 14; audio-tool mix 'DL2 Media Playback Volume' 90"
+0028	set -x; handlerProcessParallelism.sh "add" "sleep 16; audio-tool mix 'DL2 Media Playback Volume' 100"
+0029	set -x; handlerProcessParallelism.sh "add" "sleep 18; audio-tool mix 'DL2 Media Playback Volume' 110"
+0030	set -x; handlerProcessParallelism.sh "add" "sleep 20; audio-tool mix 'DL2 Media Playback Volume' 120"
+0031	set -x; handlerProcessParallelism.sh "execute"
+0032	audio-tool restore $TMPBASE/audio.cfg

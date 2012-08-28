@@ -1,0 +1,18 @@
+###################################################################################################################
+# Scenario: L_DD_AUDIO-ALSA_30522
+# Author  : Misael Lopez Cruz
+# Date    : Aug 27, 2012
+# Description:
+###################################################################################################################
+
+0001	echo "L_DD_AUDIO-ALSA_30522"
+0002	audio-tool save $TMPBASE/audio.cfg && audio-tool reset
+0003	audio-tool config play Voice Headset enable
+0004	audio-tool tone sine 1000 16 -c 1 -r 11025 -b 16 -d 2 || exit 0
+0005	audio-tool tone sine 1000 16 -c 1 -r 12000 -b 16 -d 2 || exit 0
+0006	audio-tool tone sine 1000 16 -c 1 -r 22050 -b 16 -d 2 || exit 0
+0007	audio-tool tone sine 1000 16 -c 1 -r 24000 -b 16 -d 2 || exit 0
+0008	audio-tool tone sine 1000 16 -c 1 -r 44100 -b 16 -d 2 || exit 0
+0009	audio-tool tone sine 1000 16 -c 1 -r 88100 -b 16 -d 2 || exit 0
+0010	audio-tool tone sine 1000 16 -c 1 -r 96000 -b 16 -d 2 || exit 0
+0011	audio-tool restore $TMPBASE/audio.cfg

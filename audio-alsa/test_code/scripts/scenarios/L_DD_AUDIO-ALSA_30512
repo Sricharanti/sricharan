@@ -1,0 +1,23 @@
+###################################################################################################################
+# Scenario: L_DD_AUDIO-ALSA_30512
+# Author  : Misael Lopez Cruz
+# Date    : Aug 27, 2012
+# Description:
+###################################################################################################################
+
+0001	echo "L_DD_AUDIO-ALSA_30512"
+0002	audio-tool save $TMPBASE/audio.cfg && audio-tool reset
+0003	audio-tool config cap Voice HeadsetMic enable
+0004	audio-tool config play Voice Headset enable
+0005	set -x; handlerProcessParallelism.sh "clean"
+0006	set -x; handlerProcessParallelism.sh "add" "audio-tool cap $TMPBASE/rec.wav -c 2 -r 8000 -b 16 -d 2 -t 16"
+0007	set -x; handlerProcessParallelism.sh "add" "sleep 2; audio-tool mix 'AUDUL Voice UL Volume' 100"
+0008	set -x; handlerProcessParallelism.sh "add" "sleep 4; audio-tool mix 'AUDUL Voice UL Volume' 80"
+0009	set -x; handlerProcessParallelism.sh "add" "sleep 6; audio-tool mix 'AUDUL Voice UL Volume' 60"
+0010	set -x; handlerProcessParallelism.sh "add" "sleep 8; audio-tool mix 'AUDUL Voice UL Volume' 70"
+0011	set -x; handlerProcessParallelism.sh "add" "sleep 10; audio-tool mix 'AUDUL Voice UL Volume' 90"
+0012	set -x; handlerProcessParallelism.sh "add" "sleep 12; audio-tool mix 'AUDUL Voice UL Volume' 110"
+0013	set -x; handlerProcessParallelism.sh "add" "sleep 14; audio-tool mix 'AUDUL Voice UL Volume' 130"
+0014	set -x; handlerProcessParallelism.sh "execute"
+0015	audio-tool play $TMPBASE/rec.wav -d 2
+0016	audio-tool restore $TMPBASE/audio.cfg

@@ -1,0 +1,9 @@
+###################################################################################################################
+# Scenario: L_DD_AUDIO-ALSA_30476
+# Author  : Misael Lopez Cruz
+# Date    : Aug 27, 2012
+# Description:
+###################################################################################################################
+
+0001	echo "L_DD_AUDIO-ALSA_30476"
+0002	cat /proc/asound/version | grep -i "Advanced Linux Sound Architecture" | grep -i "1.0."

@@ -1,0 +1,21 @@
+###################################################################################################################
+# Scenario: L_DD_AUDIO-ALSA_30544
+# Author  : Misael Lopez Cruz
+# Date    : Aug 27, 2012
+# Description:
+###################################################################################################################
+
+0001	echo "L_DD_AUDIO-ALSA_30544"
+0002	audio-tool save $TMPBASE/audio.cfg && audio-tool
+0003	audio-tool config play Multimedia Headset enable
+0005	echo Y > /sys/kernel/debug/omap-abe/format2
+0006	echo Y > /sys/kernel/debug/omap-abe/format3
+0007	echo 128 > /sys/kernel/debug/omap-abe/element_bytes
+0008	echo N > /sys/kernel/debug/omap-abe/circular
+0009	echo 128 > /sys/kernel/debug/omap-abe/msecs
+0010	set -x; handlerProcessParallelism.sh "clean"
+0011	set -x; handlerProcessParallelism.sh "add" "audio-tool tone sine 1000 16 -c 2 -r 48000 -b 16 -d 0 -t 8"
+0012	set -x; handlerProcessParallelism.sh "add" "sleep 2; cat /sys/kernel/debug/omap-abe/debug > $TMPBASE/trace"
+0013	set -x; handlerProcessParallelism.sh "execute"
+0014	abe_trace $TMPBASE/trace 128 0xFFFF | grep 'McPDM DL' | grep "W=" | grep "R="
+0015	audio-tool restore $TMPBASE/audio.cfg

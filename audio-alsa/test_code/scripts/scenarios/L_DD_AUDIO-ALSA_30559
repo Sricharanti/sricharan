@@ -1,0 +1,16 @@
+###################################################################################################################
+# Scenario: L_DD_AUDIO-ALSA_30559
+# Author  : Misael Lopez Cruz
+# Date    : Aug 27, 2012
+# Description:
+###################################################################################################################
+
+0001	echo "L_DD_AUDIO-ALSA_30559"
+0002	audio-tool save $TMPBASE/audio.cfg && audio-tool reset
+0003	audio-tool config cap Multimedia DMic0 enable
+0004	audio-tool mix 'MUX_UL02' 'DMic1L'
+0005	audio-tool mix 'MUX_UL03' 'DMic1R'
+0006	audio-tool mix 'MUX_UL04' 'DMic2L'
+0007	audio-tool mix 'MUX_UL05' 'DMic2R'
+0008	audio-tool cap $TMPBASE/rec.wav -c 6 -r 48000 -b 32 -d 0 -t 5
+0009	audio-tool restore $TMPBASE/audio.cfg

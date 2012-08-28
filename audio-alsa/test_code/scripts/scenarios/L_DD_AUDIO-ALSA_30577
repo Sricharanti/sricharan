@@ -1,0 +1,18 @@
+###################################################################################################################
+# Scenario: L_DD_AUDIO-ALSA_30577
+# Author  : Misael Lopez Cruz
+# Date    : Aug 27, 2012
+# Description:
+###################################################################################################################
+
+0001	echo "L_DD_AUDIO-ALSA_30577"
+0002	audio-tool save $TMPBASE/audio.cfg && audio-tool reset
+0003	audio-tool mix 'Headset Left Playback' 'Line-In amp'
+0004	audio-tool mix | grep 'Headset Left Playback' | grep 'Line-In amp'
+0005	audio-tool mix 'Headset Right Playback' 'Line-In amp'
+0006	audio-tool mix | grep 'Headset Right Playback' | grep 'Line-In amp'
+0007	audio-tool mix 'Headset Left Playback' 'Off'
+0008	audio-tool mix | grep 'Headset Left Playback' | grep 'Off'
+0009	audio-tool mix 'Headset Right Playback' 'Off'
+0010	audio-tool mix | grep 'Headset Right Playback' | grep 'Off'
+0011	audio-tool restore $TMPBASE/audio.cfg

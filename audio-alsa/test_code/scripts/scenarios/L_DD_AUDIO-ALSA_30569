@@ -1,0 +1,17 @@
+###################################################################################################################
+# Scenario: L_DD_AUDIO-ALSA_30569
+# Author  : Misael Lopez Cruz
+# Date    : Aug 27, 2012
+# Description:
+###################################################################################################################
+
+0001	echo "L_DD_AUDIO-ALSA_30569"
+0002	audio-tool save $TMPBASE/audio.cfg && audio-tool reset
+0003	audio-tool config play Multimedia Headset enable
+0004	set -x; handlerProcessParallelism.sh "clean"
+0005	set -x; handlerProcessParallelism.sh "add" "audio-tool tone sine 1000 16 -c 2 -r 48000 -b 16 -d 0 -t 20"
+0006	set -x; handlerProcessParallelism.sh "add" "sleep 5; audio-tool config play Multimedia Headset disable; audio-tool config play Multimedia Handsfree enable"
+0007	set -x; handlerProcessParallelism.sh "add" "sleep 10; audio-tool config play Multimedia Handsfree disable; audio-tool config play Multimedia Headset enable"
+0008	set -x; handlerProcessParallelism.sh "add" "sleep 15; audio-tool config play Multimedia Handsfree enable"
+0009	set -x; handlerProcessParallelism.sh "execute"
+0010	audio-tool restore $TMPBASE/audio.cfg

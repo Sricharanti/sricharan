@@ -1,0 +1,16 @@
+###################################################################################################################
+# Scenario: L_DD_AUDIO-ALSA_31520
+# Author  : Misael Lopez Cruz
+# Date    : Aug 27, 2012
+# Description:
+###################################################################################################################
+
+0001	echo "L_DD_AUDIO-ALSA_31520"
+0002	audio-tool save $TMPBASE/audio.cfg && audio-tool reset
+0003	audio-tool config play Multimedia Handsfree enable
+0004	set -x; handlerProcessParallelism.sh "clean"
+0005	set -x; handlerProcessParallelism.sh "add" "audio-tool tone sine 1000 16 -c 2 -r 48000 -b 16 -d 0 -t 5"
+0006	set -x; handlerProcessParallelism.sh "add" "sleep 1; omapconf show audioic cfg |  grep 'HF Short Detection Interrupt' | grep 'Enabled'"
+0007	set -x; handlerProcessParallelism.sh "add" "sleep 1; omapconf show audioic cfg |  grep 'Vibra Short Detection Int' | grep 'Enabled'"
+0008	set -x; handlerProcessParallelism.sh "execute"
+0009	audio-tool restore $TMPBASE/audio.cfg

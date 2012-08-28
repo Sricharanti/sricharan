@@ -1,0 +1,28 @@
+###################################################################################################################
+# Scenario: L_DD_AUDIO-ALSA_30562
+# Author  : Misael Lopez Cruz
+# Date    : Aug 27, 2012
+# Description:
+###################################################################################################################
+
+0001	echo "L_DD_AUDIO-ALSA_30562"
+0002	audio-tool save $TMPBASE/audio.cfg && audio-tool reset
+0003	audio-tool reset
+0004	audio-tool config play Multimedia Headset enable
+0005	audio-tool tone sine 1000 16 -c 3 -r 48000 -b 16 -d 0 -t 5 || exit 0
+0006	audio-tool reset
+0007	audio-tool config cap Multimedia HeadsetMic enable
+0008	audio-tool cap $TMPBASE/rec.wav -c 9 -r 48000 -b 32 -d 0 -t 5 || exit 0
+0009	audio-tool reset
+0010	audio-tool config cap Multimedia2 HeadsetMic enable
+0011	audio-tool cap $TMPBASE/rec.wav -c 3 -r 48000 -b 16 -d 1 -t 5 || exit 0
+0012	audio-tool reset
+0013	audio-tool config play Voice Headset enable
+0014	audio-tool tone sine 1000 16 -c 3 -r 16000 -b 16 -d 2 -t 5 || exit 0
+0015	audio-tool reset
+0016	audio-tool config cap Voice HeadsetMic enable
+0017	audio-tool cap $TMPBASE/rec.wav -c 3 -r 16000 -b 16 -d 2 -t 5 || exit 0
+0018	audio-tool reset
+0019	audio-tool config play Tones Headset enable
+0020	audio-tool tone sine 1000 16 -c 3 -r 48000 -b 16 -d 3 -t 5 || exit 0
+0021	audio-tool restore $TMPBASE/audio.cfg

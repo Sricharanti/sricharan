@@ -1,0 +1,15 @@
+###################################################################################################################
+# Scenario: L_DD_AUDIO-ALSA_30564
+# Author  : Misael Lopez Cruz
+# Date    : Aug 27, 2012
+# Description:
+###################################################################################################################
+
+0001	echo "L_DD_AUDIO-ALSA_30564"
+0002	audio-tool save $TMPBASE/audio.cfg && audio-tool reset
+0003	audio-tool config play Multimedia Headset enable
+0004	set -x; handlerProcessParallelism.sh "clean"
+0005	set -x; handlerProcessParallelism.sh "add" "audio-tool tone sine 1000 16 -c 2 -r 48000 -b 16 -d 0 -t 5"
+0006	set -x; handlerProcessParallelism.sh "add" "sleep 1; cat /sys/kernel/debug/omap-abe/opp_level | grep '25'"
+0007	set -x; handlerProcessParallelism.sh "execute"
+0008	audio-tool restore $TMPBASE/audio.cfg

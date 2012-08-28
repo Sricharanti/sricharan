@@ -1,0 +1,17 @@
+###################################################################################################################
+# Scenario: L_DD_AUDIO-ALSA_30532
+# Author  : Misael Lopez Cruz
+# Date    : Aug 27, 2012
+# Description:
+###################################################################################################################
+
+0001	echo "L_DD_AUDIO-ALSA_30532"
+0002	audio-tool save $TMPBASE/audio.cfg && audio-tool reset
+0003	audio-tool config cap Multimedia HeadsetMic enable
+0004	audio-tool config play Multimedia Headset enable
+0005	audio-tool cap $TMPBASE/rec.wav -c 2 -r 48000 -b 32 -d 0 -t 5
+0006	audio-tool play $TMPBASE/rec.wav -d 0
+0007	audio-tool reset
+0008	audio-tool config play Multimedia Headset enable
+0009	audio-tool tone sine 1000 16 -c 2 -r 44100 -b 32 -d 0 -t 5
+0010	audio-tool restore $TMPBASE/audio.cfg

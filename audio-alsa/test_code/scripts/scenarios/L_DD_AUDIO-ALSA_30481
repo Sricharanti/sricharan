@@ -1,0 +1,14 @@
+###################################################################################################################
+# Scenario: L_DD_AUDIO-ALSA_30481
+# Author  : Misael Lopez Cruz
+# Date    : Aug 27, 2012
+# Description:
+###################################################################################################################
+
+0001	echo "L_DD_AUDIO-ALSA_30481"
+0002	audio-tool save $TMPBASE/audio.cfg && audio-tool reset
+0003	audio-tool mix 'Earphone Playback Switch' 1
+0004	audio-tool mix | grep 'Earphone Playback Switch' | grep 'On'
+0005	audio-tool mix 'Earphone Playback Switch' 0
+0006	audio-tool mix | grep 'Earphone Playback Switch' | grep 'Off'
+0007	audio-tool restore $TMPBASE/audio.cfg

@@ -1,0 +1,13 @@
+###################################################################################################################
+# Scenario: L_DD_AUDIO-ALSA_30493
+# Author  : Misael Lopez Cruz
+# Date    : Aug 27, 2012
+# Description:
+###################################################################################################################
+
+0001	echo "L_DD_AUDIO-ALSA_30493"
+0002	audio-tool save $TMPBASE/audio.cfg && audio-tool reset
+0003	audio-tool config play Tones Earpiece enable
+0004	audio-tool tone sine 1000 0 -c 2 -r 44100 -b 16 -d 3 -t 5
+0005	audio-tool tone sine 1000 0 -c 2 -r 48000 -b 16 -d 3 -t 5
+0006	audio-tool restore $TMPBASE/audio.cfg

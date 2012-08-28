@@ -1,0 +1,22 @@
+###################################################################################################################
+# Scenario: L_DD_AUDIO-ALSA_30480
+# Author  : Misael Lopez Cruz
+# Date    : Aug 27, 2012
+# Description:
+###################################################################################################################
+
+0001	echo "L_DD_AUDIO-ALSA_30480"
+0002	audio-tool save $TMPBASE/audio.cfg && audio-tool reset
+0003	audio-tool mix 'MUX_VX1' 'DMic0L'
+0004	audio-tool mix | grep 'MUX_VX1' | grep 'DMic0L'
+0005	audio-tool mix 'MUX_VX1' 'DMic0R'
+0006	audio-tool mix | grep 'MUX_VX1' | grep 'DMic0R'
+0007	audio-tool mix 'MUX_VX1' 'DMic1L'
+0008	audio-tool mix | grep 'MUX_VX1' | grep 'DMic1L'
+0009	audio-tool mix 'MUX_VX1' 'DMic1R'
+0010	audio-tool mix | grep 'MUX_VX1' | grep 'DMic1R'
+0011	audio-tool mix 'MUX_VX1' 'DMic2L'
+0012	audio-tool mix | grep 'MUX_VX1' | grep 'DMic2L'
+0013	audio-tool mix 'MUX_VX1' 'DMic2R'
+0014	audio-tool mix | grep 'MUX_VX1' | grep 'DMic2R'
+0015	audio-tool restore $TMPBASE/audio.cfg

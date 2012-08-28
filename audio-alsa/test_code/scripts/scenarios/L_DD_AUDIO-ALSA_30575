@@ -1,0 +1,22 @@
+###################################################################################################################
+# Scenario: L_DD_AUDIO-ALSA_30575
+# Author  : Misael Lopez Cruz
+# Date    : Aug 27, 2012
+# Description:
+###################################################################################################################
+
+0001	echo "L_DD_AUDIO-ALSA_30575"
+0002	audio-tool save $TMPBASE/audio.cfg && audio-tool reset
+0003	audio-tool mix 'Headset Left Playback' 'Line-In amp'
+0004	audio-tool mix | grep 'Headset Left Playback' | grep 'Line-In amp'
+0005	audio-tool mix 'Headset Right Playback' 'Line-In amp'
+0006	audio-tool mix | grep 'Headset Right Playback' | grep 'Line-In amp'
+0007	audio-tool mix 'Handsfree Left Playback' 'Line-In amp'
+0008	audio-tool mix | grep 'Handsfree Left Playback' | grep 'Line-In amp'
+0009	audio-tool mix 'Handsfree Right Playback' 'Line-In amp'
+0010	audio-tool mix | grep 'Handsfree Right Playback' | grep 'Line-In amp'
+0011	audio-tool mix 'Analog Left Capture Route' 'Aux/FM Left'
+0012	audio-tool mix | grep 'Analog Left Capture Route' | grep 'Aux/FM Left'
+0013	audio-tool mix 'Analog Right Capture Route' 'Aux/FM Right'
+0014	audio-tool mix | grep 'Analog Right Capture Route' | grep 'Aux/FM Right'
+0015	audio-tool restore $TMPBASE/audio.cfg

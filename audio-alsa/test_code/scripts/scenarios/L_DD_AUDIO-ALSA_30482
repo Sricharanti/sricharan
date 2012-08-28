@@ -1,0 +1,18 @@
+###################################################################################################################
+# Scenario: L_DD_AUDIO-ALSA_30482
+# Author  : Misael Lopez Cruz
+# Date    : Aug 27, 2012
+# Description:
+###################################################################################################################
+
+0001	echo "L_DD_AUDIO-ALSA_30482"
+0002	audio-tool save $TMPBASE/audio.cfg && audio-tool reset
+0003	audio-tool mix 'Handsfree Left Playback' 'HF DAC'
+0004	audio-tool mix | grep 'Handsfree Left Playback' | grep 'HF DAC'
+0005	audio-tool mix 'Handsfree Right Playback' 'HF DAC'
+0006	audio-tool mix | grep 'Handsfree Right Playback' | grep 'HF DAC'
+0007	audio-tool mix 'Handsfree Left Playback' 'Off'
+0008	audio-tool mix | grep 'Handsfree Left Playback' | grep 'Off'
+0009	audio-tool mix 'Handsfree Right Playback' 'Off'
+0010	audio-tool mix | grep 'Handsfree Right Playback' | grep 'Off'
+0011	audio-tool restore $TMPBASE/audio.cfg

@@ -1,0 +1,12 @@
+###################################################################################################################
+# Scenario: L_DD_AUDIO-ALSA_30546
+# Author  : Misael Lopez Cruz
+# Date    : Aug 27, 2012
+# Description:
+###################################################################################################################
+
+0001	echo "L_DD_AUDIO-ALSA_30546"
+0002	audio-tool save $TMPBASE/audio.cfg && audio-tool reset
+0003	audio-tool config cap Multimedia HeadsetMic enable
+0004	audio-tool cap $TMPBASE/rec.wav -c 2 -r 48000 -b 16 -d 3 -t 5 || exit 0
+0005	audio-tool restore $TMPBASE/audio.cfg
