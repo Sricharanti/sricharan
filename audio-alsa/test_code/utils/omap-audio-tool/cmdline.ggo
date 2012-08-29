@@ -1,0 +1,83 @@
+package "audio-tool"
+usage "audio-tool [options] command [command args]"
+description "Audio utility knife for playback, capture, and tests
+
+Commands:
+	play <filename> - playback of an RIFF WAV file
+	cap <filename> - capture to an RIFF WAV file
+	mix <ctrl#> <value> - manipulate the ALSA mixer
+	tone <wave> <freq> <vol dB> - generate a tone (sine wave, square wave, etc)
+	pulse - generate impulses on the period boundaries
+	save - save current mixer state to a file
+	restore - restore mixer state from a file
+	defaults - put card in audio-tool's 'default' state
+	reset - reset all mixer controls to their disable state
+"
+
+section "Options"
+
+option "card" D
+       "audio card number"
+       int
+       default="0"
+       optional
+
+option "device" d
+       "audio port"
+       int
+       default="0"
+       optional
+
+option "periods" p
+       "frames per period"
+       int
+       default="1032"
+       optional
+
+option "num-periods" n
+       "number of periods per buffer"
+       int
+       default="4"
+       optional
+
+option "time" t
+       "maximum duration of command"
+       int
+       default="0"
+       optional
+
+option "channels" c
+       "number of channels"
+       int
+       default="2"
+       optional
+
+option "channel-mask" m
+       "Bit mask with enabled channels"
+       int
+       default="0xFFFFFFFF"
+       optional
+
+option "bits" b
+       "Number of bits in output format (signed)"
+       int
+       default="16"
+       optional
+
+option "rate" r
+       "Sample rate"
+       int
+       default="48000"
+       optional
+
+option "mmap" M
+	"Use mmap"
+	optional
+
+section "Copyrights"
+
+text "
+Copyright 2012 Texas Instruments Incorporated
+Copyright 2011 The Android Open Source Project
+Copyright 2011 Gabriel M. Beddingfield
+"

@@ -1,0 +1,80 @@
+OMAP audio-tool
+---------------
+
+The audio-tool is a swiss-army knife for testing and using audio on
+OMAP.  It includes the ability to play and record simple wave files,
+play test tones and impulses, and manipulate the ALSA mixer.
+
+There also includes a "legacy mode" for backwards-compatibility with
+the tinyalsa utils.
+
+MANIFEST
+--------
+
+As stated before, the goal is to have ONE binary, 'audio-tool'.  But
+for now we have:
+
+TARGET BINARIES:
+
+    audio-tool - The main audio-tool tool.
+
+HOST BINARIES:
+
+    generate-wave-tables - Generates C-source output with look-up tables
+        for various waveforms.
+
+BUILDING
+--------
+
+The Makefile builds statically linked binaries for the target
+platform.  The binaries for the host platform are usually dynamically
+linked.
+
+To build for the host PC, do this:
+
+   $ make
+
+To build for the target device, do this:
+
+   $ export CROSS_COMPILE=/path/to/arm-none-linux-gnueabi-
+   $ make ARCH=arm
+
+...and push the binaries to the device.
+
+LEGACY MODE
+-----------
+
+The audio-tool may be used as a drop-in replacement for the tinyalsa
+utils by creating symlinks to audio-tool.  In this mode, it accepts
+the exact same command-line syntax as those tools.  To use this mode,
+then you need to do this on your target device.
+
+    # which audio-tool
+    /usr/bin/audio-tool
+    # ln -s audio-tool /usr/bin/tinyplay
+    # ln -s audio-tool /usr/bin/tinycap
+    # ln -s audio-tool /usr/bin/tinymix
+
+You can then use those tools as you always have (with some of the
+enhanced parameters that the audio team has been using interally, such
+as the '-t duration' parameter.
+
+LICENSING
+---------
+
+BSD (3-clause)
+
+IDEAS AND FUTURE DIRECTIONS
+---------------------------
+
+* On unit tests, android's test tool looks for the last output
+  line instead of the OS return code for pass/fail.  Make sure
+  that we're compatible with that.
+
+* Add support for using the mmap() API in the tests and/or
+  play/cap.
+
+* Support UCM
+
+* Test multi-port configurations (e.g. play a system tone during
+  mm playback.  Capture/playback at the same time over misc. ports.
