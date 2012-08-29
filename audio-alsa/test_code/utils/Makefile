@@ -6,22 +6,19 @@
 #  in the license agreement under which this software has been supplied.
 #===============================================================================
 
-OBJS := utilities install
+SUBDIRS := omap-audio-tool abe_trace
 
-all: $(OBJS)
+.PHONY:	$(SUBDIRS)
 
-utilities:
-	make -C utils
+all: $(SUBDIRS)
+
+$(SUBDIRS):
+	make ARCH=arm -C $@
 
 install:
-	mkdir -p scripts/test
-	mkdir -p scripts/tmp
-	mkdir -p bin
-	make -C utils install
+	cp -vf omap-audio-tool/audio-tool ../bin/
+	cp -vf abe_trace/abe_trace ../bin/
 
 clean:
-	make -C utils clean
-	rm -rf bin
-	rm -rf scripts/log*
-	rm -rf scripts/tmp
-	rm -rf scripts/test
+	make -C omap-audio-tool clean
+	make -C abe_trace clean
