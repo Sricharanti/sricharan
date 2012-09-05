@@ -1,0 +1,19 @@
+###################################################################################################################
+# Scenario: L_DD_AUDIO-ALSA_23864
+# Author  : Misael Lopez Cruz
+# Date    : Sep 5, 2012
+# Description:
+###################################################################################################################
+
+0001	echo "L_DD_AUDIO-ALSA_23864"
+0002	audio-tool save $TMPBASE/audio.cfg && audio-tool reset
+0003	audio-tool config cap Multimedia2 HeadsetMic enable
+0004	audio-tool config play Multimedia Headset enable
+0005	set -x; handlerProcessParallelism.sh "clean"
+0006	set -x; handlerProcessParallelism.sh "add" "audio-tool cap $TMPBASE/rec.wav -c 2 -r 48000 -b 16 -d 1 -t 12"
+0007	set -x; handlerProcessParallelism.sh "add" "sleep 3; audio-tool mix 'AMIC Equalizer' 'High-pass 0dB'"
+0008	set -x; handlerProcessParallelism.sh "add" "sleep 6; audio-tool mix 'AMIC Equalizer' 'High-pass -12dB'"
+0009	set -x; handlerProcessParallelism.sh "add" "sleep 9; audio-tool mix 'AMIC Equalizer' 'High-pass -18dB'"
+0010	set -x; handlerProcessParallelism.sh "execute"
+0011	audio-tool play $TMPBASE/rec.wav -d 0
+0012	audio-tool restore $TMPBASE/audio.cfg
