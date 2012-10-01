@@ -12,7 +12,7 @@
 0005	audio-tool mix 'SDT UL Volume' 120
 0006	audio-tool mix 'Sidetone Mixer Capture' 1
 0007	set -x; handlerProcessParallelism.sh "clean"
-0008	set -x; handlerProcessParallelism.sh "add" "audio-tool tone sine 100 16 -c 2 -r 16000 -b 16 -d 2 -t 10"
+0008	set -x; handlerProcessParallelism.sh "add" "audio-tool tone sine 700 16 -c 2 -r 16000 -b 16 -d 2 -t 10"
 0009	set -x; handlerProcessParallelism.sh "add" "audio-tool cap $TMPBASE/rec.wav -c 2 -r 16000 -b 16 -d 2 -t 10"
 0009	set -x; handlerProcessParallelism.sh "execute"
 0010	audio-tool restore $TMPBASE/audio.cfg
