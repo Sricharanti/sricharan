@@ -18,6 +18,9 @@ E) export TESTSUITES=<driver_x>
 F) export TESTROOT=<output dir><output dir>
 G) make
 
+Note: Please install gengetopt "sudo apt-get install gengetopt"
+or remove audio-alsa from TESTSUITES in .config file.
+
 The testsuite will be created in the location specified by <output dir>
 If <output dir> is not set, by default the testsuites will be installed
 in "build" directory
