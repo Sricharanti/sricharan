@@ -129,12 +129,11 @@ export PM_RETENTION_TIMER_DEFAULT=30
 export PM_DEBUGFS_DIRECTORY=$HDFS_DEBUG_FILESYSTEM_DIRECTORY
 export PM_DEBUG=$PM_DEBUGFS_DIRECTORY/pm_debug/
 
-if [ `cat /proc/cpuinfo | grep -ic OMAP4` -gt 0 ]; then
+if [ `cat /proc/cpuinfo | grep -ic "OMAP4\|OMAP5"` -gt 0 ]; then
 	export PM_COUNT=$PM_DEBUG/count
 	export PM_ENABLED_OFF_MODE=$PM_DEBUG/enable_off_mode
-	export PM_ENABLE_SR_VP_DEBUG=$PM_DEBUG/enable_sr_vp_debug
-	export PM_SLEEP_WHILE_IDLE=$PM_DEBUG/sleep_while_idle
-	export PM_VOLTAGE_OFF_WHILE_IDLE=$PM_DEBUG/voltage_off_while_idle
+	#export PM_SLEEP_WHILE_IDLE=$PM_DEBUG/sleep_while_idle
+	#export PM_VOLTAGE_OFF_WHILE_IDLE=$PM_DEBUG/voltage_off_while_idle
 	export PM_WAKEUP_TIMER_SECONDS=$PM_DEBUG/wakeup_timer_seconds
 	export PM_WAKEUP_TIMER_MILLISECONDS=$PM_DEBUG/wakeup_timer_milliseconds
 fi
@@ -147,7 +146,10 @@ if [ `cat /proc/cpuinfo | grep -ic OMAP4` -gt 0 ]; then
 		export SR_CORE_AUTOCOMP=$PM_DEBUGFS_DIRECTORY/smartreflex/sr_core/autocomp
 		export SR_IVA_AUTOCOMP=$PM_DEBUGFS_DIRECTORY/smartreflex/sr_iva/autocomp
 		export SR_MPU_AUTOCOMP=$PM_DEBUGFS_DIRECTORY/smartreflex/sr_mpu/autocomp
-
+	elif [ `cat /proc/cpuinfo | grep -ic OMAP5` -gt 0 ]; then
+		export SR_CORE_AUTOCOMP=$PM_DEBUGFS_DIRECTORY/smartreflex/smartreflex_core/autocomp
+		export SR_IVA_AUTOCOMP=$PM_DEBUGFS_DIRECTORY/smartreflex/smartreflex_mm/autocomp
+		export SR_MPU_AUTOCOMP=$PM_DEBUGFS_DIRECTORY/smartreflex/smartreflex_mpu/autocomp
 	elif [ `cat /proc/cpuinfo | grep -ic Zoom3` -gt 0 ]; then
 		export SR_VDD1_AUTOCOMP=$PM_SYS_PWR/sr_vdd1_autocomp
 		export SR_VDD2_AUTOCOMP=$PM_SYS_PWR/sr_vdd2_autocomp
