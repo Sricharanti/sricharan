@@ -90,6 +90,9 @@ case "$TESTCASEID" in
 	14)
 		verifyspeed.sh && ((($UTILS_DIR_HANDLERS/handlerCpuAffinity.sh "switch" "i2cdump -y -f 1 0x48 b 0 0 5" "5" "15" &) && $UTILS_DIR_HANDLERS/handlerCpuAffinity.sh "switch" "i2cdump -y -f 1 0x48 b 0 0 5" "5" "15"  &) && $UTILS_DIR_HANDLERS/handlerCpuAffinity.sh "switch" "i2cdump -y -f 1 0x48 b 0 0 5" "5" "15"  &) && wait.sh handlerCpuAffinity.sh 5 || exit 1
 	;;
+	15)
+		verifyspeed.sh && (($UTILS_DIR_HANDLERS/handlerCpuAffinity.sh "switch" "i2cdump -y -f 1 0x48 b 0 0 10" "5" "5" &) && $UTILS_DIR_HANDLERS/handlerAndroidPM.sh suspend kernel force 5) && handlerAndroidPM.sh resume kernel || exit 1
+	;;
 	*)
 		echo "No Test Case ID Found!";
 		exit 1
