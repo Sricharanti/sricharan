@@ -1,0 +1,14 @@
+###############################################################################
+# Scenario: L_DD_I2C_NEW_0008
+# Author  : Andrii Danylov
+# Date    : 11/18/12
+# Testing : I2C: Power Management: DVFS
+# Results : I2C  driver shall allow DVFS during data transfer
+#           DVFS stands for Dinamic Voltage Frequency Scaling.
+###############################################################################
+
+# Begin L_DD_I2C_NEW_0008
+
+0002 set -x; handlerCpuFreqScalFrequencies.sh run all "sleep 20" & timeout=0; iterations=10 ; while [  $timeout -lt $iterations ]; do  for i in  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f; do i2cdump -f -y 0x1 0x49; done; timeout=$((timeout=$timeout+1)); done
+
+# End L_DD_I2C_NEW_0008
