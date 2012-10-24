@@ -59,9 +59,9 @@ fi
 
 if [ "$LOCAL_OPERATION" = "get" ]; then
 
-	LOCAL_VALUE_INITIAL=`$UTILS_DIR_HANDLERS/handlerIrq.sh "get" "cpu0" "88"`
+	LOCAL_VALUE_INITIAL=`$UTILS_DIR_HANDLERS/handlerIrq.sh "get" "cpu0" "$LOCAL_IRQ_NUMBER"`
 	sleep $LOCAL_TIME_TO_WAIT;
-	LOCAL_VALUE_FINAL=`$UTILS_DIR_HANDLERS/handlerIrq.sh "get" "cpu0" "88"`
+	LOCAL_VALUE_FINAL=`$UTILS_DIR_HANDLERS/handlerIrq.sh "get" "cpu0" "$LOCAL_IRQ_NUMBER"`
 
 	echo "Values Initial | Final : $LOCAL_VALUE_INITIAL | $LOCAL_VALUE_FINAL"  || exit 1
 
@@ -71,7 +71,7 @@ if [ "$LOCAL_OPERATION" = "get" ]; then
 		exit 1
 	fi
 
-	LOCAL_VALUE_INITIAL=`$UTILS_DIR_HANDLERS/handlerIrq.sh "get" "cpu0" "88"`
+	LOCAL_VALUE_INITIAL=`$UTILS_DIR_HANDLERS/handlerIrq.sh "get" "cpu0" "$LOCAL_IRQ_NUMBER"`
 
 	count=1
 	while [ $count -le $LOCAL_EXECUTION_TIMES ]
@@ -89,7 +89,7 @@ if [ "$LOCAL_OPERATION" = "get" ]; then
 	done
 
 	sleep $LOCAL_TIME_TO_WAIT;
-	LOCAL_VALUE_FINAL=`$UTILS_DIR_HANDLERS/handlerIrq.sh "get" "cpu0" "88"`
+	LOCAL_VALUE_FINAL=`$UTILS_DIR_HANDLERS/handlerIrq.sh "get" "cpu0" "$LOCAL_IRQ_NUMBER"`
 
 	echo "Values Initial | Final : $LOCAL_VALUE_INITIAL | $LOCAL_VALUE_FINAL"  || exit 1
 
