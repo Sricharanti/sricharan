@@ -21,6 +21,9 @@ TARGETS = watchdog_keepalive \
 	watchdog_timeout_set \
 	watchdog_keepalive_smp \
 	watchdog_write \
+	watchdog_start_stop \
+	watchdog_enable_disable \
+
 
 all: $(TARGETS)
 

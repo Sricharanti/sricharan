@@ -47,6 +47,8 @@ export WATCHDOG_TIMEOUT_GET=watchdog_timeout_get
 export WATCHDOG_TIMEOUT_SET=watchdog_timeout_set
 export WATCHDOG_WRITE=watchdog_write
 export WATCHDOG_KEEPALIVE_SMP=watchdog_keepalive_smp
+export WATCHDOG_START_STOP=watchdog_start_stop
+export WATCHDOG_ENABLE_DISABLE=watchdog_enable_disable
 
 #cat /sys/class/misc/watchdog/uevent
 #MAJOR=10
