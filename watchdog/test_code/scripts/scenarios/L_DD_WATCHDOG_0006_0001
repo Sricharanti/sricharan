@@ -1,11 +1,16 @@
-###############################################################################
+######################################################
 # Scenario: L_DD_WATCHDOG_0006_0001
-# Author  : Misael Lopez Cruz, Abraham Arce
-# Date    : October 8, 2009
-###############################################################################
+# Date: 14 Feb 2012
+# Author: Mariia Nagul | Taras Koroliuk
+# Testing: Watchdog Service Initialization Negative
+#
+######################################################
 
 # Begin L_DD_WATCHDOG_0006_0001
 
-01 set -x; (handlerCpuAffinity.sh "switch" "$WATCHDOG_KEEPALIVE $WATCHDOG_DEVFS " "1" "15" &) && sleep 1 && (killall handlerCpuAffinity &)
-02 set -x; sleep 1
+01 set -x; dmesg -c 2&>1 > $TMPFILE
+02 set -x; $WATCHDOG_DIR_BINARIES/./$WATCHDOG_ENABLE_DISABLE 0 $WATCHDOG_DEVFS
+03 set -x; [ -n "$(dmesg | grep "Watchdog enabled")" ] && [ -n "$(dmesg | grep "Watchdog disabled")"  ] && echo "Pass"
+04 set -x; sleep 5; echo "Board still not reset, test PASS:"
+
 # End L_DD_WATCHDOG_0006_0001
