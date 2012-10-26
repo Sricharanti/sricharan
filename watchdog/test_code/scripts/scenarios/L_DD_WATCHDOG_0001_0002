@@ -1,0 +1,12 @@
+######################################################
+# Scenario: L_DD_WATCHDOG_0001_0002
+# Date: 10 Feb 2012
+# Author: Mariia Nagul
+# testing: Watchdog service initialization
+######################################################
+
+# Begin L_DD_WATCHDOG_0001_0002
+
+01 set -x; echo "/dev:\n"; for i in `ls /dev`; do echo $i; [ $i == "watchdog" ] && echo "Found /dev/watchdog" &&  break; done
+
+# End L_DD_WATCHDOG_0001_0002
