@@ -8,11 +8,15 @@
 0001	echo "L_DD_AUDIO-ALSA_30552"
 0002	audio-tool save $TMPBASE/audio.cfg && audio-tool reset
 0003	audio-tool config play Multimedia Headset enable
-0004	set -x; handlerProcessParallelism.sh "clean"
-0005	set -x; handlerProcessParallelism.sh "add" "audio-tool tone sine 1000 16 -c 2 -r 48000 -b 16 -d 0 -t 10"
-0006	set -x; handlerProcessParallelism.sh "add" "sleep 2; audio-tool mix 'Sidetone Equalizer' 'Flat response'"
-0007	set -x; handlerProcessParallelism.sh "add" "sleep 4; audio-tool mix 'Sidetone Equalizer' 'High-pass 0dB'"
-0008	set -x; handlerProcessParallelism.sh "add" "sleep 6; audio-tool mix 'Sidetone Equalizer' 'High-pass -12dB'"
-0009	set -x; handlerProcessParallelism.sh "add" "sleep 8; audio-tool mix 'Sidetone Equalizer' 'High-pass -18dB'"
-0010	set -x; handlerProcessParallelism.sh "execute"
-0011	audio-tool restore $TMPBASE/audio.cfg
+0004	audio-tool config cap Voice HeadsetMic enable
+0005	audio-tool mix 'Sidetone Mixer Capture' 1
+0006	audio-tool mix 'SDT UL Volume' 120
+0007	set -x; handlerProcessParallelism.sh "clean"
+0008	set -x; handlerProcessParallelism.sh "add" "audio-tool tone sine 1000 60 -c 2 -r 48000 -b 16 -d 0 -t 10"
+0009	set -x; handlerProcessParallelism.sh "add" "audio-tool cap $TMPBASE/rec.wav -c 2 -r 48000 -b 16 -d 2 -t 10"
+0010	set -x; handlerProcessParallelism.sh "add" "sleep 2; audio-tool mix 'Sidetone Equalizer' 'Flat response'"
+0011	set -x; handlerProcessParallelism.sh "add" "sleep 4; audio-tool mix 'Sidetone Equalizer' 'High-pass 0dB'"
+0012	set -x; handlerProcessParallelism.sh "add" "sleep 6; audio-tool mix 'Sidetone Equalizer' 'High-pass -12dB'"
+0013	set -x; handlerProcessParallelism.sh "add" "sleep 8; audio-tool mix 'Sidetone Equalizer' 'High-pass -18dB'"
+0014	set -x; handlerProcessParallelism.sh "execute"
+0015	audio-tool restore $TMPBASE/audio.cfg
