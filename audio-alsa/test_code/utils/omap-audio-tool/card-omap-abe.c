@@ -519,30 +519,6 @@ static struct audio_tool_mixer_control_info g_defaults_common[] = {
 	},
 	{
 		.id = -1,
-		.name = "MUX_UL07",
-		.type = MIXER_CTL_TYPE_ENUM,
-		.num_values = 1,
-		.value.enumerated = {
-			"None",
-			"",
-			"",
-			"",
-		},
-	},
-	{
-		.id = -1,
-		.name = "MUX_UL06",
-		.type = MIXER_CTL_TYPE_ENUM,
-		.num_values = 1,
-		.value.enumerated = {
-			"None",
-			"",
-			"",
-			"",
-		},
-	},
-	{
-		.id = -1,
 		.name = "MUX_UL05",
 		.type = MIXER_CTL_TYPE_ENUM,
 		.num_values = 1,
@@ -1155,8 +1131,6 @@ static struct route_setting g_capture_multimedia_amic_mix[] = {
 	RS_ENUM("MUX_UL03", "None"),
 	RS_ENUM("MUX_UL04", "None"),
 	RS_ENUM("MUX_UL05", "None"),
-	RS_ENUM("MUX_UL06", "None"),
-	RS_ENUM("MUX_UL07", "None"),
 	RS_NULL,
 };
 
@@ -1167,8 +1141,6 @@ static struct route_setting g_capture_multimedia_dmic0_mix[] = {
 	RS_ENUM("MUX_UL03", "None"),
 	RS_ENUM("MUX_UL04", "None"),
 	RS_ENUM("MUX_UL05", "None"),
-	RS_ENUM("MUX_UL06", "None"),
-	RS_ENUM("MUX_UL07", "None"),
 	RS_NULL,
 };
 
@@ -1179,8 +1151,6 @@ static struct route_setting g_capture_multimedia_dmic1_mix[] = {
 	RS_ENUM("MUX_UL03", "None"),
 	RS_ENUM("MUX_UL04", "None"),
 	RS_ENUM("MUX_UL05", "None"),
-	RS_ENUM("MUX_UL06", "None"),
-	RS_ENUM("MUX_UL07", "None"),
 	RS_NULL,
 };
 
@@ -1191,8 +1161,6 @@ static struct route_setting g_capture_multimedia_dmic2_mix[] = {
 	RS_ENUM("MUX_UL03", "None"),
 	RS_ENUM("MUX_UL04", "None"),
 	RS_ENUM("MUX_UL05", "None"),
-	RS_ENUM("MUX_UL06", "None"),
-	RS_ENUM("MUX_UL07", "None"),
 	RS_NULL,
 };
 
@@ -1203,8 +1171,6 @@ static struct route_setting g_capture_multimedia_bluetooth_mix[] = {
 	RS_ENUM("MUX_UL03", "None"),
 	RS_ENUM("MUX_UL04", "None"),
 	RS_ENUM("MUX_UL05", "None"),
-	RS_ENUM("MUX_UL06", "None"),
-	RS_ENUM("MUX_UL07", "None"),
 	RS_NULL,
 };
 
@@ -1215,8 +1181,6 @@ static struct route_setting g_capture_multimedia_echo_mix[] = {
 	RS_ENUM("MUX_UL03", "None"),
 	RS_ENUM("MUX_UL04", "None"),
 	RS_ENUM("MUX_UL05", "None"),
-	RS_ENUM("MUX_UL06", "None"),
-	RS_ENUM("MUX_UL07", "None"),
 	RS_NULL,
 };
 
@@ -1227,8 +1191,6 @@ static struct route_setting g_capture_multimedia_vxrec_mix[] = {
 	RS_ENUM("MUX_UL03", "None"),
 	RS_ENUM("MUX_UL04", "None"),
 	RS_ENUM("MUX_UL05", "None"),
-	RS_ENUM("MUX_UL06", "None"),
-	RS_ENUM("MUX_UL07", "None"),
 	RS_NULL,
 };
 
