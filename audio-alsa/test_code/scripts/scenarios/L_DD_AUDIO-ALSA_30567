@@ -17,6 +17,6 @@
 0010	audio-tool config play Multimedia Handsfree enable
 0011	set -x; handlerProcessParallelism.sh "clean"
 0012	set -x; handlerProcessParallelism.sh "add" "audio-tool tone sine 1000 16 -c 2 -r 48000 -b 16 -d 0 -t 10"
-0013	set -x; handlerProcessParallelism.sh "add" "sleep 5; audio-tool config play Multimedia Handsfree disable"
+0013	set -x; handlerProcessParallelism.sh "add" "sleep 5; audio-tool mix 'DL1 PDM_DL2 Switch' 0"
 0014	set -x; handlerProcessParallelism.sh "execute"
-0009	audio-tool restore $TMPBASE/audio.cfg
+0015	audio-tool restore $TMPBASE/audio.cfg
