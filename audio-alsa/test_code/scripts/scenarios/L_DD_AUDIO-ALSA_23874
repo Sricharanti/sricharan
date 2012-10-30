@@ -1,0 +1,71 @@
+###################################################################################################################
+# Scenario: L_DD_AUDIO-ALSA_23874
+# Author  : Misael Lopez Cruz
+# Date    : Oct 30, 2012
+# Description:
+###################################################################################################################
+
+0001	echo "L_DD_AUDIO-ALSA_23874"
+0002	audio-tool save $TMPBASE/audio.cfg && audio-tool reset
+0003	audio-tool config play Multimedia Headset enable
+0004	audio-tool config cap Multimedia HeadsetMic enable
+0005	audio-tool cap $TMPBASE/rec.wav -c 2 -r 48000 -b 32 -d 0 -t 5
+0006	audio-tool config cap Multimedia HeadsetMic disable
+0007	audio-tool play $TMPBASE/rec.wav -d 0
+0008	audio-tool config cap Multimedia OnboardMic enable
+0009	audio-tool cap $TMPBASE/rec.wav -c 2 -r 48000 -b 32 -d 0 -t 5
+0010	audio-tool config cap Multimedia OnboardMic disable
+0011	audio-tool play $TMPBASE/rec.wav -d 0
+0012	audio-tool config cap Multimedia DMic0 enable
+0013	audio-tool cap $TMPBASE/rec.wav -c 2 -r 48000 -b 32 -d 0 -t 5
+0014	audio-tool config cap Multimedia DMic0 disable
+0015	audio-tool play $TMPBASE/rec.wav -d 0
+0016	audio-tool config cap Multimedia DMic1 enable
+0017	audio-tool cap $TMPBASE/rec.wav -c 2 -r 48000 -b 32 -d 0 -t 5
+0018	audio-tool config cap Multimedia DMic1 disable
+0019	audio-tool play $TMPBASE/rec.wav -d 0
+0020	audio-tool config cap Multimedia DMic2 enable
+0021	audio-tool cap $TMPBASE/rec.wav -c 2 -r 48000 -b 32 -d 0 -t 5
+0022	audio-tool config cap Multimedia DMic2 disable
+0023	audio-tool play $TMPBASE/rec.wav -d 0
+0024	audio-tool config cap Multimedia2 HeadsetMic enable
+0025	audio-tool cap $TMPBASE/rec.wav -c 2 -r 48000 -b 16 -d 1 -t 5
+0026	audio-tool config cap Multimedia2 HeadsetMic disable
+0027	audio-tool play $TMPBASE/rec.wav -d 0
+0028	audio-tool config cap Multimedia2 OnboardMic enable
+0029	audio-tool cap $TMPBASE/rec.wav -c 2 -r 48000 -b 16 -d 1 -t 5
+0030	audio-tool config cap Multimedia2 OnboardMic disable
+0031	audio-tool play $TMPBASE/rec.wav -d 0
+0032	audio-tool config cap Multimedia2 DMic0 enable
+0033	audio-tool cap $TMPBASE/rec.wav -c 2 -r 48000 -b 16 -d 1 -t 5
+0034	audio-tool config cap Multimedia2 DMic0 disable
+0035	audio-tool play $TMPBASE/rec.wav -d 0
+0036	audio-tool config cap Multimedia2 DMic1 enable
+0037	audio-tool cap $TMPBASE/rec.wav -c 2 -r 48000 -b 16 -d 1 -t 5
+0038	audio-tool config cap Multimedia2 DMic1 disable
+0039	audio-tool play $TMPBASE/rec.wav -d 0
+0040	audio-tool config cap Multimedia2 DMic2 enable
+0041	audio-tool cap $TMPBASE/rec.wav -c 2 -r 48000 -b 16 -d 1 -t 5
+0042	audio-tool config cap Multimedia2 DMic2 disable
+0043	audio-tool play $TMPBASE/rec.wav -d 0
+0044	audio-tool config cap Voice HeadsetMic enable
+0045	audio-tool cap $TMPBASE/rec.wav -c 2 -r 48000 -b 16 -d 2 -t 5
+0046	audio-tool config cap Voice HeadsetMic disable
+0047	audio-tool play $TMPBASE/rec.wav -d 0
+0048	audio-tool config cap Voice OnboardMic enable
+0049	audio-tool cap $TMPBASE/rec.wav -c 2 -r 48000 -b 16 -d 2 -t 5
+0050	audio-tool config cap Voice OnboardMic disable
+0051	audio-tool play $TMPBASE/rec.wav -d 0
+0052	audio-tool config cap Voice DMic0 enable
+0053	audio-tool cap $TMPBASE/rec.wav -c 2 -r 48000 -b 16 -d 2 -t 5
+0054	audio-tool config cap Voice DMic0 disable
+0055	audio-tool play $TMPBASE/rec.wav -d 0
+0056	audio-tool config cap Voice DMic1 enable
+0057	audio-tool cap $TMPBASE/rec.wav -c 2 -r 48000 -b 16 -d 2 -t 5
+0058	audio-tool config cap Voice DMic1 disable
+0059	audio-tool play $TMPBASE/rec.wav -d 0
+0060	audio-tool config cap Voice DMic2 enable
+0061	audio-tool cap $TMPBASE/rec.wav -c 2 -r 48000 -b 16 -d 2 -t 5
+0062	audio-tool config cap Voice DMic2 disable
+0063	audio-tool play $TMPBASE/rec.wav -d 0
+0064	audio-tool restore $TMPBASE/audio.cfg
