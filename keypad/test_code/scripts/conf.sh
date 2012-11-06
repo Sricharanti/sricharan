@@ -21,6 +21,14 @@ export KEYPAD_VERBOSE=""
 export KEYPAD_SCENARIO_NAMES=""
 export KEYPAD_STRESS=""
 
+if [ `cat /proc/cpuinfo| grep -ic OMAP4` -ne 0 ];then
+export KEYPAD_NAME="keypad"
+elif [ `cat /proc/cpuinfo| grep -ic OMAP5` -ne 0 ];then
+export KEYPAD_NAME="smsc_keypad"
+else
+echo "Unknown system type, please provide configuration."
+fi
+
 export PATH="${KEYPAD_ROOT}:${KEYPAD_DIR_BINARIES}:${KEYPAD_DIR_HELPER}:${PATH}"
 
 # Utils General Variables
@@ -46,7 +54,7 @@ set $TEMP_EVENT
 
 for i in $TEMP_EVENT
 do
-	${KEYPAD_DIR_BINARIES}/dev_name /dev/input/$i | grep -i "keypad"
+	${KEYPAD_DIR_BINARIES}/dev_name /dev/input/$i | grep -i $KEYPAD_NAME
 	IS_THIS_OUR_DRIVER=`echo $?`
 	if [ "$IS_THIS_OUR_DRIVER" -eq "0" ]
 	then
