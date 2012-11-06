@@ -39,6 +39,9 @@ export PATH="$PATH:$UTILS_DIR_BIN:$UTILS_DIR_HANDLERS:$UTILS_DIR_SCRIPTS"
 if [ `cat /proc/cpuinfo| grep -ic "OMAP4"` -eq 1 ]; then
 	export TOUCHSCREEN_SYSFS_NAME="Synaptic TM12XX"
 	export TOUCHSCREEN_IRQ_NAME="tm12xx_ts"
+elif [ `cat /proc/cpuinfo| grep -ic OMAP5` -ne 0 ];then
+	export TOUCHSCREEN_SYSFS_NAME="qtouch-touchscreen"
+	export TOUCHSCREEN_IRQ_NAME="qtouch_ts_int"
 fi
 
 # Touchscreen devfs node
