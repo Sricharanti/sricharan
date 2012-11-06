@@ -47,6 +47,12 @@ elif [ `cat $SYSFS_BOARD_REV | grep -wc "Blaze/SDP"` -ge 1  ]; then
 	export AMBIENT_LIGHT_POWERON_VAL=3
 	export AMBIENT_LIGHT_POWEROFF_VAL=0
 	export AMBIENT_LIGHT_ENABLE_POWER="$AMBIENT_LIGHT_SYSFS_PATH/power_state"
+elif [ `cat /proc/cpuinfo| grep -ic OMAP5` -ne 0 ];then
+	#specific to tsl2771 sensor
+	export AMBIENT_LIGHT_SYSFS_PATH="/sys/bus/i2c/drivers/tsl2771/2-0039"
+	export AMBIENT_LIGHT_POWERON_VAL=1
+	export AMBIENT_LIGHT_POWEROFF_VAL=0
+	export AMBIENT_LIGHT_ENABLE_POWER="$AMBIENT_LIGHT_SYSFS_PATH/als_enable"
 else
 	echo "Warning: Unrecognized hardware platform"
 	exit 1
