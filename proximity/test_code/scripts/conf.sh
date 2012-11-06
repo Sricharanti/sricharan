@@ -42,6 +42,11 @@ elif [ `cat $SYSFS_BOARD_REV | grep -wc "Blaze/SDP"` -ge 1  ]; then
 	#specific to sfh7741 sensor
 	export PROXIMITY_HW="sfh7741"
 	export PROXIMITY_INPUTDEV="sfh7741"
+elif [ `cat /proc/cpuinfo| grep -ic OMAP5` -ne 0 ];then
+	#specific to tsl2771 sensor
+	export PROXIMITY_HW="tsl2771"
+	export PROXIMITY_INPUTDEV="tsl2771_prox"
+	export PROXIMITY_SYSFS_PATH="/sys/bus/i2c/drivers/tsl2771/2-0039"
 else
 	echo "Warning: Unrecognized hardware platform"
 	exit 1
