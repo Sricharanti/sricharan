@@ -35,7 +35,13 @@ export PATH="$PATH:$UTILS_DIR_BIN:$UTILS_DIR_HANDLERS:$UTILS_DIR_SCRIPTS"
 
 # General variables
 export DMESG_FILE=/var/log/dmesg
+if [ `cat /proc/cpuinfo| grep -ic OMAP4` -ne 0 ];then
 export DIGITAL_COMPASS_SYSFS=/sys/devices/platform/omap/omap_i2c.4/i2c-4/4-001e
+elif [ `cat /proc/cpuinfo| grep -ic OMAP5` -ne 0 ];then
+export DIGITAL_COMPASS_SYSFS=/sys/devices/platform/omap_i2c.2/i2c-2/2-000c
+else
+echo "Unknown device. Can not find sysfs path."
+fi
 export DIGITAL_COMPASS_OM=$DIGITAL_COMPASS_SYSFS/mode
 export DIGITAL_COMPASS_ENABLE=$DIGITAL_COMPASS_SYSFS/enable
 
