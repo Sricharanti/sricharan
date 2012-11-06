@@ -36,9 +36,17 @@ export PATH="$PATH:$UTILS_DIR_BIN:$UTILS_DIR_HANDLERS:$UTILS_DIR_SCRIPTS"
 # General variables
 export DMESG_FILE=/var/log/dmesg
 
+if [ `cat /proc/cpuinfo| grep -ic OMAP4` -ne 0 ];then
 export DEVFS_BMP085_DIR=/sys/class/i2c-adapter/i2c-4/4-0077
 export DEVFS_BMP085_TEMP=/sys/class/i2c-adapter/i2c-4/4-0077/temp0_input
 export DEVFS_BMP085_PRESS=/sys/class/i2c-adapter/i2c-4/4-0077/pressure0_input
+elif [ `cat /proc/cpuinfo| grep -ic OMAP5` -ne 0 ];then
+export DEVFS_BMP085_DIR=/sys/bus/i2c/drivers/bmp085/2-0077
+export DEVFS_BMP085_TEMP=/sys/bus/i2c/drivers/bmp085/2-0077/temp0_input
+export DEVFS_BMP085_PRESS=/sys/bus/i2c/drivers/bmp085/2-0077/pressure0_input
+else
+echo "Unknown device, please provide configuration."
+fi
 
 #find sensor node
 TEMP_EVENT=`ls /sys/class/input/ | grep event`
