@@ -21,7 +21,7 @@
 0005 set -x; handlerPowerTransitionStats.sh log "l3init_pwrdm" "RET" "oswr1"
 0006 set -x; handlerPowerTransitionStats.sh log "l4per_pwrdm" "RET" "oswr1"
 
-0007 set -x; handlerGpioTest.sh "run" 1
+0007 set -x; ((handlerGpioTest.sh "run" 1 &) && sleep 10; $UTILS_DIR_HANDLERS/handlerAndroidPM.sh suspend kernel force 5) && handlerAndroidPM.sh resume kernel || exit 1
 
 0008 set -x; handlerPowerTransitionStats.sh log "mpu_pwrdm" "RET" "oswr2"
 0009 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET" "oswr2"

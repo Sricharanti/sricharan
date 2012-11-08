@@ -22,8 +22,6 @@
 0003 set -x; handlerCStateTransition.sh log "state0"  "before"; handlerCStateTransition.sh log "state1"  "before"
 0004 set -x; handlerCStateTransition.sh log "state2"  "before"; handlerCStateTransition.sh log "state3"  "before"
 
-
-
 0006 set -x; echo "Waiting 20 seconds" && sleep 20 & handlerGpioTest.sh "run" 1
 
 0007 set -x; handlerCStateTransition.sh log "state0" "after"; handlerCStateTransition.sh log "state1"  "after"

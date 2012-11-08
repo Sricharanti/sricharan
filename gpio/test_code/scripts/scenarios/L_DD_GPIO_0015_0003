@@ -19,7 +19,7 @@
 
 # Verify MPU RET and RET-LOGIC-OFF counters (OSWR) increase during a test period
 0003 set -x; handlerPowerTransitionStats.sh log "DEVICE-OFF" "DEVICE-OFF" "before"
-0004 set -x; handlerGpioTest.sh "run" 1
+0004 set -x; ((handlerGpioTest.sh "run" 1 &) && sleep 10; $UTILS_DIR_HANDLERS/handlerAndroidPM.sh suspend kernel force 5) && handlerAndroidPM.sh resume kernel || exit 1
 0005 set -x; handlerPowerTransitionStats.sh log "DEVICE-OFF" "DEVICE-OFF" "after"
 0006 set -x; handlerPowerTransitionStats.sh compare "DEVICE-OFF" "DEVICE-OFF" "before" "after"
 
