@@ -1,0 +1,37 @@
+###############################################################################
+# Scenario: L_DD_UART_SERIAL_0012_0005
+# Author  : Andrii Danylov
+# Date    : 11/08/12
+# Testing : UART: OS idle: C-State transition
+# Results : Verify all C-state transitiom when UART driver is used
+###############################################################################
+
+# Begin L_DD_UART_SERIAL_0012_0005
+
+0000 set -x; is_android_ready.sh
+
+# Unlock the UI by pressing Menu Key then go to home screen
+0001 set -x; handlerInputSubsystem.sh "keypad" "KeyCodeF1" 1 1 1
+0002 set -x; handlerInputSubsystem.sh "keypad" "KeyCodeHome" 1 1 1
+
+# set a dummy wakelock to avoid going to suspend
+0002 set -x; handlerAndroidPM.sh wakelock hold dummy
+# Turn the display OFF by pressing TWL power key
+0003 set -x; android_display_switch.sh OFF
+
+0003 set -x; handlerCStateTransition.sh log "state0"  "before"; handlerCStateTransition.sh log "state1"  "before"
+0004 set -x; handlerCStateTransition.sh log "state2"  "before"; handlerCStateTransition.sh log "state3"  "before"
+
+0006 set -x; echo "Waiting 20 seconds" && sleep 20 & $TESTSCRIPT/handlerHsuart.sh $UART_TEST_PORT1 115200 1
+
+0007 set -x; handlerCStateTransition.sh log "state0" "after"; handlerCStateTransition.sh log "state1"  "after"
+0008 set -x; handlerCStateTransition.sh log "state2" "after"; handlerCStateTransition.sh log "state3"  "after"
+
+0009 set -x; handlerCStateTransition.sh compare "state0" "before" "after"; handlerCStateTransition.sh compare "state1" "before" "after"
+0010 set -x; handlerCStateTransition.sh compare "state2" "before" "after"; handlerCStateTransition.sh compare "state3" "before" "after"
+
+0010 set -x; android_display_switch.sh ON
+0011 set -x; handlerInputSubsystem.sh "keypad" "KeyCodeHome" 1 1 1
+0012 set -x; handlerAndroidPM.sh wakelock release dummy
+
+# End L_DD_UART_SERIAL_0012_0005
