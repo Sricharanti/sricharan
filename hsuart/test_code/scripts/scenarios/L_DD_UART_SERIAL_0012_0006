@@ -1,0 +1,43 @@
+###############################################################################
+# Scenario: L_DD_UART_SERIAL_0012_0006
+# Author  : Andrii Danylov
+# Date    : 11/08/12
+# Testing : CPU idle: CSWR for MPU/CORE/L3/L4 power domains
+# Results : Verify MPU/CORE/L3/L4 power domain for RET and RET-LOGIC-OFF counters,
+#           they must increases after a period of time through cpu idle path
+###############################################################################
+
+# Begin L_DD_UART_SERIAL_0012_0006
+
+# Set the max screen timeout (30 min)
+#0001 set -x; handlerAndroidSqlite3.sh set "system" "screen_off_timeout" "1800000"
+
+# set a dummy wakelock to avoid going to suspend
+0002 set -x; handlerAndroidPM.sh wakelock hold dummy
+
+# Turn the display OFF by pressing TWL power key
+0003 set -x; android_display_switch.sh OFF
+
+# Verify MPU RET and RET-LOGIC-OFF counters (OSWR) increase during a test period
+0004 set -x; handlerPowerTransitionStats.sh log "mpu_pwrdm" "RET" "oswr1"
+0005 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET" "oswr1"
+0006 set -x; handlerPowerTransitionStats.sh log "l3init_pwrdm" "RET" "oswr1"
+0007 set -x; handlerPowerTransitionStats.sh log "l4per_pwrdm" "RET" "oswr1"
+
+0008 set -x; echo "Waiting 20 seconds" && sleep 20 & $TESTSCRIPT/handlerHsuart.sh $UART_TEST_PORT1 115200 1
+
+0009 set -x; handlerPowerTransitionStats.sh log "mpu_pwrdm" "RET" "oswr2"
+0010 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET" "oswr2"
+0011 set -x; handlerPowerTransitionStats.sh log "l3init_pwrdm" "RET" "oswr2"
+0012 set -x; handlerPowerTransitionStats.sh log "l4per_pwrdm" "RET" "oswr2"
+
+0013 set -x; handlerPowerTransitionStats.sh compare "mpu_pwrdm" "RET" "oswr1" "oswr2"
+0014 set -x; handlerPowerTransitionStats.sh compare "core_pwrdm" "RET" "oswr1" "oswr2"
+0015 set -x; handlerPowerTransitionStats.sh compare "l3init_pwrdm" "RET" "oswr1" "oswr2"
+0016 set -x; handlerPowerTransitionStats.sh compare "l4per_pwrdm" "RET" "oswr1" "oswr2"
+
+0017 set -x; handlerInputSubsystem.sh "keypad" "KeyCodePowerKey" 1 1 1
+0018 set -x; sleep 1; input keyevent $KeyMonkeyMenu; input keyevent $KeyMonkeyHome
+0019 set -x; handlerAndroidPM.sh wakelock release dummy
+
+# End L_DD_UART_SERIAL_0012_0006
