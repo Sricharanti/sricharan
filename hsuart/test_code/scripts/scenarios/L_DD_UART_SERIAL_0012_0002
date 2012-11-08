@@ -1,0 +1,48 @@
+###############################################################################
+# Scenario: L_DD_UART_SERIAL_0012_0002
+# Author  : Andrii Danylov
+# Date    : 11/08/12
+# Testing : Retention (OSWR) for MPU, CORE, L3 and L4 power domains
+# Results : UART driver shall use clocks, power domain, voltage domain on a need
+#           basis and relinquish when not needed, via the respective manager.
+###############################################################################
+
+# Begin L_DD_UART_SERIAL_0012_0002
+
+# Set the max screen timeout (30 min)
+#0001 set -x; handlerAndroidSqlite3.sh set "system" "screen_off_timeout" "1800000"
+
+# Turn the display OFF by pressing TWL power key
+0002 set -x; android_display_switch.sh OFF
+
+# Verify MPU RET and RET-LOGIC-OFF counters (OSWR) increase during a test period
+0003 set -x; handlerPowerTransitionStats.sh log "mpu_pwrdm" "RET" "oswr1"
+0004 set -x; handlerPowerTransitionStats.sh log "mpu_pwrdm" "RET-LOGIC-OFF" "oswr1"
+0005 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET" "oswr1"
+0006 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET-LOGIC-OFF" "oswr1"
+0007 set -x; handlerPowerTransitionStats.sh log "l3init_pwrdm" "RET" "oswr1"
+0008 set -x; handlerPowerTransitionStats.sh log "l3init_pwrdm" "RET-LOGIC-OFF" "oswr1"
+0009 set -x; handlerPowerTransitionStats.sh log "l4per_pwrdm" "RET" "oswr1"
+0010 set -x; handlerPowerTransitionStats.sh log "l4per_pwrdm" "RET-LOGIC-OFF" "oswr1"
+
+0011 set -x; (($TESTSCRIPT/handlerHsuart.sh $UART_TEST_PORT1 115200 1 &) && sleep 10; $UTILS_DIR_HANDLERS/handlerAndroidPM.sh suspend kernel force 5) && handlerAndroidPM.sh resume kernel || exit 1
+
+0012 set -x; handlerPowerTransitionStats.sh log "mpu_pwrdm" "RET" "oswr2"
+0013 set -x; handlerPowerTransitionStats.sh log "mpu_pwrdm" "RET-LOGIC-OFF" "oswr2"
+0014 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET" "oswr2"
+0015 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET-LOGIC-OFF" "oswr2"
+0016 set -x; handlerPowerTransitionStats.sh log "l3init_pwrdm" "RET" "oswr2"
+0017 set -x; handlerPowerTransitionStats.sh log "l3init_pwrdm" "RET-LOGIC-OFF" "oswr2"
+0018 set -x; handlerPowerTransitionStats.sh log "l4per_pwrdm" "RET" "oswr2"
+0019 set -x; handlerPowerTransitionStats.sh log "l4per_pwrdm" "RET-LOGIC-OFF" "oswr2"
+
+0020 set -x; handlerPowerTransitionStats.sh compare "mpu_pwrdm" "RET" "oswr1" "oswr2"
+0021 set -x; handlerPowerTransitionStats.sh compare "mpu_pwrdm" "RET-LOGIC-OFF" "oswr1" "oswr2"
+0022 set -x; handlerPowerTransitionStats.sh compare "core_pwrdm" "RET" "oswr1" "oswr2"
+0023 set -x; handlerPowerTransitionStats.sh compare "core_pwrdm" "RET-LOGIC-OFF" "oswr1" "oswr2"
+0024 set -x; handlerPowerTransitionStats.sh compare "l3init_pwrdm" "RET" "oswr1" "oswr2"
+0025 set -x; handlerPowerTransitionStats.sh compare "l3init_pwrdm" "RET-LOGIC-OFF" "oswr1" "oswr2"
+0026 set -x; handlerPowerTransitionStats.sh compare "l4per_pwrdm" "RET" "oswr1" "oswr2"
+0027 set -x; handlerPowerTransitionStats.sh compare "l4per_pwrdm" "RET-LOGIC-OFF" "oswr1" "oswr2"
+
+# End L_DD_UART_SERIAL_0012_0002
