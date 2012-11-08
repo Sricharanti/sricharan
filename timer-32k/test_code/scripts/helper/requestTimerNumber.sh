@@ -7,7 +7,7 @@ if [ $REQUESTED_GPTIMER -eq $RESERVED_GPTIMER ]; then
 	exit 0
 fi
 
-if [ `cat /proc/cpuinfo | grep -wc OMAP4` -ge 1 ]; then
+if [ `cat /proc/cpuinfo | grep -wc "OMAP4\|OMAP5"` -ge 1 ]; then
 	if [ $REQUESTED_GPTIMER -gt 4 ] && [ $REQUESTED_GPTIMER -lt 9 ]; then
 		echo "GPtimers 5-8 are not available"
 		exit 0
