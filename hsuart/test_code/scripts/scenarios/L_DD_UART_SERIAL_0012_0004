@@ -1,0 +1,14 @@
+###############################################################################
+# Scenario: L_DD_UART_SERIAL_0012_0004
+# Author  : Andrii Danylov
+# Date    : 11/08/12
+# Testing : UART: Power Management: DVFS
+# Results : UART driver shall allow DVFS during data transfer
+#           DVFS stands for Dinamic Voltage Frequency Scaling.
+###############################################################################
+
+# Begin L_DD_UART_SERIAL_0012_0004
+
+0002 set -x; handlerCpuFreqScalFrequencies.sh run all "sleep 20" & timeout=0; iterations=10 ; while [  $timeout -lt $iterations ]; do  for i in  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f; do $TESTSCRIPT/handlerHsuart.sh $UART_TEST_PORT1 115200 0; done; timeout=$((timeout=$timeout+1)); done
+
+# End L_DD_UART_SERIAL_0012_0004
