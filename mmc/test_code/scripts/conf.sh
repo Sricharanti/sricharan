@@ -47,7 +47,11 @@ handlerFilesystem.sh getType
 FS_TYPE=`cat $HFS_FS_TYPE`
 
 if [ "$FS_TYPE" = "android" ]; then
-	export EXT_SD_FOLDER="/mnt/ext_sdcard"
+        if [ "jb" = "$ANDROID_RELEASE_VERSION" ]; then
+                export EXT_SD_FOLDER="/storage/sdcard1"
+        else
+                export EXT_SD_FOLDER="/mnt/ext_sdcard"
+        fi
 	export USERDATA_FOLDER="/data"
 	export CACHE_FOLDER="/cache"
 	if [ "$MSD_TEST_FOLDER" = "" ]; then
