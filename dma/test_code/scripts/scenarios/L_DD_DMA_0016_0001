@@ -1,28 +1,25 @@
-################################################################################
-# Scenario:    L_DD_DMA_0016_0001
-# Author  :    G, Manjunath Kondaiah <manjugk@ti.com>
-# Date    :    November 16th, 2010
-# Description: OSWR testing with DMA Constant addressing mode
-################################################################################
+###############################################################################
+# Scenario: L_DD_DMA_0016_0001
+# Author  : Andrii Danylov
+# Date    : 11/30/12
+# Testing : DMA: Power Management: DVFS
+# Results : DMA driver shall allow DVFS during data transfer
+#           DVFS stands for Dinamic Voltage Frequency Scaling.
+###############################################################################
 
 # Begin L_DD_DMA_0016_0001
 
-0001	set -x; insmod $MODDIR/dma_register_dump.ko
-0002	set -x; insmod $MODDIR/dma_single_channel.ko
-0003	set -x; insmod $MODDIR/dma_addrmode_constant_oswr.ko
-0004	set -x; echo 0 > /sys/devices/system/cpu/cpu1/online
-0005	set -x; echo mem > /sys/power/state
-0006	set -x; sleep 20
-0007	set -x; echo " "
-0008	set -x; echo " "
-0009	set -x; echo " "
-0010	set -x; echo " "
-0011	set -x; echo " "
-0012	set -x; insmod $MODDIR/dma_oswr_trigger.ko
-0013	set -x; rmmod dma_oswr_trigger
-0014	set -x; rmmod dma_addrmode_constant_oswr
-0015	set -x; cat /proc/driver/dma_test_status | grep PASS
-0016	set -x; rmmod dma_single_channel
-0017	set -x; rmmod dma_register_dump
+0001 set -x; insmod $MODDIR/dma_register_dump.ko
+0002 set -x; insmod $MODDIR/dma_single_channel.ko
+0003 set -x; insmod $MODDIR/dma_addrmode_constant_oswr.ko
+0004 set -x; insmod $MODDIR/dma_oswr_trigger.ko
+
+0005 set -x; handlerCpuFreqScalFrequencies.sh run all "sleep 20" & sleep 20; timeout=0; iterations=10 ; while [  $timeout -lt $iterations ]; do for i in  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f; do timeout=$((timeout=$timeout+1)); done; done;
+
+0006 set -x; rmmod dma_oswr_trigger
+0007 set -x; rmmod dma_addrmode_constant_oswr
+0008 set -x; cat /proc/driver/dma_test_status | grep PASS
+0009 set -x; rmmod dma_single_channel
+0010 set -x; rmmod dma_register_dump
 
 # End L_DD_DMA_0016_0001
