@@ -1,0 +1,48 @@
+###############################################################################
+# Scenario: L_DD_DMA_0017_0004
+# Author  : Andrii Danylov
+# Date    : 11/30/12
+# Testing : DMA: OS idle: C-State transition
+# Results : Verify all C-state transitiom when DMA driver is used
+###############################################################################
+
+# Begin L_DD_DMA_0017_0004
+
+0000 set -x; is_android_ready.sh
+
+# Unlock the UI by pressing Menu Key then go to home screen
+0001 set -x; handlerInputSubsystem.sh "keypad" "KeyCodeF1" 1 1 1
+0002 set -x; handlerInputSubsystem.sh "keypad" "KeyCodeHome" 1 1 1
+
+# set a dummy wakelock to avoid going to suspend
+0002 set -x; handlerAndroidPM.sh wakelock hold dummy
+# Turn the display OFF by pressing TWL power key
+0003 set -x; android_display_switch.sh OFF
+
+0003 set -x; handlerCStateTransition.sh log "state0"  "before"; handlerCStateTransition.sh log "state1"  "before"
+0004 set -x; handlerCStateTransition.sh log "state2"  "before"; handlerCStateTransition.sh log "state3"  "before"
+
+0005 set -x; insmod $MODDIR/dma_register_dump.ko
+0006 set -x; insmod $MODDIR/dma_single_channel.ko
+0007 set -x; insmod $MODDIR/dma_addrmode_constant_oswr.ko
+0008 set -x; insmod $MODDIR/dma_oswr_trigger.ko
+
+0009 set -x; echo "Waiting 20 seconds" && sleep 20
+
+0010 set -x; rmmod dma_oswr_trigger
+0011 set -x; rmmod dma_addrmode_constant_oswr
+0012 set -x; cat /proc/driver/dma_test_status | grep PASS
+0013 set -x; rmmod dma_single_channel
+0014 set -x; rmmod dma_register_dump
+
+0015 set -x; handlerCStateTransition.sh log "state0" "after"; handlerCStateTransition.sh log "state1"  "after"
+0016 set -x; handlerCStateTransition.sh log "state2" "after"; handlerCStateTransition.sh log "state3"  "after"
+
+0017 set -x; handlerCStateTransition.sh compare "state0" "before" "after"; handlerCStateTransition.sh compare "state1" "before" "after"
+0018 set -x; handlerCStateTransition.sh compare "state2" "before" "after"; handlerCStateTransition.sh compare "state3" "before" "after"
+
+0019 set -x; android_display_switch.sh ON
+0020 set -x; handlerInputSubsystem.sh "keypad" "KeyCodeHome" 1 1 1
+0021 set -x; handlerAndroidPM.sh wakelock release dummy
+
+# End L_DD_DMA_0017_0004
