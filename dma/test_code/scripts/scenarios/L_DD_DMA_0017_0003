@@ -1,0 +1,35 @@
+###############################################################################
+# Scenario: L_DD_DMA_0017_0003
+# Author  : Andrii Danylov
+# Date    : 11/30/12
+# Testing : DMA: Suspend and Resume (OFF mode)
+# Results : Target: OFF mode / Device OFF
+#           DMA driver shall use clocks, power domain, voltage domain on a need
+#           basis and relinquish when not needed, via the respective manager.
+#           Drivers shall check if context restore is needed when driver is activated
+###############################################################################
+
+# Begin L_DD_GPIO_0017_0003
+
+# Set the max screen timeout (30 min)
+#0001 set -x; handlerAndroidSqlite3.sh set "system" "screen_off_timeout" "1800000"
+
+# Turn the display OFF by pressing TWL power key
+0002 set -x; android_display_switch.sh OFF
+
+# Verify MPU RET and RET-LOGIC-OFF counters (OSWR) increase during a test period
+0003 set -x; handlerPowerTransitionStats.sh log "DEVICE-OFF" "DEVICE-OFF" "before"
+
+0004 set -x; insmod $MODDIR/dma_register_dump.ko
+0005 set -x; insmod $MODDIR/dma_single_channel.ko
+
+0006 set -x; sleep 5;
+0007 set -x; ($UTILS_DIR_HANDLERS/handlerAndroidPM.sh suspend kernel force 5 && handlerAndroidPM.sh resume kernel) || exit 1
+
+0008 set -x; rmmod dma_single_channel
+0009 set -x; rmmod dma_register_dump
+
+0010 set -x; handlerPowerTransitionStats.sh log "DEVICE-OFF" "DEVICE-OFF" "after"
+0011 set -x; handlerPowerTransitionStats.sh compare "DEVICE-OFF" "DEVICE-OFF" "before" "after"
+
+# End L_DD_GPIO_0017_0003
