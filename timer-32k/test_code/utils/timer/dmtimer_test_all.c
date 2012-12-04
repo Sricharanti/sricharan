@@ -34,7 +34,8 @@ static u32 local_jiffies;
 static u32 start_count, end_count;
 
 /* user parameter list */
-static uint id; /* gptimer number: [1-12] */
+static uint id = 2; /* gptimer number: [1-12] by default 2 and 10 timers are avaliable */
+module_param_named(gptimer_id, id, int, S_IRUGO | S_IWUSR);
 static uint clk = 1; /* gptimer clock source: [1(sysclk), 2(32khz)] */
 static uint to = 2; /* timeout in seconds */
 
@@ -116,7 +117,6 @@ static int __init dmtimer_test_init(void)
 	static int flag = 0;
 
 	while (clk < 3) {
-		for (id = 3; id < 12; id++) {
 			/* requesting for the specified timer */
 			timer = omap_dm_timer_request_specific(id);
 			if (timer == NULL) {
@@ -193,9 +193,8 @@ static int __init dmtimer_test_init(void)
 			omap_dm_timer_stop(timer);
 			remove_irq(omap_dm_timer_get_irq(timer), &dmtimer_irq);
 			omap_dm_timer_free(timer);
-		}/*for(...)*/
-		clk++;
-	}/* while (i < 3)*/
+	clk++;
+	}/* while (clk < 3)*/
 	printk("ret=%d ",ret);
 	return ret;
 }
