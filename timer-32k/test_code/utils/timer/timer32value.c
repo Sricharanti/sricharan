@@ -19,6 +19,10 @@
 MODULE_DESCRIPTION("GP Timer Request and Reserve Test Module");
 MODULE_LICENSE("GPL");
 
+/* threshold of divergence of timer tics 491 Hz is 15 ms,
+ * this is the criteria for test success */
+#define DIV_THRESH 491
+
 /*Pointer to timer struct*/
 static struct omap_dm_timer *timer_ptr;
 
@@ -29,11 +33,15 @@ static int32_t timer_irq;
 static uint delay = 1;
 module_param(delay, int, S_IRUGO|S_IWUSR);
 
+/* Check */
+static uint check = 0;
+module_param(check, int, S_IRUGO | S_IWUSR);
+
 static int __init gptimer_request_init(void)
 {
 	struct clk *gt_fclk;
 	uint32_t gt_rate;
-	unsigned int timer_count1, timer_count2;
+	unsigned int timer_count;
 
 	/*Requesting for any available timer*/
 	timer_ptr = omap_dm_timer_request();
@@ -61,13 +69,40 @@ static int __init gptimer_request_init(void)
 	printk(KERN_INFO "GP Timer initialized and started (%lu Hz, IRQ %d)\n",
 		(long unsigned)gt_rate, timer_irq);
 
-	timer_count1 = omap_dm_timer_read_counter(timer_ptr);
+	timer_count = omap_dm_timer_read_counter(timer_ptr);
+	printk(KERN_INFO "Timer count before delay: %u\n", timer_count);
+
+	if (check) {
+		unsigned int t1, t2, diff, diver, delay_hz = delay * gt_rate;
+		char c;
+
+		t1 = timer_count;
+		msleep(delay * 1000);
+		t2 = omap_dm_timer_read_counter(timer_ptr);
+		printk(KERN_INFO "Timer count after delay: %u\n", t2);
+		diff = t2 - t1;
+
+		if (diff > delay_hz) {
+			diver = diff - delay_hz;
+			c = '>';
+		}
+		else {
+			diver = delay_hz - diff;
+			c = '<';
+		}
+
+		printk(KERN_INFO "gp_timer %c system_timer for %u Hz (%u == 1 sec.)\n", c, diver, gt_rate);
+
+		if (diver > DIV_THRESH)
+			return -1;
+
+		return 0;
+	}
 
 	ssleep(delay);
 
-	timer_count2 = omap_dm_timer_read_counter(timer_ptr);
-	printk(KERN_INFO "Timer count before delay: %u\n", timer_count1);
-	printk(KERN_INFO "Timer count after delay: %u\n", timer_count2);
+	timer_count = omap_dm_timer_read_counter(timer_ptr);
+	printk(KERN_INFO "Timer count after delay: %u\n", timer_count);
 
 	return 0;
 }
