@@ -18,6 +18,9 @@
 #include <linux/sched.h>
 #include <linux/kthread.h>
 
+#define DIV_THRESHOLD 500 /* divergence threshold */
+
+
 MODULE_DESCRIPTION("GP Timer Request and Reserve Test Module");
 MODULE_LICENSE("GPL");
 
@@ -30,6 +33,7 @@ static int32_t timer_irq;
 /* Delay in Sec's between two timer value query */
 static uint delay = 1;
 static uint iterations = 1;
+static uint32_t gt_rate;
 module_param(delay, int, S_IRUGO|S_IWUSR);
 module_param(iterations, int, S_IRUGO|S_IWUSR);
 
@@ -37,14 +41,17 @@ static void  gptimer_keepreading_counter(void *info)
 {
 	int i;
 	unsigned int timer_count;
+	unsigned int timer_before, timer_after, tsh;
 	for (i = 0 ; i < iterations ; i++) {
-		timer_count = omap_dm_timer_read_counter(timer_ptr);
-		printk(KERN_INFO "Timer count before delay: %u\n", timer_count);
+		timer_before = omap_dm_timer_read_counter(timer_ptr);
+//		printk(KERN_INFO "Timer count before delay: %u\n", timer_count);
 
 		ssleep(delay);
 
-		timer_count = omap_dm_timer_read_counter(timer_ptr);
-		printk(KERN_INFO "Timer count after delay: %u\n", timer_count);
+		timer_after = omap_dm_timer_read_counter(timer_ptr);
+//		printk(KERN_INFO "Timer count after delay: %u\n", timer_count);
+		tsh = timer_after - timer_before - gt_rate * delay;
+		(tsh > DIV_THRESHOLD) ? printk(KERN_INFO "threshold overhead: %u\n", tsh) : printk(KERN_INFO "divergence[%d] = %u\n", i, tsh);
 	}
 }
 

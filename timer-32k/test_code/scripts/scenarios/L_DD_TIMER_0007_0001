@@ -1,0 +1,16 @@
+###############################################################################
+# Scenario: L_DD_TIMER_0007_0001
+# Author  : Taras Koroliuk
+# Date    : Feb 06 , 2012
+# Descr.  : Timer driver shall support query of the 32Khz sync timer value
+# 			simultaneously from two threads running on diffferent processors.
+###############################################################################
+
+# Begin L_DD_TIMER_0007_0001
+# $1 - module parameter delay, $2 - iterations
+#The query should return the correct values with proper
+#difference between them depending on the time elapsed in both the cases.
+
+01  set -x; $TESTSCRIPT/timer32value-smp.sh 1 10 && exit 0 || exit 1
+
+# End L_DD_TIMER_0007_0001
