@@ -408,10 +408,10 @@ elif [ `cat /proc/cpuinfo | grep -ic Zoom3` -gt 0 ]; then
 
 elif [ `cat $SYSFS_SOC_FAMILY | grep -wc "OMAP5430"` -ge 1 ]; then
 
-	# OMAP4 Keypad (on board keypad)
-	export omapKeypadEvent="/dev/input/event1"
+	# smc-keypad (on board keypad)
+	export omapKeypadEvent="/dev/input/event2"
 	# PALMAS Power Button event
-	export omapPowerButtonEvent="/dev/input/event8"
+	export omapPowerButtonEvent="/dev/input/event6"
 
 	export KeyCodeHome=102
 	export KeyCodeBack=231
