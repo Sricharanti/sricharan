@@ -175,7 +175,7 @@ verifyErrorFlag() {
 	debug_message=$1
 	if [ $error_val -eq 1 ]; then
 		handlerError.sh "log" "1" "halt" "handlerAndroidPM.sh"
-		handlerDebugFileSystem.sh "umount"
+		#handlerDebugFileSystem.sh "umount"
 		showInfo "Debug: local error detected:" "$debug_message"  1>&2
 		exit $error_val
 	fi
@@ -343,7 +343,7 @@ case $operation in
 	;;
 esac
 
-handlerDebugFileSystem.sh "umount"
+#handlerDebugFileSystem.sh "umount"
 exit $error_val
 
 # End of file

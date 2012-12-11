@@ -80,7 +80,7 @@ elif [ "$LOCAL_OPERATION" = "run" ]; then
 	suspendResume $LOCAL_WAKEUP_TIME "$LOCAL_COMMAND_LINE"
 fi
 
-handlerDebugFileSystem.sh "umount"
+#handlerDebugFileSystem.sh "umount"
 
 exit $LOCAL_ERROR
 

@@ -103,7 +103,7 @@ done
 
 if [ $error_status -eq 1 ]; then
 	handlerError.sh "log" "1" "halt" "handlerSmartReflex.sh"
-	handlerDebugFileSystem.sh "umount"
+	#handlerDebugFileSystem.sh "umount"
 	exit $error_status
 fi
 
@@ -136,11 +136,11 @@ fi
 
 if [ $error_status -eq 1 ]; then
         handlerError.sh "log" "1" "halt" "handlerSmartReflex.sh"
-        handlerDebugFileSystem.sh "umount"
+        #handlerDebugFileSystem.sh "umount"
         exit $error_status
 fi
 
-handlerDebugFileSystem.sh "umount"
+#handlerDebugFileSystem.sh "umount"
 exit $error_status
 
 # End of file

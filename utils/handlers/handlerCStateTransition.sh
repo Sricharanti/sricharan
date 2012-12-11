@@ -115,7 +115,7 @@ elif [ "$operation" = "compare" ]; then
         fi
 fi
 
-handlerDebugFileSystem.sh "umount"
+#handlerDebugFileSystem.sh "umount"
 
 exit $error_val
 
