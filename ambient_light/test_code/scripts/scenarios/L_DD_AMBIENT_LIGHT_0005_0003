@@ -1,0 +1,26 @@
+###############################################################################
+# Scenario: L_DD_AMBIENT_LIGHT_0005_0003
+# Author  : Andrii Danylov
+# Date    : 14/12/12
+# Testing : Ambient Light Sensor: Suspend and Resume (OFF mode)
+# Results : Target: OFF mode / Device OFF
+#           Ambient Light Sensor driver shall use clocks, power domain, voltage domain on a need
+#           basis and relinquish when not needed, via the respective manager.
+#           Drivers shall check if context restore is needed when driver is activated
+###############################################################################
+
+# Begin L_DD_AMBIENT_LIGHT_0005_0003
+
+# Set the max screen timeout (30 min)
+#0001 set -x; handlerAndroidSqlite3.sh set "system" "screen_off_timeout" "1800000"
+
+# Turn the display OFF by pressing TWL power key
+0002 set -x; android_display_switch.sh OFF
+
+# Verify MPU RET and RET-LOGIC-OFF counters (OSWR) increase during a test period
+0003 set -x; handlerPowerTransitionStats.sh log "DEVICE-OFF" "DEVICE-OFF" "before"
+0004 set -x; (handlerSysFs.sh set $AMBIENT_LIGHT_ENABLE_POWER $AMBIENT_LIGHT_POWERON_VAL; sleep 1; [ `cat $AMBIENT_LIGHT_SYSFS_PATH/lux` -gt "0" ] && $UTILS_DIR_HANDLERS/handlerAndroidPM.sh suspend kernel force 5; sleep 1) && handlerAndroidPM.sh resume kernel
+0005 set -x; handlerPowerTransitionStats.sh log "DEVICE-OFF" "DEVICE-OFF" "after"
+0006 set -x; handlerPowerTransitionStats.sh compare "DEVICE-OFF" "DEVICE-OFF" "before" "after"
+
+# End L_DD_ETHERNET_0015_0003
