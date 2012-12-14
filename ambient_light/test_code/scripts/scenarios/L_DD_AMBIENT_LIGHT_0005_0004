@@ -1,0 +1,14 @@
+###############################################################################
+# Scenario: L_DD_AMBIENT_LIGHT_0005_0004
+# Author  : Andrii Danylov
+# Date    : 14/12/12
+# Testing : Ambient Light Sensor: Power Management: DVFS
+# Results : Ambient Light Sensor driver shall allow DVFS during data transfer
+#           DVFS stands for Dinamic Voltage Frequency Scaling.
+###############################################################################
+
+# Begin L_DD_AMBIENT_LIGHT_0005_0004
+
+0001 set -x; handlerCpuFreqScalFrequencies.sh run all "sleep 20" & timeout=0; iterations=10 ; while [  $timeout -lt $iterations ]; do handlerSysFs.sh set $AMBIENT_LIGHT_ENABLE_POWER $AMBIENT_LIGHT_POWERON_VAL; sleep 1; [ `cat $AMBIENT_LIGHT_SYSFS_PATH/lux` -gt "0" ]; timeout=$((timeout=$timeout+1)); done
+
+# End L_DD_AMBIENT_LIGHT_0005_0004
