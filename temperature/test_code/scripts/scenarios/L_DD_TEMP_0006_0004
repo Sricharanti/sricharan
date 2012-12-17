@@ -1,12 +1,12 @@
 ###############################################################################
-# Scenario: L_DD_TEMP_0002_0001
+# Scenario: L_DD_TEMP_0006_0004
 # Author  : DTaylor
 #
 # Date    : 9Nov11
 ###############################################################################
 
-# Begin L_DD_TEMP_0002_0001
+# Begin L_DD_TEMP_0006_0004
 
 01 set -x; $UTILS_DIR_HANDLERS/handlerCpuFreqScalFrequencies.sh run all "${SENSOR_DIR_HELPER}/Readvalues.sh 20  1"
 
-# End L_DD_TEMP_0002_0001
+# End L_DD_TEMP_0006_0004
