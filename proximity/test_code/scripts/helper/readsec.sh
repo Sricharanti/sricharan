@@ -1,24 +1,22 @@
 #!/bin/sh
 
-DURATION=60
+DURATION=30
 
-if [ -n "$PROXIMITY_ENABLE" ]; then 
-	echo -n "1">$PROXIMITY_ENABLE
-fi 
+if [ -n "$PROXIMITY_ENABLE" ]; then
+	echo -n "2">$PROXIMITY_ENABLE
+fi
 
-#TMPFILE=`mktemp /var/tmpXXXXXX`
 NOWTIME=`date "+%s"`
 ENDTIME=`expr "$NOWTIME" + "$DURATION"`
 RV=0
 while [ "$NOWTIME" -lt "$ENDTIME" ]; do
-	$SENSOR_ROOT/../../compass/bin/evtest $DEVFS_SENSOR >$TMPFILE
-	RV=$?
+	$SENSOR_ROOT/../bin/evtest $DEVFS_SENSOR
 	if [ "$?" -ne "0" ]; then
+		RV=1
 		break
 	fi
     NOWTIME=`date "+%s"`
 done
-rm $TMPFILE
 
 if [ "$RV" -eq "0" ]
 then

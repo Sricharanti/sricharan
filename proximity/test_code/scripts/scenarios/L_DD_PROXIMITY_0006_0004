@@ -1,0 +1,14 @@
+###############################################################################
+# Scenario: L_DD_PROXIMITY_0006_0004
+# Author  : dtaylor
+#
+# Date    : 30Sep11
+###############################################################################
+
+# Begin L_DD_PROXIMITY_0006_0004
+
+01 set -x; if [ -n "$PROXIMITY_ENABLE" ]; then handlerSysFs.sh set $PROXIMITY_ENABLE 2 ; fi
+02 set -x; $UTILS_DIR_HANDLERS/handlerCpuFreqScalFrequencies.sh run all "$SENSOR_DIR_HELPER/readsec.sh"
+03 set -x; handlerSysFs.sh set $PROXIMITY_ENABLE 0
+
+# End L_DD_PROXIMITY_0006_0004
