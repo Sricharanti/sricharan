@@ -1,12 +1,12 @@
 ###############################################################################
-# Scenario: L_DD_PRESS_0002_0001
+# Scenario: L_DD_PRESS_0006_0004
 # Author  : DTaylor
 #
 # Date    : 29Sep11
 ###############################################################################
 
-# Begin L_DD_PRESS_0002_0001
+# Begin L_DD_PRESS_0006_0004
 
-01 set -x; $UTILS_DIR_HANDLERS/handlerCpuFreqScalFrequencies.sh run all "$SENSOR_DIR_HELPER/readsec.sh" 
+01 set -x; $UTILS_DIR_HANDLERS/handlerCpuFreqScalFrequencies.sh run all "$SENSOR_DIR_HELPER/readsec.sh"
 
-# End L_DD_PRESS_0002_0001
+# End L_DD_PRESS_0006_0004
