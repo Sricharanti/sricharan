@@ -1,0 +1,38 @@
+###############################################################################
+# Scenario: L_DD_PROXIMITY_0006_0001
+# Author  : Andrii Danylov
+# Date    : 19/12/12
+# Testing : Retention (CSWR) for MPU, CORE, L3 and L4 power domains
+# Results : Proximity Sensor driver shall use clocks, power domain, voltage domain on a need
+#           basis and relinquish when not needed, via the respective manager.
+###############################################################################
+
+# Begin L_DD_PROXIMITY_0006_0001
+
+# Set the max screen timeout (30 min)
+#0001 set -x; handlerAndroidSqlite3.sh set "system" "screen_off_timeout" "1800000"
+
+# Turn the display OFF by pressing TWL power key
+0002 set -x; android_display_switch.sh OFF
+
+# Verify MPU RET and RET-LOGIC-OFF counters (OSWR) increase during a test period
+0003 set -x; handlerPowerTransitionStats.sh log "mpu_pwrdm" "RET" "oswr1"
+0004 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET" "oswr1"
+0005 set -x; handlerPowerTransitionStats.sh log "l3init_pwrdm" "RET" "oswr1"
+0006 set -x; handlerPowerTransitionStats.sh log "l4per_pwrdm" "RET" "oswr1"
+
+0007 set -x; if [ -n "$PROXIMITY_ENABLE" ]; then handlerSysFs.sh set $PROXIMITY_ENABLE 2 ; fi
+0008 set -x; ($SENSOR_DIR_BINARIES/evtest $DEVFS_SENSOR && $UTILS_DIR_HANDLERS/handlerAndroidPM.sh suspend kernel force 5; sleep 1) && handlerAndroidPM.sh resume kernel
+0009 set -x; handlerSysFs.sh set $PROXIMITY_ENABLE 0
+
+0010 set -x; handlerPowerTransitionStats.sh log "mpu_pwrdm" "RET" "oswr2"
+0011 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET" "oswr2"
+0012 set -x; handlerPowerTransitionStats.sh log "l3init_pwrdm" "RET" "oswr2"
+0013 set -x; handlerPowerTransitionStats.sh log "l4per_pwrdm" "RET" "oswr2"
+
+0014 set -x; handlerPowerTransitionStats.sh compare "mpu_pwrdm" "RET" "oswr1" "oswr2"
+0015 set -x; handlerPowerTransitionStats.sh compare "core_pwrdm" "RET" "oswr1" "oswr2"
+0016 set -x; handlerPowerTransitionStats.sh compare "l3init_pwrdm" "RET" "oswr1" "oswr2"
+0017 set -x; handlerPowerTransitionStats.sh compare "l4per_pwrdm" "RET" "oswr1" "oswr2"
+
+# End L_DD_PROXIMITY_0006_0001
