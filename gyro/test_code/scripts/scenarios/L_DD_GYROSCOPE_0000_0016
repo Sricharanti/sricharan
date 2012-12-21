@@ -1,0 +1,21 @@
+###############################################################################
+# Scenario: L_DD_GYROSCOPE_0000_0016
+# Author  : 
+# Date    : 28 Sep 11
+###############################################################################
+
+# Begin L_DD_GYROSCOPE_0000_0016
+
+#valid values are 1, 20, 60, 200
+
+01 set -x; echo -n $GYRO_POWERON_VAL>$GYRO_ENABLE_POWER
+
+02 set -x; handlerSysFs.sh "set" $GYRO_DELAY 1
+
+03 set -x; handlerSysFs.sh "compare" $GYRO_DELAY 1
+
+04 set -x; handlerSysFs.sh "set" $GYRO_DELAY -1 ; true
+
+05 set -x; handlerSysFs.sh "compare" $GYRO_DELAY 1
+
+# End L_DD_GYROSCOPE_0000_0016

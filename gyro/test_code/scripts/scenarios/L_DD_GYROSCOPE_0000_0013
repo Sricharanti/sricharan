@@ -1,0 +1,18 @@
+###############################################################################
+# Scenario: L_DD_GYROSCOPE_0000_0013
+# Author  : 
+# Date    : 27 Sep 11
+###############################################################################
+
+# Begin L_DD_GYROSCOPE_0000_0013
+
+01 handlerSysFs.sh "set" $GYRO_ENABLE_POWER $GYRO_POWEROFF_VAL
+
+02 handlerSysFs.sh "compare" $GYRO_ENABLE_POWER $GYRO_POWEROFF_VAL
+
+03 handlerSysFs.sh "set" $GYRO_ENABLE_POWER $GYRO_POWERON_VAL
+
+04 handlerSysFs.sh "compare" $GYRO_ENABLE_POWER $GYRO_POWERON_VAL
+
+# End L_DD_GYROSCOPE_0000_0013
+

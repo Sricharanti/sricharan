@@ -1,0 +1,13 @@
+###############################################################################
+# Scenario: L_DD_GYROSCOPE_0000_0011
+# Author  : John Doe
+# Date    : 27 Sep 11
+# Modif   : Taras Koroliuk
+# Mod.dat.: Mar 12 2012
+###############################################################################
+
+# Begin L_DD_GYROSCOPE_0000_0011
+
+01 set -x; $GYRO_DIR_HELPER/GYRO_0000_0011
+
+# End L_DD_GYROSCOPE_0000_0011

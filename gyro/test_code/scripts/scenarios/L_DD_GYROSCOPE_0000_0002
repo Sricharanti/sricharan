@@ -1,0 +1,13 @@
+###############################################################################
+# Scenario: L_DD_GYROSCOPE_0000_0002
+# Author  : 
+# Date    : 27 Sep 11
+###############################################################################
+
+# Begin L_DD_GYROSCOPE_0000_0002
+
+01 set -x; cat $GYRO_ENABLE_POWER
+02 set -x; cat $GYRO_SYSFS_PATH/delay
+
+# End L_DD_GYROSCOPE_0000_0002
+

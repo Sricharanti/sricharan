@@ -1,0 +1,14 @@
+###############################################################################
+# Scenario: L_DD_GYROSCOPE_0000_0003
+# Author  : 
+# Date    : 27 Sep 11
+###############################################################################
+
+# Begin L_DD_GYROSCOPE_0000_0003
+
+01 echo -n $GYRO_POWERON_VAL>$GYRO_ENABLE_POWER
+
+02 set -x; [ "`cat /proc/interrupts|awk '/mpu3050/ {print $2}'|wc -l`" -ne "0" ]
+
+# End L_DD_GYROSCOPE_0000_0003
+

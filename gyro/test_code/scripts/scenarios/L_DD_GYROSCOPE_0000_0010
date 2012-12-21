@@ -1,0 +1,20 @@
+###############################################################################
+# Scenario: L_DD_GYROSCOPE_0000_0010
+# Author  : John Doe
+# Date    : 27 Sep 11
+# Modif   : Taras Koroliuk
+# Mod.dat.: Mar 12 2012
+###############################################################################
+
+# Begin L_DD_GYROSCOPE_0000_0010
+# IMPORTANT NOTES!
+# 	Please, ensure that device goes to true suspen
+# 	USB-OTG cable (i.e. micro-usb) must not be connected to the device 
+# 	while executing this test.
+
+01 set -x; handlerAndroidPM.sh suspend android force 1
+02 set -x; sleep 1
+#all other things done in the below script.
+03 set -x; $GYRO_DIR_HELPER/GYRO_0000_0010
+
+# End L_DD_GYROSCOPE_0000_0010

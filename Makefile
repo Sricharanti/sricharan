@@ -104,7 +104,7 @@ APPLICABLE_TESTS += gpio mcspi i2c
 
 # Sensor devices
 APPLICABLE_TESTS += accelerometer ambient_light compass pressure proximity \
-		    temperature
+		    temperature gyro
 
 ifdef CONFIG_ANDROID
 APPLICABLE_TESTS += android

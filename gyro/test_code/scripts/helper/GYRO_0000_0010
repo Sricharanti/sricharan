@@ -1,0 +1,16 @@
+###############################################################################
+# Scenario: L_DD_GYROSCOPE_0000_0010
+# Author  : Taras Koroliuk
+# Date    : Mar 12 2012
+###############################################################################
+
+# Begin GYRO_0000_0010
+# Here  we exec evtest and take stdout of it to main tty
+# to see if evtest is really interrupted by suspend/resume states.
+# after evtest we wake up by handler.
+echo -n $GYRO_POWERON_VAL>$GYRO_ENABLE_POWER
+handlerSysFs.sh "set" $GYRO_DELAY 20
+$GYRO_DIR_BINARIES/evtest $DEVFS_GYRO >/dev/ttyO2
+handlerAndroidPM.sh resume android
+
+# End GYRO_0000_0010

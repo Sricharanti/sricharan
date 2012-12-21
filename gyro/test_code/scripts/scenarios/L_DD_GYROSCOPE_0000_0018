@@ -1,0 +1,22 @@
+###############################################################################
+# Scenario: L_DD_GYROSCOPE_0000_0018
+# Author  : 
+# Date    : 27 Sep 11
+###############################################################################
+
+# Begin L_DD_GYROSCOPE_0000_0018
+
+01 set -x; handlerSysFs.sh "set" $GYRO_ENABLE_POWER $GYRO_POWERON_VAL
+
+02 set -x; handlerSysFs.sh "compare" $GYRO_ENABLE_POWER $GYRO_POWERON_VAL
+
+03 set -x; handlerSysFs.sh "set" $GYRO_ENABLE_POWER "-1" ; true
+
+04 set -x;  handlerSysFs.sh "compare" $GYRO_ENABLE_POWER $GYRO_POWERON_VAL
+
+05 set -x; handlerSysFs.sh "set" $GYRO_ENABLE_POWER "2"
+
+06 set -x; handlerSysFs.sh "compare" $GYRO_ENABLE_POWER $GYRO_POWERON_VAL
+
+# End L_DD_GYROSCOPE_0000_0018
+

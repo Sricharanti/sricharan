@@ -1,0 +1,15 @@
+###############################################################################
+# Scenario: L_DD_GYROSCOPE_0000_0011
+# Author  : Taras Koroliuk
+# Date    : Mar 12 2012
+###############################################################################
+
+# Begin GYRO_0000_0011
+
+echo -n $GYRO_POWERON_VAL>$GYRO_ENABLE_POWER
+handlerSysFs.sh "set" $GYRO_DELAY 20
+
+$GYRO_DIR_BINARIES/evtest $DEVFS_GYRO&
+$GYRO_DIR_BINARIES/evtest $DEVFS_GYRO
+
+# End GYRO_0000_0011
