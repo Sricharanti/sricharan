@@ -1,0 +1,32 @@
+###############################################################################
+# Scenario: ACC_0005_0003
+# Author  : Andrii Danylov
+# Date    : 12/21/12
+# Testing : Accelerometer: Suspend and Resume (OFF mode)
+# Results : Target: OFF mode / Device OFF
+#           Accelerometer driver shall use clocks, power domain, voltage domain on a need
+#           basis and relinquish when not needed, via the respective manager.
+#           Drivers shall check if context restore is needed when driver is activated
+###############################################################################
+
+# Begin ACC_0005_0003
+
+# Set the max screen timeout (30 min)
+#$UTILS_DIR_HANDLERS/handlerAndroidSqlite3.sh set "system" "screen_off_timeout" "1800000"
+
+# Turn the display OFF by pressing TWL power key
+$UTILS_DIR_SCRIPTS/android_display_switch.sh OFF
+
+# Verify MPU RET and RET-LOGIC-OFF counters (OSWR) increase during a test period
+$UTILS_DIR_HANDLERS/handlerPowerTransitionStats.sh log "DEVICE-OFF" "DEVICE-OFF" "before"
+
+if [ -n "$ACCELEROMETER_ENABLE_POWER" ]; then handlerSysFs.sh set $ACCELEROMETER_ENABLE_POWER 1 ; fi
+($ACCELEROMETER_DIR_BINARIES/evtest $DEVFS_ACCELEROMETER && $UTILS_DIR_HANDLERS/handlerAndroidPM.sh suspend kernel force 5; sleep 1) && $UTILS_DIR_HANDLERS/handlerAndroidPM.sh resume kernel exit 0 || exit 1
+$UTILS_DIR_HANDLERS/handlerSysFs.sh set $ACCELEROMETER_ENABLE_POWER 0
+
+$UTILS_DIR_HANDLERS/handlerPowerTransitionStats.sh log "DEVICE-OFF" "DEVICE-OFF" "after"
+$UTILS_DIR_HANDLERS/handlerPowerTransitionStats.sh compare "DEVICE-OFF" "DEVICE-OFF" "before" "after"
+
+$UTILS_DIR_SCRIPTS/android_display_switch.sh ON
+
+# End ACC_0005_0003
