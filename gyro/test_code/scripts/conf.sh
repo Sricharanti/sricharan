@@ -41,6 +41,12 @@ if [ `cat $SYSFS_BOARD_REV | grep -c "Tablet"` -ge 1 ] ||
 	export GYRO_POWEROFF_VAL=0
 	export GYRO_ENABLE_POWER="$GYRO_SYSFS_PATH/enable"
 	export GYRO_DELAY="$GYRO_SYSFS_PATH/delay"
+elif [ `cat /proc/cpuinfo| grep -ic OMAP5` -ne 0 ]; then
+	export GYRO_SYSFS_PATH="/sys/bus/i2c/drivers/mpu6050/2-0068"
+	export GYRO_HW="mpu6050-gyroscope"
+	export GYRO_POWERON_VAL=1
+	export GYRO_POWEROFF_VAL=0
+	export GYRO_ENABLE_POWER="$GYRO_SYSFS_PATH/gyro_enable"
 fi
 
 # General variables
