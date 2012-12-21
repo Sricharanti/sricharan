@@ -57,7 +57,7 @@ elif [ `cat $SYSFS_BOARD_REV | grep -wc "Blaze/SDP"` -ge 1  ]; then
 	export ACCELEROMETER_ENABLE_POWER="$ACCELEROMETER_SYSFS_PATH/power_state"
 elif [ `cat /proc/cpuinfo| grep -ic OMAP5` -ne 0 ];then
 	export ACCELEROMETER_SYSFS_PATH="/sys/bus/i2c/drivers/mpu6050/2-0068"
-	export ACCELEROMETER_HW="mpu6050"
+	export ACCELEROMETER_HW="mpu6050-accelerometer"
 	export ACCELEROMETER_POWERON_VAL=1
 	export ACCELEROMETER_POWEROFF_VAL=0
 	export ACCELEROMETER_ENABLE_POWER="$ACCELEROMETER_SYSFS_PATH/accel_enable"

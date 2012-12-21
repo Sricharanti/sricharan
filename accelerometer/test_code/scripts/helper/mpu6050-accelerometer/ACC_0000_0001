@@ -1,0 +1,13 @@
+###############################################################################
+# Scenario: L_DD_ACCELEROMETER_0000_0001
+# Author  : Hemanth V
+# Author  : Dan Murphy
+# Date    : Thu Jun 24 16:43:42 IST 2010
+# Updated : Mon Nov 01, 2010
+###############################################################################
+
+# Begin L_DD_ACCELEROMETER_0000_0001
+
+test -r $DEVFS_ACCELEROMETER && exit 0 || exit 1
+
+# End L_DD_ACCELEROMETER_0000_0001
