@@ -1,0 +1,46 @@
+###############################################################################
+# Scenario: L_DD_ACCELEROMETER_0000_0006
+# Author  : Hemanth V
+# Date    : Thu Jun 24 16:43:42 IST 2010
+###############################################################################
+
+# Begin L_DD_ACCELEROMETER_0000_0006
+
+exitfn ()
+{
+	handlerSysFs.sh "set" $ACCELEROMETER_SYSFS_PATH/grange "`cat grange.log`"
+	handlerSysFs.sh "set" $ACCELEROMETER_SYSFS_PATH/mode "`cat mode.log`"
+	rm grange.log
+	rm mode.log
+	exit $1
+}
+
+handlerSysFs.sh "get" $ACCELEROMETER_SYSFS_PATH/mode > mode.log
+
+handlerSysFs.sh "get" $ACCELEROMETER_SYSFS_PATH/grange > grange.log
+
+handlerSysFs.sh "set" $ACCELEROMETER_SYSFS_PATH/grange $ACCELEROMETER_RANGE_2G
+
+handlerSysFs.sh "compare" $ACCELEROMETER_SYSFS_PATH/grange $ACCELEROMETER_RANGE_2G || exitfn 2
+
+value=`$ACCELEROMETER_DIR_BINARIES/acctest $DEVFS_ACCELEROMETER X |grep Max | awk '{print $2}'`
+[ $value -eq $ACCELEROMETER_RANGE_2G ] || exitfn 4
+
+handlerSysFs.sh "set" $ACCELEROMETER_SYSFS_PATH/grange $ACCELEROMETER_RANGE_8G
+
+handlerSysFs.sh "compare" $ACCELEROMETER_SYSFS_PATH/grange $ACCELEROMETER_RANGE_8G || exitfn 8
+
+value=`$ACCELEROMETER_DIR_BINARIES/acctest $DEVFS_ACCELEROMETER X |grep Max | awk '{print $2}'`
+[ $value -eq  $ACCELEROMETER_RANGE_8G ] || exitfn 16
+
+handlerSysFs.sh "set" $ACCELEROMETER_SYSFS_PATH/grange "`cat grange.log`"
+
+handlerSysFs.sh "compare" $ACCELEROMETER_SYSFS_PATH/grange "`cat grange.log`" || exitfn 32
+
+handlerSysFs.sh "set" $ACCELEROMETER_SYSFS_PATH/mode "`cat mode.log`"
+
+handlerSysFs.sh "compare" $ACCELEROMETER_SYSFS_PATH/mode "`cat mode.log`" || exitfn 64
+
+exitfn 0
+
+# End L_DD_ACCELEROMETER_0000_0006
