@@ -1,0 +1,41 @@
+###############################################################################
+# Scenario: ACC_0005_0005
+# Author  : Andrii Danylov
+# Date    : 11/21/12
+# Testing : Accelerometer: OS idle: C-State transition
+# Results : Verify all C-state transitiom when accelerometer driver is used
+###############################################################################
+
+# Begin ACC_0005_0005
+
+$UTILS_DIR_SCRIPTS/is_android_ready.sh
+
+# Unlock the UI by pressing Menu Key then go to home screen
+$UTILS_DIR_HANDLERS/handlerInputSubsystem.sh "keypad" "KeyCodeF1" 1 1 1
+$UTILS_DIR_HANDLERS/handlerInputSubsystem.sh "keypad" "KeyCodeHome" 1 1 1
+
+# set a dummy wakelock to avoid going to suspend
+$UTILS_DIR_HANDLERS/handlerAndroidPM.sh wakelock hold dummy
+# Turn the display OFF by pressing TWL power key
+$UTILS_DIR_SCRIPTS/android_display_switch.sh OFF
+
+$UTILS_DIR_HANDLERS/handlerCStateTransition.sh log "state0"  "before"; handlerCStateTransition.sh log "state1"  "before"
+$UTILS_DIR_HANDLERS/handlerCStateTransition.sh log "state2"  "before"; handlerCStateTransition.sh log "state3"  "before"
+
+if [ -n "$ACCELEROMETER_ENABLE_POWER" ]; then handlerSysFs.sh set $ACCELEROMETER_ENABLE_POWER 1 ; fi
+echo "Waiting 20 seconds" && sleep 20 & ($ACCELEROMETER_DIR_BINARIES/evtest $DEVFS_ACCELEROMETER)
+$UTILS_DIR_HANDLERS/handlerSysFs.sh set $ACCELEROMETER_ENABLE_POWER 0
+
+$UTILS_DIR_HANDLERS/handlerCStateTransition.sh log "state0" "after"; handlerCStateTransition.sh log "state1"  "after"
+$UTILS_DIR_HANDLERS/handlerCStateTransition.sh log "state2" "after"; handlerCStateTransition.sh log "state3"  "after"
+
+$UTILS_DIR_HANDLERS/handlerCStateTransition.sh compare "state0" "before" "after"; handlerCStateTransition.sh compare "state1" "before" "after"
+$UTILS_DIR_HANDLERS/handlerCStateTransition.sh compare "state2" "before" "after"; handlerCStateTransition.sh compare "state3" "before" "after"
+
+$UTILS_DIR_SCRIPTS/android_display_switch.sh ON
+$UTILS_DIR_HANDLERS/handlerInputSubsystem.sh "keypad" "KeyCodeHome" 1 1 1
+$UTILS_DIR_HANDLERS/handlerAndroidPM.sh wakelock release dummy
+
+$UTILS_DIR_SCRIPTS/android_display_switch.sh ON
+
+# End ACC_0005_0005
