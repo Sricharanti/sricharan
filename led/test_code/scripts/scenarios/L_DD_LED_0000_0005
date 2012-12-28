@@ -6,12 +6,12 @@
 
 # Begin L_DD_LED_0000_0005
 
-01  set -x; echo 1 > $LED_SYSFS_PATH/omap4\:green\:chrg/brightness;echo "\n\n\n\nCheck Charging LED is ON\n"; sleep 1; $UTILS_DIR_BIN/akey $DEVFS_KEYPAD;
+01  set -x; echo 1 > $LED_SYSFS_PATH/LED_GREEN_LED_PATH/brightness;echo "Check Charging LED is ON"; sleep 1;
 
-02  set -x; echo 100 > $LED_SYSFS_PATH/omap4\:green\:chrg/brightness;echo "\n\n\n\nCheck Charging LED Brightness increased\n"; sleep 1; $UTILS_DIR_BIN/akey $DEVFS_KEYPAD;
+02  set -x; echo 100 > $LED_SYSFS_PATH/LED_GREEN_LED_PATH/brightness;echo "Check Charging LED Brightness increased"; sleep 1;
 
-03  set -x; echo 255 > $LED_SYSFS_PATH/omap4\:green\:chrg/brightness;echo "\n\n\n\nCheck Charging LED Brightness increased\n"; sleep 1; $UTILS_DIR_BIN/akey $DEVFS_KEYPAD;
+03  set -x; echo 255 > $LED_SYSFS_PATH/LED_GREEN_LED_PATH/brightness;echo "Check Charging LED Brightness increased"; sleep 1;
 
-04  set -x; echo 0 > $LED_SYSFS_PATH/omap4\:green\:chrg/brightness;echo "\n\n\n\nCheck Charging LED is OFF\n"; sleep 1; $UTILS_DIR_BIN/akey $DEVFS_KEYPAD;
+04  set -x; echo 0 > $LED_SYSFS_PATH/LED_GREEN_LED_PATH/brightness;echo "Check Charging LED is OFF"; sleep 1;
 
 # End L_DD_LED_0000_0005
