@@ -23,11 +23,10 @@ export LED_STRESS=""
 
 export LED_SYSFS_PATH="/sys/class/leds"
 
-export LED_DISPLAY_LED_PATH="lcd-backlight"
 export LED_KEYPAD_LED_PATH="keyboard-backlight"
 export LED_BATTERY_LED_PATH="battery-led"
 export LED_RED_LED_PATH="red"
-export LED_GEEN_LED_PATH="green"
+export LED_GREEN_LED_PATH="green"
 export LED_BLUE_LED_PATH="blue"
 
 export PATH="${PATH}:${LED_ROOT}:${LED_DIR_BINARIES}:${LED_DIR_HELPER}"
@@ -43,9 +42,14 @@ export UTILS_DIR_SCRIPTS=$UTILS_DIR/scripts
 export PATH="$PATH:$UTILS_DIR_BIN:$UTILS_DIR_HANDLERS:$UTILS_DIR_SCRIPTS"
 
 if [ `cat $SYSFS_BOARD_REV | grep -c "Tablet"` -ne "0" ]; then
-	export HW_PLATFORM=tablet	
+	export HW_PLATFORM=tablet
+	export LED_DISPLAY_LED_PATH="/sys/class/leds/lcd-backlight"
 elif [ `cat $SYSFS_BOARD_REV | grep -wc "Blaze/SDP"` -ne 0  ]; then
 	export HW_PLATFORM=blaze
+	export LED_DISPLAY_LED_PATH="/sys/class/leds/lcd-backlight"
+elif [ `cat /proc/cpuinfo| grep -ic OMAP5` -ne 0 ];then
+	export HW_PLATFORM=omap5sevm
+	export LED_DISPLAY_LED_PATH="/sys/devices/omapdss/display0/backlight/lg4591"
 else
 	echo "Warning: Unrecognized hardware platform"
 	exit 1
@@ -60,7 +64,12 @@ set $TEMP_EVENT
 
 for i in $TEMP_EVENT
 do
-	cat /sys/class/input/$i/device/name | grep "keypad"
+	if [ `cat /proc/cpuinfo| grep -ic OMAP5` -ne 0 ];then
+		cat /sys/class/input/$i/device/name | grep "smsc_keypad"
+	else
+		cat /sys/class/input/$i/device/name | grep "keypad"
+	fi
+
 	IS_THIS_OUR_DRIVER=`echo $?`
 	if [ "$IS_THIS_OUR_DRIVER" -eq "0" ]
 	then
