@@ -14,6 +14,8 @@ export AMBIENT_LIGHT_FILE_OUTPUT=${AMBIENT_LIGHT_ROOT}/output.$AMBIENT_LIGHT_POS
 export AMBIENT_LIGHT_FILE_LOG=${AMBIENT_LIGHT_ROOT}/log.$AMBIENT_LIGHT_POSTFIX
 export AMBIENT_LIGHT_FILE_TMP=${AMBIENT_LIGHT_DIR_TMP}/tmp.$AMBIENT_LIGHT_POSTFIX
 export AMBIENT_LIGHT_FILE_CMD=cmd.$AMBIENT_LIGHT_POSTFIX
+export AMBIENT_LIGHT_IRQ_INITIAL=${AMBIENT_LIGHT_DIR_TMP}/als.irq.initial
+export AMBIENT_LIGHT_IRQ_FINAL=${AMBIENT_LIGHT_DIR_TMP}/als.irq.final
 
 export AMBIENT_LIGHT_DURATION=""
 export AMBIENT_LIGHT_PRETTY_PRT=""
@@ -53,6 +55,7 @@ elif [ `cat /proc/cpuinfo| grep -ic OMAP5` -ne 0 ];then
 	export AMBIENT_LIGHT_POWERON_VAL=1
 	export AMBIENT_LIGHT_POWEROFF_VAL=0
 	export AMBIENT_LIGHT_ENABLE_POWER="$AMBIENT_LIGHT_SYSFS_PATH/als_enable"
+	export AMBIENT_LIGHT_IRQ=`cat /proc/interrupts | grep "tsl2771" | awk '{print $1}' | cut -d: -f1`
 else
 	echo "Warning: Unrecognized hardware platform"
 	exit 1
@@ -67,18 +70,18 @@ set $TEMP_EVENT
 
 for i in $TEMP_EVENT
 do
-	cat /sys/class/input/$i/device/name | grep "keypad"
+	cat /sys/class/input/$i/device/name | grep "tsl2771_als"
 	IS_THIS_OUR_DRIVER=`echo $?`
 	if [ "$IS_THIS_OUR_DRIVER" -eq "0" ]
 	then
-		export DEVFS_KEYPAD=/dev/input/$i
-		echo "Keypad node is " $DEVFS_KEYPAD
+		export DEVFS_AMBIENT_LIGHT=/dev/input/$i
+		echo "AMBIENT_LIGHT node is " $DEVFS_AMBIENT_LIGHT
 	fi
 done
 
-if [ ! -e "$DEVFS_KEYPAD" ]
+if [ ! -e "$DEVFS_AMBIENT_LIGHT" ]
 then
-	echo "Warning: Keypad node cannot be found -> $DEVFS_KEYPAD"
+	echo "Warning: AMBIENT_LIGHT node cannot be found -> $DEVFS_AMBIENT_LIGHT"
 fi
 
 # End of file
