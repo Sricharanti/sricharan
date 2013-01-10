@@ -1,0 +1,13 @@
+##############################################################################
+# Scenario    : L_DD_AMBIENT_LIGHT_0006_0003
+# Author      : Andrii Danylov
+# Date        : 09 Jan 2013
+# Description : Test Ambient light IRQ Affinity
+##############################################################################
+
+# Begin L_DD_AMBIENT_LIGHT_0006_0003
+
+00  set -x; handlerSysFs.sh set $AMBIENT_LIGHT_ENABLE_POWER $AMBIENT_LIGHT_POWERON_VAL; sleep 1;
+01  set -x; handlerIrqAffinity.sh "switch" "[ `cat $AMBIENT_LIGHT_SYSFS_PATH/lux` -gt "0" ]" "10" "300" "$AMBIENT_LIGHT_IRQ"
+
+# End L_DD_AMBIENT_LIGHT_0006_0003
