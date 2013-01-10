@@ -1,0 +1,39 @@
+##############################################################################
+# Scenario    : L_DD_AMBIENT_LIGHT_0006_0001
+# Author      : Andrii Danylov
+# Date        : 09 Jan 2013
+# Description : Ambient light CPU Affinity test
+##############################################################################
+
+# Begin L_DD_AMBIENT_LIGHT_0006_0001
+# The test passes if both files match
+
+00 set -x; handlerSysFs.sh set $AMBIENT_LIGHT_ENABLE_POWER $AMBIENT_LIGHT_POWERON_VAL; sleep 1;
+
+01  set -x; handlerCpuAffinity.sh "switch" "[ `cat $AMBIENT_LIGHT_SYSFS_PATH/lux` -gt '0' ]" "10" "300"
+02  set -x; sleep 5
+
+03  set -x; handlerCpuAffinity.sh "switch" "[ `cat $AMBIENT_LIGHT_SYSFS_PATH/lux` -gt "0" ]" "10" "300"
+04  set -x; sleep 5
+
+05  set -x; handlerCpuAffinity.sh "switch" "[ `cat $AMBIENT_LIGHT_SYSFS_PATH/lux` -gt "0" ]" "10" "300"
+06  set -x; sleep 5
+
+07  set -x; handlerCpuAffinity.sh "switch" "[ `cat $AMBIENT_LIGHT_SYSFS_PATH/lux` -gt "0" ]" "10" "300"
+08  set -x; sleep 5
+
+09  set -x; handlerCpuAffinity.sh "switch" "[ `cat $AMBIENT_LIGHT_SYSFS_PATH/lux` -gt "0" ]" "10" "300"
+10  set -x; sleep 5
+
+11  set -x; handlerCpuAffinity.sh "switch" "[ `cat $AMBIENT_LIGHT_SYSFS_PATH/lux` -gt "0" ]" "10" "300"
+12  set -x; sleep 5
+
+13  set -x; handlerCpuAffinity.sh "switch" "[ `cat $AMBIENT_LIGHT_SYSFS_PATH/lux` -gt "0" ]" "10" "300"
+14  set -x; sleep 5
+
+15  set -x; handlerCpuAffinity.sh "switch" "[ `cat $AMBIENT_LIGHT_SYSFS_PATH/lux` -gt "0" ]" "10" "300"
+16  set -x; sleep 5
+
+17  set -x; handlerCpuAffinity.sh "switch" "[ `cat $AMBIENT_LIGHT_SYSFS_PATH/lux` -gt "0" ]" "10" "300"
+
+# End L_DD_AMBIENT_LIGHT_0006_0001
