@@ -1,0 +1,18 @@
+#######################################
+##Scenario: L_DD_PROXIMITY_0006_0004
+## Author: Andrii Danylov
+## Date: 10 Jan 2013
+## Testing: Proximity: IRQ support
+## Verify that Proximity interrupts are only generated when sensor in use or activated
+#######################################
+
+# Begin L_DD_PROXIMITY_0006_0004
+
+0001 set -x; handlerSysFs.sh set $PROXIMITY_ENABLE $PROXIMITY_POWERON_VAL; sleep 1; echo ${AMBIENT_LIGHT_IRQ_INITIAL};
+
+0002  set -x; IRQ=`handlerIrq.sh get cpu0 $PROXIMITY_IRQ` && echo $IRQ > $PROXIMITY_IRQ_INITIAL
+0003  set -x; echo "Waiting 100 seconds" && ($SENSOR_DIR_BINARIES/evtest $DEVFS_SENSOR)
+0004  set -x; IRQ=`handlerIrq.sh get cpu0 $PROXIMITY_IRQ` && echo $IRQ > $PROXIMITY_IRQ_FINAL
+0005  set -x; if [ `cat $PROXIMITY_IRQ_FINAL` -gt `cat $PROXIMITY_IRQ_INITIAL` ]; then exit 0; else exit 1; fi
+
+# End L_DD_PROXIMITY_0006_0004

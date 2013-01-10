@@ -9,6 +9,8 @@ export SENSOR_DIR_HELPER=${SENSOR_ROOT}/helper
 export SENSOR_DIR_TMP=${SENSOR_ROOT}/tmp
 export SENSOR_DIR_TEST=${SENSOR_ROOT}/test
 export SENSOR_DIR_SCENARIOS="${SENSOR_ROOT}/scenarios"
+export PROXIMITY_IRQ_INITIAL=${AMBIENT_LIGHT_DIR_TMP}/prox.irq.initial
+export PROXIMITY_IRQ_FINAL=${AMBIENT_LIGHT_DIR_TMP}/prox.irq.final
 
 export SENSOR_FILE_OUTPUT=${SENSOR_ROOT}/output.$SENSOR_POSTFIX
 export SENSOR_FILE_LOG=${SENSOR_ROOT}/log.$SENSOR_POSTFIX
@@ -38,6 +40,7 @@ if [ `cat $SYSFS_BOARD_REV | grep -c "Tablet"` -ge 1 ]; then
 	export PROXIMITY_INPUTDEV="tsl2771_prox"
 	export PROXIMITY_SYSFS_PATH="/sys/bus/i2c/drivers/tsl2771/4-0039"
 	export PROXIMITY_ENABLE="$PROXIMITY_SYSFS_PATH/prox_enable"
+	export PROXIMITY_POWERON_VAL=2
 elif [ `cat $SYSFS_BOARD_REV | grep -wc "Blaze/SDP"` -ge 1  ]; then
 	#specific to sfh7741 sensor
 	export PROXIMITY_HW="sfh7741"
@@ -48,6 +51,7 @@ elif [ `cat /proc/cpuinfo| grep -ic OMAP5` -ne 0 ];then
 	export PROXIMITY_INPUTDEV="tsl2771_prox"
 	export PROXIMITY_SYSFS_PATH="/sys/bus/i2c/drivers/tsl2771/2-0039"
 	export PROXIMITY_ENABLE="$PROXIMITY_SYSFS_PATH/prox_enable"
+	export PROXIMITY_POWERON_VAL=2
 else
 	echo "Warning: Unrecognized hardware platform"
 	exit 1
@@ -57,6 +61,8 @@ fi
 export DMESG_FILE=/var/log/dmesg
 
 $UTILS_DIR_SCRIPTS/mknodins.sh
+
+export PROXIMITY_IRQ=`cat /proc/interrupts | grep "tsl2771" | awk '{print $1}' | cut -d: -f1`
 
 # Sensor devfs node
 TEMP_EVENT=`ls /sys/class/input/ | grep event`
