@@ -1,0 +1,18 @@
+#######################################
+##Scenario: L_DD_AMBIENT_LIGHT_0006_0004
+## Author: Andrii Danylov
+## Date: 09 Jan 2013
+## Testing: Ambient light: IRQ support
+## Verify that Ambient light interrupts are only generated when sensor in use or activated
+#######################################
+
+# Begin L_DD_AMBIENT_LIGHT_0006_0004
+
+0001 set -x; handlerSysFs.sh set $AMBIENT_LIGHT_ENABLE_POWER $AMBIENT_LIGHT_POWERON_VAL; sleep 1; echo ${AMBIENT_LIGHT_IRQ_INITIAL};
+
+0002  set -x; IRQ=`handlerIrq.sh get cpu0 $AMBIENT_LIGHT_IRQ` && echo $IRQ > $AMBIENT_LIGHT_IRQ_INITIAL
+0003  set -x; [ `cat $AMBIENT_LIGHT_SYSFS_PATH/lux` -gt "0" ] && sleep 5
+0004  set -x; IRQ=`handlerIrq.sh get cpu0 $AMBIENT_LIGHT_IRQ` && echo $IRQ > $AMBIENT_LIGHT_IRQ_FINAL
+0005  set -x; if [ `cat $AMBIENT_LIGHT_IRQ_FINAL` -gt `cat $AMBIENT_LIGHT_IRQ_INITIAL` ]; then exit 0; else exit 1; fi
+
+# End L_DD_AMBIENT_LIGHT_0006_0004
