@@ -1,0 +1,17 @@
+###############################################################################
+# Scenario: L_DD_KEYPAD_0005_0002
+# Author  : Abraham Arce
+# Date    : Tue Sep 22 16:43:35 CDT 2009
+###############################################################################
+
+# Begin L_DD_KEYPAD_0005_0002
+
+01  set -x; handlerCpuAffinity.sh "clean"
+02  set -x; handlerCpuAffinity.sh "assign" "handlerEvtest.sh run $KEYPAD_DEVFS $KEYPAD_ITERATIONS" "1"
+03  set -x; handlerCpuAffinity.sh "assign" "handlerEvtest.sh run $KEYPAD_DEVFS $KEYPAD_ITERATIONS" "2"
+04  set -x; handlerCpuAffinity.sh "assign" "handlerEvtest.sh run $KEYPAD_DEVFS $KEYPAD_ITERATIONS" "3"
+05  set -x; handlerCpuAffinity.sh "assign" "handlerEvtest.sh run $KEYPAD_DEVFS $KEYPAD_ITERATIONS" "2"
+06  set -x; handlerCpuAffinity.sh "assign" "handlerEvtest.sh run $KEYPAD_DEVFS $KEYPAD_ITERATIONS" "1"
+07  set -x; handlerCpuAffinity.sh "execute" "withrandomdelay"
+
+# End L_DD_KEYPAD_0005_0002
