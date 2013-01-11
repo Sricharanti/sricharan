@@ -1,11 +1,13 @@
 ###############################################################################
-# Scenario: L_DD_RTC_0005
-# Author  : Shubhro
-# Date    : Octuber 15, 2009
+# Scenario: L_DD_RTC_0007_0001
+# Author  : Andrii Danylov
+# Date    : 11 Jan 2013
 ###############################################################################
 
-# Begin L_DD_RTC_0005
+# Begin L_DD_RTC_0007_0001
 
-01  set -x; handlerCpuAffinity.sh "switch" "$APP_TIME_KEEP_READING /dev/rtc0 " "5" "3" && exit 0 || exit 1
+01  set -x; handlerProcessParallelism.sh "clean"
+02  set -x; handlerProcessParallelism.sh "add" "$APP_TIME_KEEP_READING /dev/rtc0 " "1"
+03  set -x; handlerProcessParallelism.sh "execute" "withrandomdelay"
 
-# End L_DD_RTC_0005
+# End L_DD_RTC_0007_0001
