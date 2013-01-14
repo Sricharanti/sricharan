@@ -1,0 +1,21 @@
+##############################################################################
+# Scenario    : ACC_0006_0001
+# Author      : Andrii Danylov
+# Date        : 14 Jan 2013
+# Description : Accelerometer CPU Affinity test
+##############################################################################
+
+# Begin ACC_0006_0001
+# The test passes if both files match
+
+if [ -n "$ACCELEROMETER_ENABLE_POWER" ]; then handlerSysFs.sh set $ACCELEROMETER_ENABLE_POWER 1 ; fi;
+
+handlerCpuAffinity.sh "switch" "($ACCELEROMETER_DIR_BINARIES/evtest $DEVFS_ACCELEROMETER)"
+sleep 1
+
+handlerCpuAffinity.sh "switch" "($ACCELEROMETER_DIR_BINARIES/evtest $DEVFS_ACCELEROMETER)"
+sleep 1
+
+$UTILS_DIR_HANDLERS/handlerSysFs.sh set $ACCELEROMETER_ENABLE_POWER 0
+
+# End ACC_0006_0001
