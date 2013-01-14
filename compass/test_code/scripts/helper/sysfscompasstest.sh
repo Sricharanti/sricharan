@@ -3,7 +3,14 @@
 rm *.log
 
 #Array containing the current OMAP4 SYSFS entries for HMC5843
-SYSFS_DC_ENTRIES=(bias driver enable gain modalias mode name power rate subsystem uevent)
+if [ `cat /proc/cpuinfo| grep -ic OMAP4` -ne 0 ];then
+	SYSFS_DC_ENTRIES=(bias driver enable gain modalias mode name power rate subsystem uevent)
+elif [ `cat /proc/cpuinfo| grep -ic OMAP5` -ne 0 ];then
+	SYSFS_DC_ENTRIES=(akm_ms1 driver modalias name power subsystem uevent)
+else
+	echo "Please use this script with OMAP4 and OMAP5 cpus only."
+fi
+
 IFS=!
 CURRENT_SYSFS_ENTRIES=(`ls $DIGITAL_COMPASS_SYSFS`)
 #ARRAY=(`ls`)
