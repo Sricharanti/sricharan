@@ -1,0 +1,15 @@
+###############################################################################
+# Scenario: L_DD_ACCELEROMETER_0006_0002
+# Author  : Andrii Danylov
+# Date    : 01/11/12
+###############################################################################
+
+# Begin L_DD_ACCELEROMETER_0006_0002
+
+01 $ACCELEROMETER_DIR_HELPER/$ACCELEROMETER_HW/ACC_0006_0002
+# Calls different test files depending on actual HW .
+# "pan" interprets zero return value as pass.
+# If an error is encountered, test files often try to return a value that
+#  facilitates pinpointing the problem line.
+
+# End L_DD_ACCELEROMETER_0006_0002

@@ -1,0 +1,36 @@
+##############################################################################
+# Scenario    : ACC_0006_0002
+# Author      : Andrii Danylov
+# Date        : 14 Jan 2013
+# Description : Test Parallel Access from 2 processes
+#		Also test parallel access from 2 processes, cat text files
+##############################################################################
+
+# Begin ACC_0006_0002
+
+# Here 2 UARTs are exercised simultaneously on 2 different CPUs
+# Each CPU is doing TX and RX on different ports
+
+if [ -n "$ACCELEROMETER_ENABLE_POWER" ]; then handlerSysFs.sh set $ACCELEROMETER_ENABLE_POWER 1 ; fi;
+
+handlerProcessParallelism.sh "clean"
+handlerProcessParallelism.sh "add" "($ACCELEROMETER_DIR_BINARIES/evtest $DEVFS_ACCELEROMETER)"
+handlerProcessParallelism.sh "add" "($ACCELEROMETER_DIR_BINARIES/evtest $DEVFS_ACCELEROMETER)"
+handlerProcessParallelism.sh "execute"; sleep 2
+
+handlerProcessParallelism.sh "clean"
+handlerProcessParallelism.sh "add" "($ACCELEROMETER_DIR_BINARIES/evtest $DEVFS_ACCELEROMETER)"
+handlerProcessParallelism.sh "add" "($ACCELEROMETER_DIR_BINARIES/evtest $DEVFS_ACCELEROMETER)"
+handlerProcessParallelism.sh "add" "($ACCELEROMETER_DIR_BINARIES/evtest $DEVFS_ACCELEROMETER)"
+handlerProcessParallelism.sh "add" "($ACCELEROMETER_DIR_BINARIES/evtest $DEVFS_ACCELEROMETER)"
+handlerProcessParallelism.sh "add" "($ACCELEROMETER_DIR_BINARIES/evtest $DEVFS_ACCELEROMETER)"
+handlerProcessParallelism.sh "add" "($ACCELEROMETER_DIR_BINARIES/evtest $DEVFS_ACCELEROMETER)"
+handlerProcessParallelism.sh "add" "($ACCELEROMETER_DIR_BINARIES/evtest $DEVFS_ACCELEROMETER)"
+handlerProcessParallelism.sh "add" "($ACCELEROMETER_DIR_BINARIES/evtest $DEVFS_ACCELEROMETER)"
+handlerProcessParallelism.sh "add" "($ACCELEROMETER_DIR_BINARIES/evtest $DEVFS_ACCELEROMETER)"
+handlerProcessParallelism.sh "add" "($ACCELEROMETER_DIR_BINARIES/evtest $DEVFS_ACCELEROMETER)"
+handlerProcessParallelism.sh "execute"
+
+$UTILS_DIR_HANDLERS/handlerSysFs.sh set $ACCELEROMETER_ENABLE_POWER 0
+
+# End ACC_0006_0002
