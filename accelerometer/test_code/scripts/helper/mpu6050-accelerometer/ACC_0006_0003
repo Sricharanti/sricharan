@@ -1,0 +1,14 @@
+##############################################################################
+# Scenario    : ACC_0006_0003
+# Author      : Andrii Danylov
+# Date        : 14 Jan 2013
+# Description : Test Accelerometer IRQ Affinity
+##############################################################################
+
+# Begin ACC_0006_0003
+
+if [ -n "$ACCELEROMETER_ENABLE_POWER" ]; then handlerSysFs.sh set $ACCELEROMETER_ENABLE_POWER 1 ; fi;
+handlerIrqAffinity.sh "switch" "($ACCELEROMETER_DIR_BINARIES/evtest $DEVFS_ACCELEROMETER)" "10" "300" "$ACCELEROMETER_IRQ" && exit 0 || exit 1
+$UTILS_DIR_HANDLERS/handlerSysFs.sh set $ACCELEROMETER_ENABLE_POWER 0
+
+# End ACC_0006_0003
