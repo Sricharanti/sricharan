@@ -38,6 +38,11 @@ export PATH="$PATH:$UTILS_DIR_BIN:$UTILS_DIR_HANDLERS:$UTILS_DIR_SCRIPTS"
 export ETHERNET_DEV_URANDOM=/dev/urandom
 export ETHERNET_PACKET_SIZE=32768
 export ETHERNET_INTERFACE=eth0
+if [ `cat /proc/cpuinfo| grep -ic OMAP5` -ne 0 ];then
+	export ETHERNET_IRQ_SOURCE="ehci_hcd"
+else
+	export ETHERNET_IRQ_SOURCE=eth0
+fi
 export ETHERNET_IFCONFIG_IPADDR=$ETHERNET_DIR_TMP/ethernet.ifconfig.ipaddr
 export ETHERNET_IFCONFIG_HWADDR=$ETHERNET_DIR_TMP/ethernet.ifconfig.hwaddr
 
