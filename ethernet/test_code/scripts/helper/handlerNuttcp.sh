@@ -29,7 +29,7 @@ fi
 if [ "$LOCAL_MODE" = "server" ]; then
 
 	if [ "$LOCAL_OPERATION" = "start" ]; then
-		nuttcp -S
+		nuttcp -S -P6001
 	elif [ "$LOCAL_OPERATION" = "stop" ]; then
 		killall nuttcp
 	fi

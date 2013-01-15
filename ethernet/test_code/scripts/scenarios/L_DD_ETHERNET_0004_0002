@@ -4,11 +4,10 @@
 
 02  set -x; handlerNuttcp.sh "server" "start"
 
-03  set -x; handlerNuttcp.sh "local"  "common"
-04  set -x; handlerNuttcp.sh "local"  "common"     "-w6m"
-05  set -x; handlerNuttcp.sh "local"  "throughput" "-R50m"      "9"
-06  set -x; handlerNuttcp.sh "local"  "dropped"    "-u -Ri50m"
+03  set -x; handlerNuttcp.sh "local"  "common" "-w6m -P6001"
+04  set -x; handlerNuttcp.sh "local"  "throughput" "-P6001" "9"
+05  set -x; handlerNuttcp.sh "local"  "dropped" "-u -Ri50m -P6001"
 
-07  set -x; handlerNuttcp.sh "server" "stop"
+06  set -x; handlerNuttcp.sh "server" "stop"
 
 # End L_DD_ETHERNET_0004_0002
