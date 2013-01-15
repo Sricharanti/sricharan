@@ -58,7 +58,7 @@ if [ "$LOCAL_OPERATION" = "common" ]; then
 elif [ "$LOCAL_OPERATION" = "throughput" ]; then
 
 	LOCAL_DATA=$4
-	nuttcp "$LOCAL_ARGUMENTS" `cat $ETHERNET_NUTTCP_SERVER_IPADDR` | awk '{print $7}' > $LOCAL_THROUGHPUT_FILE
+	eval nuttcp "$LOCAL_ARGUMENTS" `cat $ETHERNET_NUTTCP_SERVER_IPADDR` | awk '{print $7}' > $LOCAL_THROUGHPUT_FILE
 	LOCAL_THROUGHPUT=`cat $LOCAL_THROUGHPUT_FILE`
 	echo "Throughput Minimun Required: $LOCAL_DATA"
 	echo "Throughput Final: $LOCAL_THROUGHPUT"
@@ -74,7 +74,7 @@ elif [ "$LOCAL_OPERATION" = "throughput" ]; then
 
 elif [ "$LOCAL_OPERATION" = "dropped" ]; then
 
-	nuttcp "$LOCAL_ARGUMENTS" `cat $ETHERNET_NUTTCP_SERVER_IPADDR` | awk '{print $17}' > $LOCAL_DROPPED_FILE
+	eval nuttcp "$LOCAL_ARGUMENTS" `cat $ETHERNET_NUTTCP_SERVER_IPADDR` | awk '{print $17}' > $LOCAL_DROPPED_FILE
 	LOCAL_DROPPED=`cat $LOCAL_DROPPED_FILE`
 	echo "Dropped Packets Final: $LOCAL_DROPPED"
 	LOCAL_RESULT=`echo "$LOCAL_DROPPED > 0" | bc`
