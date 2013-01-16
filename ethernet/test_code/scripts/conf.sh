@@ -53,7 +53,7 @@ export ETHERNET_KERNEL_MESSAGES=$ETHERNET_DIR_TMP/ethernet.kernel.messages
 
 export ETHERNET_NFS_DIR=$ETHERNET_DIR_TMP/ethernet.nfs.directory.path
 
-export ETHERNET_IRQ=$ETHERNET_DIR_TMP/ethernet.irq
+export ETHERNET_IRQ=`cat /proc/interrupts | grep "$ETHERNET_IRQ_SOURCE" | awk '{print $1}' | cut -d: -f1`
 handlerIrq.sh "get" "irq" "eth0" "$ETHERNET_IRQ"
 
 # NFS
