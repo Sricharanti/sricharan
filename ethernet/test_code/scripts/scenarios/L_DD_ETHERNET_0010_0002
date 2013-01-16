@@ -27,7 +27,7 @@
 19  set -x; handlerCpuAffinity.sh "random" "dd if=$ETHERNET_DEV_URANDOM of=`cat $ETHERNET_NFS_DIR`/eth.04 bs=1M count=5"
 20  set -x; handlerCpuAffinity.sh "random" "dd if=$ETHERNET_DEV_URANDOM of=`cat $ETHERNET_NFS_DIR`/eth.05 bs=1M count=5"
 
-21  set -x; handlerNuttcp.sh "local"  "throughput" "-R50m" "9"
+21  set -x; handlerNuttcp.sh "local"  "throughput" "-P6001" "9"
 
 22  set -x; handlerCpuAffinity.sh "execute"
 
@@ -53,7 +53,7 @@
 37  set -x; handlerCpuAffinity.sh "random" "dd if=$ETHERNET_DEV_URANDOM of=`cat $ETHERNET_NFS_DIR`/eth.04 bs=1M count=5"
 38  set -x; handlerCpuAffinity.sh "random" "dd if=$ETHERNET_DEV_URANDOM of=`cat $ETHERNET_NFS_DIR`/eth.05 bs=1M count=5"
 
-39  set -x; handlerNuttcp.sh "local"  "throughput" "-R50m" "9"
+39  set -x; handlerNuttcp.sh "local"  "throughput" "-P6001" "9"
 
 40  set -x; handlerCpuAffinity.sh "execute" "withrandomdelay"
 
