@@ -39,7 +39,7 @@
 31  set -x; handlerProcessParallelism.sh "add" "dd if=$ETHERNET_DEV_URANDOM of=`cat $ETHERNET_NFS_DIR`/eth.08 bs=1M count=5"
 32  set -x; handlerProcessParallelism.sh "add" "dd if=$ETHERNET_DEV_URANDOM of=`cat $ETHERNET_NFS_DIR`/eth.09 bs=1M count=5"
 
-33  set -x; handlerNuttcp.sh "local"  "throughput" "-R50m" "9"
+33  set -x; handlerNuttcp.sh "local"  "throughput" "-P6001" "9"
 
 34  set -x; handlerProcessParallelism.sh "execute"
 
@@ -77,7 +77,7 @@
 61  set -x; handlerProcessParallelism.sh "add" "dd if=$ETHERNET_DEV_URANDOM of=`cat $ETHERNET_NFS_DIR`/eth.08 bs=1M count=5"
 62  set -x; handlerProcessParallelism.sh "add" "dd if=$ETHERNET_DEV_URANDOM of=`cat $ETHERNET_NFS_DIR`/eth.09 bs=1M count=5"
 
-63  set -x; handlerNuttcp.sh "local"  "throughput" "-R50m" "9"
+63  set -x; handlerNuttcp.sh "local"  "throughput" "-P6001" "9"
 
 64  set -x; handlerProcessParallelism.sh "execute" "withrandomdelay"
 
