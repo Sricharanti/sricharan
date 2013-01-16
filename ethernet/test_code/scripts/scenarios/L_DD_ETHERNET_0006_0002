@@ -1,0 +1,17 @@
+################################################################################
+# Scenario: L_DD_ETHERNET_0006_0002
+# Author  : Ievgen Musiichuk
+# Date    : Fri Mar 12, 2012
+################################################################################
+
+# Begin L_DD_ETHERNET_0006_0002
+
+# Checking the current setup
+01  set -x; echo "NOTE: In order to run this scenario you need to have a ftp server in your remote machine.";
+02  set -x; handlerFtp.sh "check"
+
+# Validating the scenario
+03  set -x; handlerCmd.sh "iterate" "handlerCmd.sh \"run\" \"date > $ETHERNET_DIR_TMP/test_file1\"; handlerFtp.sh \"put\" \"-u $FTP_USER -p $FTP_PASSWD $FTP_SERVER test_file $ETHERNET_DIR_TMP/test_file1\"; handlerFtp.sh \"get\" \"-u $FTP_USER -p $FTP_PASSWD $FTP_SERVER $ETHERNET_DIR_TMP/test_file2 test_file\"; handlerCmd.sh \"run\" \"cmp $ETHERNET_DIR_TMP/test_file1 $ETHERNET_DIR_TMP/test_file2\"" "200" "1"
+
+
+# End L_DD_ETHERNET_0006_0002
