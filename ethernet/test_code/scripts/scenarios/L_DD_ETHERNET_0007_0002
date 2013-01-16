@@ -1,0 +1,20 @@
+################################################################################
+# Scenario: L_DD_ETHERNET_0007_0002
+# Author  : Ievgen Musiichuk
+# Date    : Fri Mar 12 2008
+################################################################################
+
+# Begin L_DD_ETHERNET_0007_0002
+
+# Checking the current setup
+01 set -x; if [ "$TESTER_ADDRESS" == "" ]; then echo "FATAL: TESTER_ADDRESS is not set"; handlerError.sh "log" "1" "halt" "L_DD_ETHERNET_0007_0001"; exit 1; fi; exit 0
+02 set -x; if [ "$TESTER_NFS_DIRECTORY" == "" ]; then echo "FATAL: TESTER_NFS_DIRECTORY is not set"; handlerError.sh "log" "1" "halt" "L_DD_ETHERNET_0007_0001"; exit 1; fi; exit 0
+
+# Validating the scenario
+03 set -x; handlerCmd.sh "run" "mkdir -p $ETHERNET_NFS_LOCAL || echo \"Folder is already created\""
+04 set -x; mount | grep $ETHERNET_NFS_LOCAL && exit 1 || exit 0
+
+
+05 set -x; handlerCmd.sh "iterate" "mount -o nolock -t nfs $TESTER_ADDRESS:$TESTER_NFS_DIRECTORY $ETHERNET_NFS_LOCAL; date > $ETHERNET_DIR_TMP/testfile; cp $ETHERNET_DIR_TMP/testfile $ETHERNET_NFS_LOCAL/testfile; umount $ETHERNET_NFS_LOCAL; mount -o nolock -t nfs $TESTER_ADDRESS:$TESTER_NFS_DIRECTORY $ETHERNET_NFS_LOCAL; cmp $ETHERNET_NFS_LOCAL/testfile $ETHERNET_DIR_TMP/testfile; rm $ETHERNET_NFS_LOCAL/testfile; umount $ETHERNET_NFS_LOCAL" "200" "2"
+
+# End L_DD_ETHERNET_0007_0002
