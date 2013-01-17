@@ -1,0 +1,14 @@
+##############################################################
+## Sceanrio: L_DD_I2C_0002_0001
+## Author: Mariia
+## Date: 7 Feb 2012
+## Testing : Master mode. I2c driver shall operate in master mode
+###############################################################
+
+# Begin L_DD_I2C_0002_0001
+
+01 set -x; for i in `find /sys/devices/platform/omap/omap_i2c.*/i2c-*/* | grep name`; do echo ==$i==; cat $i; done
+
+02 set -x; i2cdetect -l
+
+# End L_DD_I2C_0002_0001
