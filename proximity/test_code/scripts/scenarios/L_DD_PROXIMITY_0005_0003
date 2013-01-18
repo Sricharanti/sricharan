@@ -6,6 +6,6 @@
 
 # Begin L_DD_SENSOR_0005_0003
 
-01  set -x; $UTILS_DIR_HANDLERS/handlerIrqAffinity.sh "switch" "$SENSOR_DIR_BINARIES/evtest $DEVFS_SENSOR" "10" "15" "344"
+01  set -x; $UTILS_DIR_HANDLERS/handlerIrqAffinity.sh "switch" "$SENSOR_DIR_BINARIES/evtest $DEVFS_SENSOR" "10" "15" "$PROXIMITY_IRQ"
 
 # End L_DD_SENSOR_0005_0003
