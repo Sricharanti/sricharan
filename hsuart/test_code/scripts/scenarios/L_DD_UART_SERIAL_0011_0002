@@ -15,15 +15,15 @@
 
 01  set -x; handlerProcessParallelism.sh "clean"
 02  set -x; handlerProcessParallelism.sh "add" "$TESTSCRIPT/handlerHsuart.sh $UART_TEST_PORT1 3500000 0"
-03  set -x; handlerProcessParallelism.sh "add" "$TESTSCRIPT/handlerHsuart.sh $UART_TEST_PORT4 3500000 0"
-04  set -x; handlerProcessParallelism.sh "execute"
-05  set -x; diff uart_tx_file_$UART_TEST_PORT1 uart_rx_file_$UART_TEST_PORT1 && exit 0 || exit 1
-06  set -x; diff uart_tx_file_$UART_TEST_PORT4 uart_rx_file_$UART_TEST_PORT4 && exit 0 || exit 1
+03  set -x; handlerProcessParallelism.sh "execute"
+04  set -x; diff uart_tx_file_$UART_TEST_PORT1 uart_rx_file_$UART_TEST_PORT1 && exit 0 || exit 1
 
-07  set -x; sleep 10
+05  set -x; sleep 10
 
-08  set -x; handlerFile.sh "create" "pattern" "$TMPFILE" "1000"
-09  set -x; handlerProcessParallelism.sh "clean"
+06  set -x; handlerFile.sh "create" "pattern" "$TMPFILE" "1000"
+07  set -x; handlerProcessParallelism.sh "clean"
+08  set -x; handlerProcessParallelism.sh "add" "cat $TMPFILE"
+09  set -x; handlerProcessParallelism.sh "add" "cat $TMPFILE"
 10  set -x; handlerProcessParallelism.sh "add" "cat $TMPFILE"
 11  set -x; handlerProcessParallelism.sh "add" "cat $TMPFILE"
 12  set -x; handlerProcessParallelism.sh "add" "cat $TMPFILE"
@@ -32,8 +32,6 @@
 15  set -x; handlerProcessParallelism.sh "add" "cat $TMPFILE"
 16  set -x; handlerProcessParallelism.sh "add" "cat $TMPFILE"
 17  set -x; handlerProcessParallelism.sh "add" "cat $TMPFILE"
-18  set -x; handlerProcessParallelism.sh "add" "cat $TMPFILE"
-19  set -x; handlerProcessParallelism.sh "add" "cat $TMPFILE"
-20  set -x; handlerProcessParallelism.sh "execute"
+18  set -x; handlerProcessParallelism.sh "execute"
 
 # End L_DD_UART_SERIAL_0011_0002
