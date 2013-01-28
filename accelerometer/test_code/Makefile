@@ -13,14 +13,14 @@ utilities:
 	make -C utils
 
 install:
-	mkdir -p scripts/test
-	mkdir -p scripts/tmp
+	#mkdir -p scripts/test
+	#mkdir -p scripts/tmp
 	mkdir -p bin/
 	make -C utils install
 
 clean:
 	make -C utils clean
 	rm -rf scripts/log*
-	rm -rf scripts/tmp
-	rm -rf scripts/test
+	#rm -rf scripts/tmp
+	#rm -rf scripts/test
 	rm -rf bin/

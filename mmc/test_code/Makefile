@@ -23,13 +23,13 @@ utilities:
 
 install:
 	mkdir -p $(DESTDIR)
-	mkdir -p scripts/test
-	mkdir -p scripts/tmp
+	#mkdir -p scripts/test
+	#mkdir -p scripts/tmp
 	make -C utils install
 
 clean:
 	make -C utils clean
 	rm -rf scripts/log*
-	rm -rf scripts/tmp
-	rm -rf scripts/test
+	#rm -rf scripts/tmp
+	#rm -rf scripts/test
 	rm -rvf $(DESTDIR)

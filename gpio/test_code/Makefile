@@ -27,13 +27,13 @@ modules:
 
 install:
 	mkdir -p modules/
-	mkdir -p scripts/test
-	mkdir -p scripts/tmp
+	#mkdir -p scripts/test
+	#mkdir -p scripts/tmp
 	$(MAKE) -C utils install
 clean:
 	$(MAKE) -C utils clean
 	rm -rf scripts/log*
-	rm -rf scripts/tmp
-	rm -rf scripts/test
+	#rm -rf scripts/tmp
+	#rm -rf scripts/test
 	rm -rf modules/
 

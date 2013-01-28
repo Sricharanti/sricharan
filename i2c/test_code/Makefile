@@ -54,8 +54,8 @@ utilities:
 
 install:
 	mkdir -p $(DESTDIR)
-	mkdir -p scripts/test
-	mkdir -p scripts/tmp
+	#mkdir -p scripts/test
+	#mkdir -p scripts/tmp
 	cp -v $(BINARIES) $(DESTDIR)
 
 clean:
@@ -63,5 +63,5 @@ clean:
 	rm -vf bin/* 
 	rm -rvf $(DESTDIR)
 	rm -rf scripts/log*
-	rm -rf scripts/tmp
-	rm -rf scripts/test
+	#rm -rf scripts/tmp
+	#rm -rf scripts/test
