@@ -28,13 +28,13 @@ fi
 if [ "$LOCAL_OPERATION" = "switch" ]; then
 
 	LOCAL_COMMAND_PID="0"
-	LOCAL_COMMAND_PID=`ps -A | grep "twl6030" | grep -v grep | awk '{print $1}'`
+	LOCAL_COMMAND_PID=`ps -A | grep $TWL_DEV_PROC_NAME | grep -v grep | awk '{print $1}'`
 
 	count=1
 	while [ $count -le $LOCAL_EXECUTION_TIMES ]
 	do
 
-		#echo "Info: PID $LOCAL_COMMAND_PID | Irq Number $LOCAL_IRQ_NUMBER | Count $count of $LOCAL_EXECUTION_TIMES"
+		echo "Info: PID $LOCAL_COMMAND_PID | Irq Number $LOCAL_IRQ_NUMBER | Count $count of $LOCAL_EXECUTION_TIMES"
 
 		LOCAL_PROCESSOR=1
 

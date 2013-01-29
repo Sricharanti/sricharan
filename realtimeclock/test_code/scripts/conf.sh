@@ -57,6 +57,12 @@ then
 	exit 1
 fi
 
+if [ `cat /proc/cpuinfo| grep -ic OMAP5` -ne 0 ];then
+	export TWL_DEV_PROC_NAME="palmas"
+else
+	export TWL_DEV_PROC_NAME="twl6030"
+fi
+
 # Application names
 export APP_ALARM_GET=alarm_get
 export APP_ALARM_GET_EVENT=alarm_get_event
