@@ -6,6 +6,6 @@
 
 # Begin L_DD_KEYPAD_0006_0003
 
-01  set -x; handlerIrqAffinity.sh "switch" "handlerEvtest.sh run $KEYPAD_DEVFS 500" "10" "15" "152"
+01  set -x; handlerIrqAffinity.sh "switch" "handlerEvtest.sh run $KEYPAD_DEVFS 50" "10" "15" "$KEYPAD_IRQ"
 
 # End L_DD_KEYPAD_0006_0003

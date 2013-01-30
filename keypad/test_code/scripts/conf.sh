@@ -23,8 +23,10 @@ export KEYPAD_STRESS=""
 
 if [ `cat /proc/cpuinfo| grep -ic OMAP4` -ne 0 ];then
 export KEYPAD_NAME="keypad"
+export KEYPAD_IRQ=`cat /proc/interrupts | grep "omap4-keypad" | awk '{print $1}' | cut -d: -f1`
 elif [ `cat /proc/cpuinfo| grep -ic OMAP5` -ne 0 ];then
 export KEYPAD_NAME="smsc_keypad"
+export KEYPAD_IRQ=`cat /proc/interrupts | grep "smsc" | awk '{print $1}' | cut -d: -f1`
 else
 echo "Unknown system type, please provide configuration."
 fi
