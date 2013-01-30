@@ -45,7 +45,7 @@ export PATH="$PATH:$UTILS_DIR_BIN:$UTILS_DIR_HANDLERS:$UTILS_DIR_SCRIPTS"
 
 # General variables
 export DMESG_FILE=/var/log/dmesg
-export KEYPAD_ITERATIONS=250
+export KEYPAD_ITERATIONS=25
 
 # Keypad devfs node
 TEMP_EVENT=`ls /dev/input/ | grep event`

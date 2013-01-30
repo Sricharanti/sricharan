@@ -11,12 +11,12 @@
 # Frequency
 01  set -x; handlerCpuFreqScalGovernors.sh "get"
 02  set -x; handlerCpuFreqScalGovernors.sh "set" "userspace"
-03  set -x; handlerCpuFreqScalFrequencies.sh "run" "all" "handlerEvtest.sh run $KEYPAD_DEVFS 200"
+03  set -x; handlerCpuFreqScalFrequencies.sh "run" "all" "handlerEvtest.sh run $KEYPAD_DEVFS 20"
 04  set -x; handlerCpuFreqScalGovernors.sh "restore"
 
 # Governors
 05  set -x; handlerCpuFreqScalGovernors.sh "get"
-06  set -x; handlerCpuFreqScalGovernors.sh "run" "all" "handlerEvtest.sh run $KEYPAD_DEVFS 200"
+06  set -x; handlerCpuFreqScalGovernors.sh "run" "all" "handlerEvtest.sh run $KEYPAD_DEVFS 20"
 07  set -x; handlerCpuFreqScalGovernors.sh "restore"
 
 # End L_DD_KEYPAD_0003_0001

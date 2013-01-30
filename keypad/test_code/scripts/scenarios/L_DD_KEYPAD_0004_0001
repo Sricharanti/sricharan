@@ -9,28 +9,28 @@
 
 # Suspend/Resume
 01  set -x; handlerSuspendResume.sh "suspend" $PM_WAKEUP_TIMER_DEFAULT
-02  set -x; handlerCmd.sh "run" "handlerEvtest.sh run $KEYPAD_DEVFS 200"
+02  set -x; handlerCmd.sh "run" "handlerEvtest.sh run $KEYPAD_DEVFS 20"
 03  set -x; handlerSuspendResume.sh "suspend" $PM_WAKEUP_TIMER_DEFAULT
 
-04  set -x; handlerSuspendResume.sh "run" "5" "handlerEvtest.sh run $KEYPAD_DEVFS 250"
+04  set -x; handlerSuspendResume.sh "run" "5" "handlerEvtest.sh run $KEYPAD_DEVFS 25"
 
 # CPU1 Hotplug
-05  set -x; handlerCpuHotPlug.sh "run" "5" "handlerEvtest.sh run $KEYPAD_DEVFS 500"
+05  set -x; handlerCpuHotPlug.sh "run" "5" "handlerEvtest.sh run $KEYPAD_DEVFS 50"
 
 # Retention
 06  set -x; handlerPowerRetention.sh  enable
 
 07  set -x; handlerPowerRetention.sh  check  "core_pwrdm"
-08  set -x; handlerCmd.sh "run" "handlerEvtest.sh run $KEYPAD_DEVFS 200"
+08  set -x; handlerCmd.sh "run" "handlerEvtest.sh run $KEYPAD_DEVFS 20"
 09  set -x; handlerPowerRetention.sh  check  "core_pwrdm"
 
 10  set -x; handlerPowerRetention.sh  disable
 
 # Open Switch Retention
 11  set -x; handlerPowerOSWR.sh  check  "core_pwrdm"
-12  set -x; handlerCmd.sh "run" "handlerEvtest.sh run $KEYPAD_DEVFS 200"
+12  set -x; handlerCmd.sh "run" "handlerEvtest.sh run $KEYPAD_DEVFS 20"
 13  set -x; handlerPowerOSWR.sh  check  "core_pwrdm"
 
-14  set -x; handlerPowerOSWR.sh  run  "core_pwrdm"  "handlerEvtest.sh run $KEYPAD_DEVFS 200"
+14  set -x; handlerPowerOSWR.sh  run  "core_pwrdm"  "handlerEvtest.sh run $KEYPAD_DEVFS 20"
 
 # End L_DD_KEYPAD_0004_0001
