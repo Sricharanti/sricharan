@@ -59,13 +59,14 @@ do
 
 		if [ $LOCAL_COUNTER -eq 1 ]; then
 			export TOUCHSCREEN_DEVFS_PRIMARY=/dev/input/$i
+			export TOUCHSCREEN_DEVFS_SECONDARY=/dev/input/$i
 		elif  [ $LOCAL_COUNTER -eq 2 ]; then
 			export TOUCHSCREEN_DEVFS_SECONDARY=/dev/input/$i
 		fi
 	fi
 done
 
-echo "INFO: Total number of touchscreen controllers found: $LOCAL_NUMBER_OF_INTERFACE"
+echo "INFO: Total number of touchscreen controllers found: $LOCAL_COUNTER"
 
 if [ ! -e "$TOUCHSCREEN_DEVFS_PRIMARY" ]
 then
