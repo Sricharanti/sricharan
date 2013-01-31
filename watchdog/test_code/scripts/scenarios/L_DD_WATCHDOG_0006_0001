@@ -10,7 +10,6 @@
 
 01 set -x; dmesg -c 2&>1 > $TMPFILE
 02 set -x; $WATCHDOG_DIR_BINARIES/./$WATCHDOG_ENABLE_DISABLE 0 $WATCHDOG_DEVFS
-03 set -x; [ -n "$(dmesg | grep "Watchdog enabled")" ] && [ -n "$(dmesg | grep "Watchdog disabled")"  ] && echo "Pass"
-04 set -x; sleep 5; echo "Board still not reset, test PASS:"
+03 set -x; sleep 5; echo "Board still not reset, test PASS:"
 
 # End L_DD_WATCHDOG_0006_0001

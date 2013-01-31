@@ -9,8 +9,8 @@
 # Begin L_DD_WATCHDOG_0005_0001
 
 01 set -x; dmesg -c 2&>1 > $TMPFILE
-02 set -x; $WATCHDOG_DIR_BINARIES/./$WATCHDOG_START_STOP $WATCHDOG_DEVFS -e & [ -n "`dmesg | grep "Watchdog enabled"`" ] && exit 0 || exit 1
-03 set -x; $WATCHDOG_DIR_BINARIES/./$WATCHDOG_START_STOP $WATCHDOG_DEVFS -d; [ -n "`dmesg | grep "Watchdog disabled"`" ] && exit 0 || exit 1
+02 set -x; $WATCHDOG_DIR_BINARIES/./$WATCHDOG_START_STOP $WATCHDOG_DEVFS -e && exit 0 || exit 1
+03 set -x; $WATCHDOG_DIR_BINARIES/./$WATCHDOG_START_STOP $WATCHDOG_DEVFS -d && exit 0 || exit 1
 04 set -x; $WATCHDOG_DIR_BINARIES/./$WATCHDOG_START_STOP $WATCHDOG_DEVFS -k || exit 0
 
 # End L_DD_WATCHDOG_0005_0001

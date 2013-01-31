@@ -10,7 +10,6 @@
 
 01 set -x; dmesg -c 2&>1 > $TMPFILE
 02 set -x; $WATCHDOG_DIR_BINARIES/./$WATCHDOG_ENABLE_DISABLE 0 $WATCHDOG_DEVFS
-03 set -x; [ -n "$(dmesg | grep "Watchdog enabled")" ] && [ -n "$(dmesg | grep "Watchdog disabled")"  ] && echo "Pass"
-04 set -x; $WATCHDOG_DIR_BINARIES/./$WATCHDOG_ENABLE_DISABLE 1 $WATCHDOG_DEVFS || exit 0
+03 set -x; $WATCHDOG_DIR_BINARIES/./$WATCHDOG_ENABLE_DISABLE 1 $WATCHDOG_DEVFS || exit 0
 
 # End L_DD_WATCHDOG_0001_0001
