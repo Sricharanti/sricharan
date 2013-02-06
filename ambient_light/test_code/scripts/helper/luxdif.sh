@@ -32,6 +32,7 @@ minmax ()
         MAXLUX="$1"
     fi
 
+    if [ $MINLUX -eq 0 ]; then $MINLUX=1; fi
     local TMP1=`expr "$MAXLUX" \/ "$MINLUX"`
     local TMP2=`test "$TMP1" -gt "1" ; echo $?`
     return $TMP2
