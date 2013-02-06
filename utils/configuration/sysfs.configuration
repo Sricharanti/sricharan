@@ -89,6 +89,8 @@ export SYSFS_CPU0_CURRENT_GOVERNOR=$SYSFS_CPU0_CPUFREQ/scaling_governor
 export SYSFS_CPU0_SET_SPEED=$SYSFS_CPU0_CPUFREQ/scaling_setspeed
 export SYSFS_CPU0_STATS_TOTAL_TRANS=$SYSFS_CPU0_CPUFREQ/stats/total_trans
 export SYSFS_CPU0_STATS_TIME_IN_STATE=$SYSFS_CPU0_CPUFREQ/stats/time_in_state
+export SYSFS_CPU0_MAX_FREQ=$SYSFS_CPU0_CPUFREQ/scaling_max_freq
+export SYSFS_CPU0_MIN_FREQ=$SYSFS_CPU0_CPUFREQ/scaling_min_freq
 
 # /sys/devices/system/smodule
 # /sys/devices/system/timekeeping

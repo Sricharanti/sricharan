@@ -177,6 +177,11 @@ if [ ! -f $SYSFS_CPU0_SET_SPEED ]; then
 	exit 1
 fi
 
+available_frequencies=`cat $SYSFS_CPU0_AVAILABLE_FREQUENCIES`
+CPU_MAX_AVAIL_FREQ=$(for word in $available_frequencies; do echo $word; done | tail -1)
+handlerSysFs.sh "set" $SYSFS_CPU0_MAX_FREQ $CPU_MAX_AVAIL_FREQ
+echo "INFO: We have set max available frequency to $CPU_MAX_AVAIL_FREQ"
+
 # Only in userspace governor the frequencies can be safely changed
 handlerCpuFreqScalGovernors.sh "get"
 handlerCpuFreqScalGovernors.sh "set" "userspace"
