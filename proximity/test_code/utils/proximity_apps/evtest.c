@@ -37,7 +37,7 @@
 #define EV_SYN 0
 #endif
 
-#define MAX_LIMIT_INTERACTIONS 100
+#define MAX_LIMIT_INTERACTIONS 5
 
 char *events[EV_MAX + 1] = {
 	[0 ... EV_MAX] = NULL,
@@ -355,7 +355,7 @@ int main (int argc, char **argv)
 		}
 
 
-	printf("Testing 100  times... (interrupt to exit)\n");
+	printf("Testing %d  times... (interrupt to exit)\n", MAX_LIMIT_INTERACTIONS);
 
 	while (counter < MAX_LIMIT_INTERACTIONS) {
 		rd = read(fd, ev, sizeof(struct input_event) * 64);
