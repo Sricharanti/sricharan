@@ -19,13 +19,15 @@
 
 # Verify MPU RET and RET-LOGIC-OFF counters (OSWR) increase during a test period
 0003 set -x; handlerPowerTransitionStats.sh log "DEVICE-OFF" "DEVICE-OFF" "before"
-0004 set -x; ((handler_msd_rw.sh "1" &) && sleep 10; $UTILS_DIR_HANDLERS/handlerAndroidPM.sh suspend kernel force 5) && handlerAndroidPM.sh resume kernel || exit 1
+0004 set -x; ((handler_msd_rw.sh "1" "$MSD_TEST_FOLDER" &) && sleep 10; $UTILS_DIR_HANDLERS/handlerAndroidPM.sh suspend kernel force 5) && handlerAndroidPM.sh resume kernel || exit 1
 0005 set -x; handlerPowerTransitionStats.sh log "DEVICE-OFF" "DEVICE-OFF" "after"
 0006 set -x; handlerPowerTransitionStats.sh compare "DEVICE-OFF" "DEVICE-OFF" "before" "after"
 
 0003 set -x; handlerPowerTransitionStats.sh log "DEVICE-OFF" "DEVICE-OFF" "before"
-0004 set -x; ((handler_msd_rw.sh "0" &) && sleep 10; $UTILS_DIR_HANDLERS/handlerAndroidPM.sh suspend kernel force 5) && handlerAndroidPM.sh resume kernel || exit 1
+0004 set -x; ((handler_msd_rw.sh "0" "$MSD_TEST_FOLDER" &) && sleep 10; $UTILS_DIR_HANDLERS/handlerAndroidPM.sh suspend kernel force 5) && handlerAndroidPM.sh resume kernel || exit 1
 0005 set -x; handlerPowerTransitionStats.sh log "DEVICE-OFF" "DEVICE-OFF" "after"
 0006 set -x; handlerPowerTransitionStats.sh compare "DEVICE-OFF" "DEVICE-OFF" "before" "after"
+
+0007 set -x; handler_msd_rw.sh "2" "$MSD_TEST_FOLDER"
 
 # End MSD_OFF_MODE
