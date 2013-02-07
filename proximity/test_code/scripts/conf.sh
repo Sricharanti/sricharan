@@ -51,7 +51,7 @@ elif [ `cat /proc/cpuinfo| grep -ic OMAP5` -ne 0 ];then
 	export PROXIMITY_INPUTDEV="tsl2771_prox"
 	export PROXIMITY_SYSFS_PATH="/sys/bus/i2c/drivers/tsl2771/2-0039"
 	export PROXIMITY_ENABLE="$PROXIMITY_SYSFS_PATH/prox_enable"
-	export PROXIMITY_POWERON_VAL=2
+	export PROXIMITY_POWERON_VAL=3
 else
 	echo "Warning: Unrecognized hardware platform"
 	exit 1

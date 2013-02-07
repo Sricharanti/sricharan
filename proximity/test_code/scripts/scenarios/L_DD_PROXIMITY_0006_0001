@@ -21,7 +21,7 @@
 0005 set -x; handlerPowerTransitionStats.sh log "l3init_pwrdm" "RET" "oswr1"
 0006 set -x; handlerPowerTransitionStats.sh log "l4per_pwrdm" "RET" "oswr1"
 
-0007 set -x; if [ -n "$PROXIMITY_ENABLE" ]; then handlerSysFs.sh set $PROXIMITY_ENABLE 2 ; fi
+0007 set -x; if [ -n "$PROXIMITY_ENABLE" ]; then handlerSysFs.sh set $PROXIMITY_ENABLE $PROXIMITY_POWERON_VAL ; fi
 0008 set -x; ($SENSOR_DIR_BINARIES/evtest $DEVFS_SENSOR && $UTILS_DIR_HANDLERS/handlerAndroidPM.sh suspend kernel force 5; sleep 1) && handlerAndroidPM.sh resume kernel
 0009 set -x; handlerSysFs.sh set $PROXIMITY_ENABLE 0
 
