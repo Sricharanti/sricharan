@@ -1,0 +1,14 @@
+###############################################################################
+# Scenario: MSD_DVFS_MODE
+# Author  : Andrii Danylov
+# Date    : 02/04/13
+# Testing : MMC: Power Management: DVFS
+# Results : MMC driver shall allow DVFS during data transfer
+#           DVFS stands for Dinamic Voltage Frequency Scaling.
+###############################################################################
+
+# Begin MSD_DVFS_MODE
+
+0001 set -x; handlerCpuFreqScalFrequencies.sh run all "sleep 20" & timeout=0; iterations=10 ; while [  $timeout -lt $iterations ]; do handler_msd_rw.sh "1"; handler_msd_rw.sh "0"; timeout=$((timeout=$timeout+1)); done
+
+# End MSD_DVFS_MODE
