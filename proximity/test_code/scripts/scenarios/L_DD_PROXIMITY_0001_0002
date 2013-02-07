@@ -1,15 +1,20 @@
 ###############################################################################
-# Scenario: L_DD_SENSOR_0001_0001
-# Author  : Abraham Arce,Shubhro
-#
-# Date    : Mon May 03 16:43:35 CDT 2010
+# Scenario: L_DD_SENSOR_0001_0002
+# Author  : Andrii Danylov
+# Date    : 07 Feb 2013
+# Testing : Enable and disable support.
 ###############################################################################
 
-# Begin L_DD_SENSOR_0001_0001
+# Begin L_DD_PROXIMITY_0001_0002
+00 set -x; handlerSysFs.sh set $PROXIMITY_ENABLE $PROXIMITY_POWERON_VAL; sleep 1
+01  set -x; IRQ=`handlerIrq.sh get cpu0 $PROXIMITY_IRQ` && echo $IRQ > $PROXIMITY_IRQ_INITIAL
+02  set -x; echo "Please INTERACT with PROXIMITY sensor NEXT 30 SECONDS." && readsec.sh
+03  set -x; IRQ=`handlerIrq.sh get cpu0 $PROXIMITY_IRQ` && echo $IRQ > $PROXIMITY_IRQ_FINAL
+04  set -x; if [ `cat $PROXIMITY_IRQ_FINAL` -gt `cat $PROXIMITY_IRQ_INITIAL` ]; then exit 0; else exit 1; fi
+05  set -x; handlerSysFs.sh set $PROXIMITY_ENABLE 0; sleep 1;
+06  set -x; IRQ=`handlerIrq.sh get cpu0 $PROXIMITY_IRQ` && echo $IRQ > $PROXIMITY_IRQ_INITIAL
+07  set -x; echo "Please DO NOT INTERACT with PROXIMITY sensor NEXT 5 SECONDS." && sleep 5
+08  set -x; IRQ=`handlerIrq.sh get cpu0 $PROXIMITY_IRQ` && echo $IRQ > $PROXIMITY_IRQ_FINAL
+09  set -x; if [ `cat $PROXIMITY_IRQ_FINAL` -eq `cat $PROXIMITY_IRQ_INITIAL` ]; then exit 0; else exit 1; fi
 
-01  set -x; if [ -n "$PROXIMITY_ENABLE" ]; then handlerSysFs.sh set $PROXIMITY_ENABLE 1 ; fi 
-
-02  $SENSOR_DIR_BINARIES/evtest $DEVFS_SENSOR
-
-# End L_DD_SENSOR_0001_0001
-
+# End L_DD_PROXIMITY_0001_0002
