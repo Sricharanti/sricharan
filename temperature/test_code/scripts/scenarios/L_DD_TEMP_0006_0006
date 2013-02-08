@@ -2,8 +2,8 @@
 # Scenario: L_DD_TEMP_0006_0006
 # Author  : Andrii Danylov
 # Date    : 12/17/12
-# Testing : CPU idle: CSWR for MPU/CORE/L3/L4 power domains
-# Results : Verify MPU/CORE/L3/L4 power domain for RET and RET-LOGIC-OFF counters,
+# Testing : CPU idle: CSWR for MPU/CORE/L3 power domains
+# Results : Verify MPU/CORE/L3 power domain for RET and RET-LOGIC-OFF counters,
 #           they must increases after a period of time through cpu idle path
 ###############################################################################
 
@@ -22,22 +22,19 @@
 0004 set -x; handlerPowerTransitionStats.sh log "mpu_pwrdm" "RET" "oswr1"
 0005 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET" "oswr1"
 0006 set -x; handlerPowerTransitionStats.sh log "l3init_pwrdm" "RET" "oswr1"
-0007 set -x; handlerPowerTransitionStats.sh log "l4per_pwrdm" "RET" "oswr1"
 
-0008 set -x; echo "Waiting 20 seconds" && sleep 20 & (${SENSOR_DIR_HELPER}/Readvalues.sh 20 1) && exit 0 || exit 1
+0007 set -x; echo "Waiting 20 seconds" && sleep 20 & (${SENSOR_DIR_HELPER}/Readvalues.sh 20 1) && exit 0 || exit 1
 
-0009 set -x; handlerPowerTransitionStats.sh log "mpu_pwrdm" "RET" "oswr2"
-0010 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET" "oswr2"
-0011 set -x; handlerPowerTransitionStats.sh log "l3init_pwrdm" "RET" "oswr2"
-0012 set -x; handlerPowerTransitionStats.sh log "l4per_pwrdm" "RET" "oswr2"
+0008 set -x; handlerPowerTransitionStats.sh log "mpu_pwrdm" "RET" "oswr2"
+0009 set -x; handlerPowerTransitionStats.sh log "core_pwrdm" "RET" "oswr2"
+0010 set -x; handlerPowerTransitionStats.sh log "l3init_pwrdm" "RET" "oswr2"
 
-0013 set -x; handlerPowerTransitionStats.sh compare "mpu_pwrdm" "RET" "oswr1" "oswr2"
-0014 set -x; handlerPowerTransitionStats.sh compare "core_pwrdm" "RET" "oswr1" "oswr2"
-0015 set -x; handlerPowerTransitionStats.sh compare "l3init_pwrdm" "RET" "oswr1" "oswr2"
-0016 set -x; handlerPowerTransitionStats.sh compare "l4per_pwrdm" "RET" "oswr1" "oswr2"
+0011 set -x; handlerPowerTransitionStats.sh compare "mpu_pwrdm" "RET" "oswr1" "oswr2"
+0012 set -x; handlerPowerTransitionStats.sh compare "core_pwrdm" "RET" "oswr1" "oswr2"
+0013 set -x; handlerPowerTransitionStats.sh compare "l3init_pwrdm" "RET" "oswr1" "oswr2"
 
-0017 set -x; handlerInputSubsystem.sh "keypad" "KeyCodePowerKey" 1 1 1
-0018 set -x; sleep 1; input keyevent $KeyMonkeyMenu; input keyevent $KeyMonkeyHome
-0019 set -x; handlerAndroidPM.sh wakelock release dummy
+0014 set -x; handlerInputSubsystem.sh "keypad" "KeyCodePowerKey" 1 1 1
+0015 set -x; sleep 1; input keyevent $KeyMonkeyMenu; input keyevent $KeyMonkeyHome
+0016 set -x; handlerAndroidPM.sh wakelock release dummy
 
 # End L_DD_TEMP_0006_0006
