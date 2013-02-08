@@ -2,7 +2,7 @@
 # Scenario: ACC_0005_0002
 # Author  : Andrii Danylov
 # Date    : 12/21/12
-# Testing : Retention (OSWR) for MPU, CORE, L3 and L4 power domains
+# Testing : Retention (OSWR) for MPU, CORE, L3 power domains
 # Results : Accelerometer driver shall use clocks, power domain, voltage domain on a need
 #           basis and relinquish when not needed, via the respective manager.
 ###############################################################################
@@ -22,8 +22,6 @@ $UTILS_DIR_HANDLERS/handlerPowerTransitionStats.sh log "core_pwrdm" "RET" "oswr1
 $UTILS_DIR_HANDLERS/handlerPowerTransitionStats.sh log "core_pwrdm" "RET-LOGIC-OFF" "oswr1"
 $UTILS_DIR_HANDLERS/handlerPowerTransitionStats.sh log "l3init_pwrdm" "RET" "oswr1"
 $UTILS_DIR_HANDLERS/handlerPowerTransitionStats.sh log "l3init_pwrdm" "RET-LOGIC-OFF" "oswr1"
-$UTILS_DIR_HANDLERS/handlerPowerTransitionStats.sh log "l4per_pwrdm" "RET" "oswr1"
-$UTILS_DIR_HANDLERS/handlerPowerTransitionStats.sh log "l4per_pwrdm" "RET-LOGIC-OFF" "oswr1"
 
 if [ -n "$ACCELEROMETER_ENABLE_POWER" ]; then handlerSysFs.sh set $ACCELEROMETER_ENABLE_POWER 1 ; fi
 ($ACCELEROMETER_DIR_BINARIES/evtest $DEVFS_ACCELEROMETER && $UTILS_DIR_HANDLERS/handlerAndroidPM.sh suspend kernel force 5; sleep 1) && $UTILS_DIR_HANDLERS/handlerAndroidPM.sh resume kernel exit 0 || exit 1
@@ -35,8 +33,6 @@ $UTILS_DIR_HANDLERS/handlerPowerTransitionStats.sh log "core_pwrdm" "RET" "oswr2
 $UTILS_DIR_HANDLERS/handlerPowerTransitionStats.sh log "core_pwrdm" "RET-LOGIC-OFF" "oswr2"
 $UTILS_DIR_HANDLERS/handlerPowerTransitionStats.sh log "l3init_pwrdm" "RET" "oswr2"
 $UTILS_DIR_HANDLERS/handlerPowerTransitionStats.sh log "l3init_pwrdm" "RET-LOGIC-OFF" "oswr2"
-$UTILS_DIR_HANDLERS/handlerPowerTransitionStats.sh log "l4per_pwrdm" "RET" "oswr2"
-$UTILS_DIR_HANDLERS/handlerPowerTransitionStats.sh log "l4per_pwrdm" "RET-LOGIC-OFF" "oswr2"
 
 $UTILS_DIR_HANDLERS/handlerPowerTransitionStats.sh compare "mpu_pwrdm" "RET" "oswr1" "oswr2"
 $UTILS_DIR_HANDLERS/handlerPowerTransitionStats.sh compare "mpu_pwrdm" "RET-LOGIC-OFF" "oswr1" "oswr2"
@@ -44,8 +40,6 @@ $UTILS_DIR_HANDLERS/handlerPowerTransitionStats.sh compare "core_pwrdm" "RET" "o
 $UTILS_DIR_HANDLERS/handlerPowerTransitionStats.sh compare "core_pwrdm" "RET-LOGIC-OFF" "oswr1" "oswr2"
 $UTILS_DIR_HANDLERS/handlerPowerTransitionStats.sh compare "l3init_pwrdm" "RET" "oswr1" "oswr2"
 $UTILS_DIR_HANDLERS/handlerPowerTransitionStats.sh compare "l3init_pwrdm" "RET-LOGIC-OFF" "oswr1" "oswr2"
-$UTILS_DIR_HANDLERS/handlerPowerTransitionStats.sh compare "l4per_pwrdm" "RET" "oswr1" "oswr2"
-$UTILS_DIR_HANDLERS/handlerPowerTransitionStats.sh compare "l4per_pwrdm" "RET-LOGIC-OFF" "oswr1" "oswr2"
 
 $UTILS_DIR_SCRIPTS/android_display_switch.sh ON
 

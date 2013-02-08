@@ -2,8 +2,8 @@
 # Scenario: ACC_0005_0006
 # Author  : Andrii Danylov
 # Date    : 12/21/12
-# Testing : CPU idle: CSWR for MPU/CORE/L3/L4 power domains
-# Results : Verify MPU/CORE/L3/L4 power domain for RET and RET-LOGIC-OFF counters,
+# Testing : CPU idle: CSWR for MPU/CORE/L3 power domains
+# Results : Verify MPU/CORE/L3 power domain for RET and RET-LOGIC-OFF counters,
 #           they must increases after a period of time through cpu idle path
 ###############################################################################
 
@@ -22,7 +22,6 @@ $UTILS_DIR_SCRIPTS/android_display_switch.sh OFF
 $UTILS_DIR_HANDLERS/handlerPowerTransitionStats.sh log "mpu_pwrdm" "RET" "oswr1"
 $UTILS_DIR_HANDLERS/handlerPowerTransitionStats.sh log "core_pwrdm" "RET" "oswr1"
 $UTILS_DIR_HANDLERS/handlerPowerTransitionStats.sh log "l3init_pwrdm" "RET" "oswr1"
-$UTILS_DIR_HANDLERS/handlerPowerTransitionStats.sh log "l4per_pwrdm" "RET" "oswr1"
 
 if [ -n "$ACCELEROMETER_ENABLE_POWER" ]; then handlerSysFs.sh set $ACCELEROMETER_ENABLE_POWER 1 ; fi
 echo "Waiting 20 seconds" && sleep 20 & ($ACCELEROMETER_DIR_BINARIES/evtest $DEVFS_ACCELEROMETER)
@@ -31,12 +30,10 @@ $UTILS_DIR_HANDLERS/handlerSysFs.sh set $ACCELEROMETER_ENABLE_POWER 0
 $UTILS_DIR_HANDLERS/handlerPowerTransitionStats.sh log "mpu_pwrdm" "RET" "oswr2"
 $UTILS_DIR_HANDLERS/handlerPowerTransitionStats.sh log "core_pwrdm" "RET" "oswr2"
 $UTILS_DIR_HANDLERS/handlerPowerTransitionStats.sh log "l3init_pwrdm" "RET" "oswr2"
-$UTILS_DIR_HANDLERS/handlerPowerTransitionStats.sh log "l4per_pwrdm" "RET" "oswr2"
 
 $UTILS_DIR_HANDLERS/handlerPowerTransitionStats.sh compare "mpu_pwrdm" "RET" "oswr1" "oswr2"
 $UTILS_DIR_HANDLERS/handlerPowerTransitionStats.sh compare "core_pwrdm" "RET" "oswr1" "oswr2"
 $UTILS_DIR_HANDLERS/handlerPowerTransitionStats.sh compare "l3init_pwrdm" "RET" "oswr1" "oswr2"
-$UTILS_DIR_HANDLERS/handlerPowerTransitionStats.sh compare "l4per_pwrdm" "RET" "oswr1" "oswr2"
 
 $UTILS_DIR_SCRIPTS/android_display_switch.sh ON
 
