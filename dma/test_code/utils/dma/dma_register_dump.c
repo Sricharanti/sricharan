@@ -23,6 +23,7 @@
 #define OMAP24XX_DMA4_BASE		(L4_24XX_BASE + 0x56000)
 #define OMAP34XX_DMA4_BASE		(L4_34XX_BASE + 0x56000)
 #define OMAP44XX_DMA4_BASE		(L4_44XX_BASE + 0x56000)
+#define OMAP54XX_DMA4_BASE		(L4_54XX_BASE + 0x56000)
 
 #define dma_read(reg)							\
 ({									\
@@ -49,6 +50,9 @@ void dma_channel_registers_dump(int lch, u32 *reg_values)
 		base = OMAP34XX_DMA4_BASE;
 	else if (cpu_is_omap44xx())
 		base = OMAP44XX_DMA4_BASE;
+	else if (cpu_is_omap54xx()) {
+		base = OMAP54XX_DMA4_BASE;
+	}
 	else {
 		pr_err("DMA Base address not found\n");
 		return;
