@@ -26,16 +26,14 @@ suspendResume() {
 
 	while [ 1 ]; do
 
-		echo > /system/bin/log
 		sleep 1
 		echo mem > $SYSFS_POWER_STATE
 
-		cat /system/bin/log | grep "$HSR_SUSPEND_RESUME_MESSAGE_SUCCESS"
+		dmesg | grep "$HSR_SUSPEND_RESUME_MESSAGE_SUCCESS"
 		if [ $? -eq 0 ]; then
 			echo "TEST PASSED"
 		else
 			echo "Error: all powerdomains did not enter target state"
-			cat /system/bin/log
 			LOCAL_ERROR=1
 		fi
 
