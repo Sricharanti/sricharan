@@ -34,18 +34,19 @@ checkRetention() {
 	LOCAL_POWER_DOMAIN=$1
 	LOCAL_COMMAND_LINE=$2
 
-	handlerPowerTransitionStats.sh "log" $LOCAL_POWER_DOMAIN "RET" "1"
+	handlerPowerTransitionStats.sh "log" $LOCAL_POWER_DOMAIN "RET" "cswr1"
 
 	if [ -n "$LOCAL_COMMAND_LINE" ]; then
 		echo "Info: Running command -> $LOCAL_COMMAND_LINE"
 		$LOCAL_COMMAND_LINE
 	fi
 
+	handlerSuspendResume.sh "suspend" $PM_WAKEUP_TIMER_DEFAULT
 	echo "Info: Sleeping for $PM_RETENTION_TIMER_DEFAULT seconds..."
   sleep $PM_RETENTION_TIMER_DEFAULT
 
-	handlerPowerTransitionStats.sh "log" $LOCAL_POWER_DOMAIN "RET" "2"
-	handlerPowerTransitionStats.sh "compare" "RET" "1" "2"
+	handlerPowerTransitionStats.sh "log" $LOCAL_POWER_DOMAIN "RET" "cswr2"
+	handlerPowerTransitionStats.sh compare $LOCAL_POWER_DOMAIN "RET" "cswr1" "cswr2"
   if [ $? -eq 1 ]; then
     LOCAL_ERROR=1
   fi
