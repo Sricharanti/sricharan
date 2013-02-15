@@ -24,6 +24,8 @@
 #  USA
 #
 
+UTILS_DIR_TMP="."
+
 # =============================================================================
 # Variables
 # =============================================================================
@@ -81,6 +83,7 @@ if [ "$operation" = "log" ]; then
 	showInfo "Power domain stats requested: $pwrdm: $pwrdm_stat"
 	pwrdm_value=`echo $pwrdm_stat | cut -d ":" -f 2`
 	echo $pwrdm_value > $UTILS_DIR_TMP/pts.$pwrdm.$pwr_state.$log_name
+	echo `pwd`
 
 elif [ "$operation" = "compare" ]; then
 
