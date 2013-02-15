@@ -16,21 +16,23 @@ checkRetentionOpenSwitch() {
 	LOCAL_POWER_DOMAIN=$1
 	LOCAL_COMMAND_LINE=$2
 
-	handlerPowerTransitionStats.sh "log" $LOCAL_POWER_DOMAIN "RET" "1"
-	handlerPowerTransitionStats.sh "log" $LOCAL_POWER_DOMAIN "RET-LOGIC-OFF" "1"
+	handlerPowerTransitionStats.sh "log" $LOCAL_POWER_DOMAIN "RET" "oswr1"
+	handlerPowerTransitionStats.sh "log" $LOCAL_POWER_DOMAIN "RET-LOGIC-OFF" "oswr1"
 
 	echo "Info: Suspending for $PM_WAKEUP_TIMER_DEFAULT seconds..."
 	handlerSuspendResume.sh "suspend" $PM_WAKEUP_TIMER_DEFAULT
 
-	handlerPowerTransitionStats.sh "log" $LOCAL_POWER_DOMAIN "RET" "2"
-	handlerPowerTransitionStats.sh "log" $LOCAL_POWER_DOMAIN "RET-LOGIC-OFF" "2"
+	handlerPowerTransitionStats.sh "log" $LOCAL_POWER_DOMAIN "RET" "oswr2"
+	handlerPowerTransitionStats.sh "log" $LOCAL_POWER_DOMAIN "RET-LOGIC-OFF" "oswr2"
 
-	handlerPowerTransitionStats.sh "compare" $LOCAL_POWER_DOMAIN "RET" "1" "2"
+	#handlerPowerTransitionStats.sh "compare" $LOCAL_POWER_DOMAIN "RET" "1" "2"
+	handlerPowerTransitionStats.sh compare $LOCAL_POWER_DOMAIN "RET" "oswr1" "oswr2"
 	if [ $? -eq 1 ]; then
 		LOCAL_ERROR=1
 	fi
 
-	handlerPowerTransitionStats.sh "compare" $LOCAL_POWER_DOMAIN "RET-LOGIC-OFF" "1" "2"
+	#handlerPowerTransitionStats.sh "compare" $LOCAL_POWER_DOMAIN "RET-LOGIC-OFF" "1" "2"
+	handlerPowerTransitionStats.sh compare $LOCAL_POWER_DOMAIN "RET-LOGIC-OFF" "oswr1" "oswr2"
 	if [ $? -eq 1 ]; then
 		LOCAL_ERROR=1
 	fi
@@ -43,15 +45,17 @@ checkRetentionOpenSwitch() {
 		echo "Info: Suspending for $PM_WAKEUP_TIMER_DEFAULT seconds..."
 		handlerSuspendResume.sh "suspend" $PM_WAKEUP_TIMER_DEFAULT
 
-		handlerPowerTransitionStats.sh "log" $LOCAL_POWER_DOMAIN "RET" "3"
-		handlerPowerTransitionStats.sh "log" $LOCAL_POWER_DOMAIN "RET-LOGIC-OFF" "3"
+		handlerPowerTransitionStats.sh "log" $LOCAL_POWER_DOMAIN "RET" "oswr3"
+		handlerPowerTransitionStats.sh "log" $LOCAL_POWER_DOMAIN "RET-LOGIC-OFF" "oswr3"
 
-		handlerPowerTransitionStats.sh "compare" "RET" "2" "3"
+		#handlerPowerTransitionStats.sh "compare" "RET" "2" "3"
+		handlerPowerTransitionStats.sh compare $LOCAL_POWER_DOMAIN "RET" "oswr2" "oswr3"
 		if [ $? -eq 1 ]; then
 			LOCAL_ERROR=1
 		fi
 
-		handlerPowerTransitionStats.sh "compare" "RET-LOGIC-OFF" "2" "3"
+		handlerPowerTransitionStats.sh compare $LOCAL_POWER_DOMAIN "RET-LOGIC-OFF" "oswr2" "oswr3"
+		#handlerPowerTransitionStats.sh "compare" "RET-LOGIC-OFF" "2" "3"
 		if [ $? -eq 1 ]; then
 			LOCAL_ERROR=1
 		fi
