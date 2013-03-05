@@ -21,6 +21,7 @@
 
 
 #include "dma_chain_transfer.h"
+#include <linux/slab.h>
 
 #define TEST_FINISHED_POLL_TIME 1000
 
@@ -69,7 +70,7 @@ struct proc_dir_entry* entry;
  */
 void create_dma_proc_chain(char *proc_name)
 {
-	entry = create_proc_read_entry(proc_name, 0, NULL, dma_read_proc, NULL);
+	entry = proc_create_data(proc_name, 0, NULL, dma_read_proc, NULL);
 	if (!entry) {
 		printk("Creating proc entry failed !!!!\n");
 		return;

@@ -28,7 +28,9 @@
 #include <linux/delay.h>
 #include <linux/init.h>
 #include <asm/io.h>
-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,32))
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(3,7,0))
+ #include <linux/omap-dma.h>
+#elif (LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,32))
  #include <plat/dma.h>
  #include <plat/hardware.h>
 #elif (LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,27))
@@ -49,6 +51,8 @@
 #endif
 
 #define PROC_FILE	"driver/dma_test_status"
+
+#define OMAP_DMA_NO_DEVICE	0
 
 #ifdef CONFIG_ANDROID
 enum {
