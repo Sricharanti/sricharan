@@ -53,10 +53,10 @@ if [ $? -eq 1 ]; then
 fi
 
 # Define which Architecture is being used
-if [ `cat /proc/cpuinfo | grep -ic OMAP4` -gt 0 ]; then
+if [ `cat /proc/cpuinfo | grep -ic "OMAP4\|OMAP5"` -gt 0 ]; then
 		sr_entries=($SR_CORE_AUTOCOMP $SR_IVA_AUTOCOMP $SR_MPU_AUTOCOMP)
 		sr_domain=(core iva mpu)
-		showInfo "OMAP4 Architecture detected"
+		showInfo "OMAP4 or OMAP5 Architecture detected"
 	elif [ `cat /proc/cpuinfo | grep -ic Zoom3` -gt 0 ]; then
 		sr_entries=($SR_VDD1_AUTOCOMP $SR_VDD2_AUTOCOMP)
 		sr_domain=(vdd1 vdd2)
