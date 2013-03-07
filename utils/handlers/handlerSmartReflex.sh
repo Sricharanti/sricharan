@@ -92,8 +92,6 @@ fi
 
 # Verify that all sysfs entries for SmartReflex exists
 
-handlerDebugFileSystem.sh "mount"
-
 for sr_entry in ${sr_entries[*]}; do
 	if [ ! -f $sr_entry ]; then
 		showInfo "FATAL: $sr_entry cannot be found" 1>&2
@@ -103,7 +101,6 @@ done
 
 if [ $error_status -eq 1 ]; then
 	handlerError.sh "log" "1" "halt" "handlerSmartReflex.sh"
-	#handlerDebugFileSystem.sh "umount"
 	exit $error_status
 fi
 
@@ -136,11 +133,9 @@ fi
 
 if [ $error_status -eq 1 ]; then
         handlerError.sh "log" "1" "halt" "handlerSmartReflex.sh"
-        #handlerDebugFileSystem.sh "umount"
         exit $error_status
 fi
 
-#handlerDebugFileSystem.sh "umount"
 exit $error_status
 
 # End of file
