@@ -128,6 +128,7 @@ export PM_WAKEUP_TIMER_DEFAULT=1
 export PM_RETENTION_TIMER_DEFAULT=30
 export PM_DEBUGFS_DIRECTORY=$HDFS_DEBUG_FILESYSTEM_DIRECTORY
 export PM_DEBUG=$PM_DEBUGFS_DIRECTORY/pm_debug/
+export PM_VOLT=$PM_DEBUGFS_DIRECTORY/voltage/
 
 if [ `cat /proc/cpuinfo | grep -ic "OMAP4\|OMAP5"` -gt 0 ]; then
 	export PM_COUNT=$PM_DEBUG/count
