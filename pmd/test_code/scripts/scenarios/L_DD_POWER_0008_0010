@@ -1,0 +1,20 @@
+###############################################################################
+# Scenario: L_DD_POWER_0008_0010
+# Author : Andrii Danylov
+# Test for Smart Reflex class 1.5 voltage recalibration:
+# Adjust the SmartReflex recalibration time delay from menuconfig (~5 min).
+# Add a test print in do_recalibrate api, to make sure the recalibration
+# is happening with this specified time interval.
+# Need enabling CONFIG_OMAP_SR_CLASS1_P5_RECALIBRATION_DELAY in menuconfig
+###############################################################################
+
+# Begin L_DD_POWER_0008_0010
+
+# Enable SmartRelfex for all domains
+0001 set -x; handlerSmartReflex.sh enable all
+
+0002 set -x; if [ $(dmesg | grep "sr_classp5_calib_work: smartreflex_core: Calibration complete:" | wc -l) -gt 1 ]; then exit 0; else exit 1; fi
+0003 set -x; if [ $(dmesg | grep "sr_classp5_calib_work: smartreflex_mm: Calibration complete:"   | wc -l) -gt 1 ]; then exit 0; else exit 1; fi
+0004 set -x; if [ $(dmesg | grep "sr_classp5_calib_work: smartreflex_mpu: Calibration complete:"  | wc -l) -gt 1 ]; then exit 0; else exit 1; fi
+
+# End L_DD_POWER_0008_0010
