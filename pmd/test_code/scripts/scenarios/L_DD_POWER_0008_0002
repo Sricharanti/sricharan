@@ -12,14 +12,14 @@
 # Iterate for a period of time over all the available frequencies
 0000 set -x; handlerCpuFreqScalFrequencies.sh run "OPP1" "sleep 1"
 
-# Disable SmartRelfex for all domains
+# Enable SmartRelfex for all domains
 0001 set -x; handlerSmartReflex.sh enable all
 
 0002 set -x; handlerVoltageTransitionsStats.sh compare "vdd_mpu"
 0003 set -x; handlerVoltageTransitionsStats.sh compare "vdd_core"
 0004 set -x; handlerVoltageTransitionsStats.sh compare "vdd_mm"
 
-# Enable SmartRelfex for all domains
+# Disable SmartRelfex for all domains
 0005 set -x; handlerSmartReflex.sh disable all
 
 0006 set -x; handlerVoltageTransitionsStats.sh compare "vdd_mpu"
@@ -30,14 +30,14 @@
 # Iterate for a period of time over all the available frequencies
 0010 set -x; handlerCpuFreqScalFrequencies.sh run "OPP2" "sleep 1"
 
-# Disable SmartRelfex for all domains
+# Enable SmartRelfex for all domains
 0011 set -x; handlerSmartReflex.sh enable all
 
 0012 set -x; handlerVoltageTransitionsStats.sh compare "vdd_mpu"
 0013 set -x; handlerVoltageTransitionsStats.sh compare "vdd_core"
 0014 set -x; handlerVoltageTransitionsStats.sh compare "vdd_mm"
 
-# Enable SmartRelfex for all domains
+# Disable SmartRelfex for all domains
 0015 set -x; handlerSmartReflex.sh disable all
 
 0016 set -x; handlerVoltageTransitionsStats.sh compare "vdd_mpu"
@@ -47,14 +47,14 @@
 # Iterate for a period of time over all the available frequencies
 0020 set -x; handlerCpuFreqScalFrequencies.sh run "OPP3" "sleep 1"
 
-# Disable SmartRelfex for all domains
+# Enable SmartRelfex for all domains
 0021 set -x; handlerSmartReflex.sh enable all
 
 0022 set -x; handlerVoltageTransitionsStats.sh compare "vdd_mpu"
 0023 set -x; handlerVoltageTransitionsStats.sh compare "vdd_core"
 0024 set -x; handlerVoltageTransitionsStats.sh compare "vdd_mm"
 
-# Enable SmartRelfex for all domains
+# Disable SmartRelfex for all domains
 0025 set -x; handlerSmartReflex.sh disable all
 
 0026 set -x; handlerVoltageTransitionsStats.sh compare "vdd_mpu"
