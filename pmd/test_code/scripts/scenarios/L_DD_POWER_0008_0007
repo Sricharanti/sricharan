@@ -1,0 +1,26 @@
+###############################################################################
+# Scenario: L_DD_POWER_0008_0007
+# Author  : Andrii Danylov
+# Testing : Test for Smart Reflex RET voltage measurements
+# Results : Enable SR for all VDDsMPU IVA and CORE. Suspend the board.Measure the
+# VDDs MPU IVA CORE, ensure they have hit RET voltages.Target:OFF mode/Device OFF
+###############################################################################
+
+# Begin L_DD_POWER_0008_0007
+
+# Enable SmartRelfex for all domains
+0000 set -x; handlerSmartReflex.sh enable all
+
+# Set the max screen timeout (30 min)
+#0001 set -x; handlerAndroidSqlite3.sh set "system" "screen_off_timeout" "1800000"
+
+# Turn the display OFF by pressing TWL power key
+0002 set -x; android_display_switch.sh OFF
+
+# Verify MPU RET and RET-LOGIC-OFF counters (OSWR) increase during a test period
+0003 set -x; handlerPowerTransitionStats.sh log "DEVICE-OFF" "DEVICE-OFF" "before"
+0004 set -x; (sleep 1 && $UTILS_DIR_HANDLERS/handlerAndroidPM.sh suspend kernel force 5; sleep 1) && handlerAndroidPM.sh resume kernel exit 0 || exit 1
+0005 set -x; handlerPowerTransitionStats.sh log "DEVICE-OFF" "DEVICE-OFF" "after"
+0006 set -x; handlerPowerTransitionStats.sh compare "DEVICE-OFF" "DEVICE-OFF" "before" "after"
+
+# End L_DD_POWER_0008_0007
