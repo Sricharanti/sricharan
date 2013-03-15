@@ -1,0 +1,37 @@
+###############################################################################
+# Scenario: L_DD_POWER_0008_0011
+# Author : Andrii Danylov
+# Test for re-programming SmartReflex n-target values:
+# Disable SmartReflex if it is currently enabled. Re-program the new n-target
+# values. Enable SmartReflex and verify by reading NVALUERECIPROCAL register
+# using Lauterbach or readmem utility.
+###############################################################################
+
+# Begin L_DD_POWER_0008_0011
+
+0001 set -x; handlerNvalueTransitionsStats.sh "save" "all"
+
+# Iterate for a period of time over all the available frequencies
+0002 set -x; handlerCpuFreqScalFrequencies.sh run "OPP1" "sleep 1"
+0003 set -x; handlerSmartReflex.sh disable all
+0004 set -x; handlerNvalueTransitionsStats.sh "inc" "all"
+0005 set -x; handlerSmartReflex.sh enable all ;  sleep 5
+
+# Iterate for a period of time over all the available frequencies
+0006 set -x; handlerCpuFreqScalFrequencies.sh run "OPP2" "sleep 1"
+0007 set -x; handlerSmartReflex.sh disable all
+0008 set -x; handlerNvalueTransitionsStats.sh "dec" "all"
+0009 set -x; handlerSmartReflex.sh enable all ; sleep 5
+
+# Iterate for a period of time over all the available frequencies
+0010 set -x; handlerCpuFreqScalFrequencies.sh run "OPP3" "sleep 1"
+0011 set -x; handlerSmartReflex.sh disable all
+0012 set -x; handlerNvalueTransitionsStats.sh "inc" "all"
+0013 set -x; handlerSmartReflex.sh enable all ; sleep 5
+
+# Return default nvalues
+0014 set -x; handlerSmartReflex.sh disable all
+0015 set -x; handlerNvalueTransitionsStats.sh "default" "all"
+0016 set -x; handlerSmartReflex.sh enable all
+
+# End L_DD_POWER_0008_0011
