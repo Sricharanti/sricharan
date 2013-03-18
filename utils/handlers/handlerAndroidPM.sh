@@ -35,10 +35,43 @@ error_val=0
 total_parameters=$#
 wakelock='android_test_wakelock'
 system_wakelocks=`cat $SYSTEM_WAKE_LOCK`
-
+finish_suspend1="Suspending console"
+finish_suspend2="PM: early resume of devices complete"
+finish_wakeup="Self-calibration started"
+sr_calibration="GIC returns spurious interrupt for resume IRQ"
+error_count=0
 # =============================================================================
 # Functions
 # =============================================================================
+
+# Prints a message with a specific format
+# @ Function: showInfo
+# @ Parameters: <message to display>
+# @ Return: None
+showInfo() {
+        messages=( "$@" )
+        for index in ${!messages[@]}; do
+         echo -e "[ handlerAndroidPM ] ${messages[$index]}"
+          done
+         }
+
+# Checking dmesg
+# @ Function: dmesg_check
+# @ parameters: <message>
+# @ Return: None
+
+dmesg_check () {
+	[ "$operand2" = "force" ] && add_sleep=8 || add_sleep=18
+	message="$1"
+	if [ `dmesg | grep -wc "$message"` -gt 0 ]; then
+		return
+	else
+		echo "No $message found"
+		error_count=$(($error_count+1))
+	fi
+	[ `dmesg | grep -wc "$sr_calibration"` -gt 0 ] && sleep $add_sleep
+	[ $error_count -gt 5 ] && { showInfo "Giving up after 5 attempts" ; return ;}
+	}
 
 # This function release all the wakelocks
 # given in the wakelock list
@@ -154,17 +187,6 @@ usage() {
 	error_val=1
 }
 
-# Prints a message with a specific format
-# @ Function: showInfo
-# @ Parameters: <message to display>
-# @ Return: None
-showInfo() {
-	messages=( "$@" )
-	for index in ${!messages[@]}; do
-		echo -e "[ handlerAndroidPM ] ${messages[$index]}"
-	done
-}
-
 # Verify error_val flag
 # if flag is set to '1' exit the script and register the failure
 # The message parameter helps to debug the script
@@ -175,7 +197,6 @@ verifyErrorFlag() {
 	debug_message=$1
 	if [ $error_val -eq 1 ]; then
 		handlerError.sh "log" "1" "halt" "handlerAndroidPM.sh"
-		#handlerDebugFileSystem.sh "umount"
 		showInfo "Debug: local error detected:" "$debug_message"  1>&2
 		exit $error_val
 	fi
@@ -201,8 +222,6 @@ handlerError.sh "test"
 if [ $? -eq 1 ]; then
 	exit 1
 fi
-
-handlerDebugFileSystem.sh "mount"
 
 # Check parameters and scritp usage
 
@@ -266,7 +285,8 @@ case $operation in
 	# Set correspond variables
 	environment_type=$operand1
 	suspend_method=$operand2
-	wakeup_timer=$operand3
+	#Adding 3 seconds to be sure that average timer value will be 5-8 seconds minimum
+	wakeup_timer=$(($operand3+3))
 
 	# Clear dmesg buffer on suspend
 	dmesg -c > /dev/null
@@ -280,12 +300,18 @@ case $operation in
 				 "Starting Android early suspend"
 			releaseWakelocks $system_wakelocks
 			verifyErrorFlag "Fail to release wakelock list"
-			handlerInputSubsystem.sh "keypad" "KeyCodePowerKey" 1 1 1
+			#setWakeUpTimer $wakeup_timer
+			#verifyErrorFlag "setWakeUpTimer(): timer value $wakeup_timer"
+			handlerAndroidMonkey.sh keypad 1 800 KeyMonkeyPower && sleep 2
+			#[ $? -eq 0 ] && showInfo "Suspending..."
+			# Wait after using Power Key waiting while device goes suspend
+			sleep 8;
 		elif [ $suspend_method = "timeout" ]; then
 			showInfo "Suspending system via timeout" \
 				 "Starting Android early suspend"
 			releaseWakelocks $system_wakelocks
 			verifyErrorFlag "Fail to release wakelock list"
+			showInfo "Waiting for suspend via timeout" && sleep 18;
 		fi
 		;;
 	"kernel")
@@ -305,22 +331,34 @@ case $operation in
 "resume")
 	# Set correspond variables
 	environment_type=$operand1
-	while [ 1 ]; do
-		if [ `dmesg -c | grep -wc \
-			"$HSR_SUSPEND_RESUME_MESSAGE_SUCCESS"` -gt 0 ]; then
-			break
-		fi
-		sleep 1
-	done
+	sr_message="GIC returns spurious interrupt for resume IRQ"
 	case $environment_type in
-	"android")
+	        "android")
+	        # Make sure  for correct suspend
+	        holdWakelock $wakelock
+	        finished=0
+	        while [ $finished -eq 0 ];do
+	              dmesg_check "$finish_suspend1"
+	              [ $? -eq 0 ] && finished=1 || dmesg
+	         done
+	        finished=0
+	         while [ $finished -eq 0 ];do
+	               dmesg_check "$finish_suspend2"
+	               [ $? -eq 0 ] && finished=1 || dmesg
+	         done
+	        #Continue with resuming
 		holdWakelock $wakelock
 		verifyErrorFlag "Not able to set wakelock"
 		showInfo "Android: resuming the system" \
 			 "starting Android late resume"
-		handlerInputSubsystem.sh "keypad" "KeyCodePowerKey" 1 1 1
-		sleep 1
-		input keyevent $KeyMonkeyMenu
+		handlerInputSubsystem.sh "keypad" "KeyCodePowerKey" 1 1 1 && sleep 1
+                # Making sure wakeup  is complete
+		for i in 1 2 3 4 5; do
+		   sleep 1
+		   dmesg_check "$finish_wakeup"
+		   [ $? -eq 0 ] && finished=1 && break || dmesg
+		done
+		handlerAndroidMonkey.sh keypad 1 800  KeyMonkeyHome && sleep 1
 		;;
 	"kernel")
 		showInfo "Kernel: resuming the system"
@@ -343,7 +381,6 @@ case $operation in
 	;;
 esac
 
-#handlerDebugFileSystem.sh "umount"
 exit $error_val
 
 # End of file
