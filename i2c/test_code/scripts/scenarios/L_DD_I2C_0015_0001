@@ -10,6 +10,7 @@
 
 # Begin L_DD_I2C_0015_0001
 
+00 set -x; echo 3 > /proc/irq/88/smp_affinity
 01 set -x; runtestcase.sh 13 && exit 0 || exit 1
 
 # End L_DD_I2c_0015_0001
