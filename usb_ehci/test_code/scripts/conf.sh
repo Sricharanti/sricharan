@@ -4,6 +4,7 @@
 export USBHOST_POSTFIX=`date "+%Y%m%d-%H%M%S"`
 export USBHOST_ROOT=`pwd`
 
+export USBHOST_DIR_BINARIES=${USBHOST_ROOT}/../bin
 export USBHOST_DIR_HELPER=${USBHOST_ROOT}/helper
 export USBHOST_DIR_TMP=${USBHOST_ROOT}/tmp
 export USBHOST_DIR_TEST=${USBHOST_ROOT}/test
@@ -41,5 +42,26 @@ export USBHOST_DEVFS_ENTRY=/dev/sda
 export USBHOST_DEVFS_PARTITION=/dev/sda1
 export USBHOST_MOUNTPOINT_PATH=/mnt/mass_storage
 export USBHOST_HID_NODE=/dev/event2
+
+# USB Keypad devfs node
+export USB_KEYBOARD_ITERATIONS=50
+TEMP_EVENT=`ls /sys/class/input/ | grep event`
+set $TEMP_EVENT
+
+for i in $TEMP_EVENT
+do
+	cat /sys/class/input/$i/device/name | grep "Keyboard"
+	IS_THIS_OUR_DRIVER=`echo $?`
+	if [ "$IS_THIS_OUR_DRIVER" -eq "0" ]
+	then
+		export DEVFS_USB_KEYBOARD=/dev/input/$i
+		echo "USB keyboard node is " $DEVFS_USB_KEYBOARD
+	fi
+done
+
+if [ ! -e "$DEVFS_USB_KEYBOARD" ]
+then
+	echo "Warning: USB keyboard node cannot be found -> $DEVFS_USB_KEYBOARD"
+fi
 
 # End of file

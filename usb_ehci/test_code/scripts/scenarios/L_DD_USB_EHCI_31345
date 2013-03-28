@@ -1,0 +1,15 @@
+###############################################################################
+# Scenario:    L_DD_USB_EHCI_31345
+# Author  :    Andrii Danylov
+# Date    :    March 28th, 2013
+# Description: USB KeyboardTesting a low speed device that uses
+# interrupt data transfers
+###############################################################################
+
+# Begin L_DD_USB_EHCI_31345
+
+01  set -x; echo -e "\n\n\nThe application will wait for $KEYPAD_ITERATIONS keypresses"
+02  set -x; echo -e "Press several keys and verify all keycodes are properly reported\n\n\n"
+03  set -x; ${USBHOST_DIR_BINARIES}/testkeypad $DEVFS_USB_KEYBOARD $USB_KEYBOARD_ITERATIONS
+
+# End L_DD_USB_EHCI_31345
