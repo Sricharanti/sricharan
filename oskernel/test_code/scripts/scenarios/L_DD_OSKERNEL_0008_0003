@@ -1,0 +1,16 @@
+###############################################
+## Sceanrio: L_DD_OSKERNEL_0008_0003
+## Date: 2 Freb 2012
+## Author Mariia Nagul
+## Testing: VFP / Power state support
+##           - Run PM tests to check retention, OFF modes
+##           - Run VFP testsuite, it should pass
+###############################################
+
+# Begin L_DD_OSKERNEL_0008_0003
+
+01 set -x; cd `pwd`/data/testsuites/i2c/scripts; bash -x test_runner.sh L_DD_I2C_NEW_0006
+02 set -x; cd `pwd`/data/testsuites/i2c/scripts; bash -x test_runner.sh L_DD_I2C_NEW_0007
+03 set -x; cd `pwd`/data/testsuites/vfp/scripts; for i in `ls scenarios`; do scen="$scen $i"; done; bash -x test_runner.sh $scen
+
+# End L_DD_OSKERNEL_0008_0003
