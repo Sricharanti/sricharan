@@ -1,0 +1,15 @@
+####################################################
+## Scenario: L_DD_OSKERNEL_0002_0002
+## Author: Mariia Nagul
+## Date: 1 Feb 2012
+## Testing: Silicon revision
+#####################################################
+
+# Begin L_DD_OSKERNEL_0002_0002
+
+01 set -x; export silicon_revision1=$(cat /proc/cpuinfo | grep "Silicon revision"); export silicon_revision2=$(cat /sys/board_properties/soc/revision); [ -n $( echo $silicon_revision1 | wc -l ) ] && echo "Silicon revision: $silicon_revision1" || [ -n $silicon_revision2 ] && echo "Silicon revision: $silicon_revision2"
+
+
+# End L_DD_OSKERNEL_0002_0002
+
+
