@@ -1,0 +1,14 @@
+####################################################
+## Scenario: L_DD_OSKERNEL_0002_0001
+## Author: Mariia Nagul
+## Date: 1 Feb 2012
+## Testing: Chip revision
+#####################################################
+
+# Begin L_DD_OSKERNEL_0002_0001
+
+01 set -x; chip_revision1=$(cat /proc/cpuinfo | grep "CPU revision"); chip_revision2=$(cat /sys/board/properties/board/revision); [ -n $( echo $chip_revision1 | wc -l ) ] && echo "Chip revision: $chip_revision1" || [ -n $chip_reision2 ] && echo "Chip revision: $chip_revision2"
+
+# End L_DD_OSKERNEL_0002_0001
+
+
