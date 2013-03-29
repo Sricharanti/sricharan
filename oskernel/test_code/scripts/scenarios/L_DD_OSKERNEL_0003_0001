@@ -1,0 +1,13 @@
+#################################################################
+# Sceanrio:	L_DD_POWER_0003_0001
+# Author:	Andrii Danylov
+# Date: 	March 29 2012
+# Testing:	ARM Clock Rate
+# OS Kernel shall allow querying ARM clock rate at runtime
+##################################################################
+
+# Begin L_DD_OSKERNEL_0003_0001
+
+01 set -x; if [ $(cat /sys/kernel/debug/clock/summary | grep mpu | wc -l) -gt 1 ]; then exit 0; else exit 1; fi
+
+# End L_DD_OSKERNEL_0003_0001
