@@ -1,0 +1,5 @@
+#!/bin/bash
+
+export CONSOLE_PORT="/dev/ttyUSB0"
+export DEVICE_SERIAL=`adb devices | tail -n -2 | awk '{ print $1 }'`
+[ -z "$DEVICE_SERIAL" ] && echo "Warning, device is not connected, can't stat device serial"
