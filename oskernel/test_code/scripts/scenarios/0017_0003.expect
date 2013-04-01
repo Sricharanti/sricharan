@@ -1,6 +1,6 @@
-#!/usr/bin/expect 
+#!/usr/bin/expect
 set timeout 25
-spawn cu -l $env($CONSOLE_PORT) -s 115200 --parity=none --nostop
+spawn cu -l $env(CONSOLE_PORT) -s 115200 --parity=none --nostop
 expect "Connected."
 
 send "\r"
@@ -9,15 +9,13 @@ send "\r/system/xbin/su\r"
 send "reboot\r"
 sleep 4
 expect {
-	"EXT4-fs\[ 0-9a-zA-Z():]*mounted filesystem with ordered data mode." {
-	expect {
-		"init: " {
+	"Freeing init memory" {
 		puts stdout "========================="
 		set t [clock clicks -millisecond]
 		puts stdout "====Start:$t====="
 		sleep 2
 		expect {
-			"mtp_open" {
+			"*name:service.bootanim.exit" {
 			set t1 [clock clicks -millisecond]
 			puts stdout "Start:$t \r End:$t1"
 			set r1 [expr $t1 - $t]
@@ -27,8 +25,6 @@ expect {
 				
 				    }
 			}
-			 }
-		}
 				    }
 	}
      send "\r"
