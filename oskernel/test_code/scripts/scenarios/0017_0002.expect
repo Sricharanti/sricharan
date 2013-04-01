@@ -10,20 +10,17 @@ puts start:$t
 send "\r/system/xbin/su\r"
 send "reboot\r"
 sleep 1
-expect "booting the kernel"
+expect "Booting Linux on physical CPU 0"
      set t [clock clicks -millisecond]
      puts stdout "Start:$t"
      sleep 1
      expect {
-      "EXT4-fs\[ 0-9a-zA-Z():]*" {
-      expect {
-      "init:" {
+      "Freeing init memory" {
            set t1 [clock clicks -millisecond]
            puts stdout "\rEnd:$t1"
            set r1 [expr $t1 - $t]
            puts stdout "kernel_time:$r1"
-              }
-         }}}
+	}}
     puts stdout "FS mounted"
      send "\r"
      sleep 10
