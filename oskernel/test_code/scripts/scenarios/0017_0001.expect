@@ -5,18 +5,18 @@ expect "Connected."
 
 send "\r"
 sleep 1
-set t [clock clicks -millisecond]
-puts start:$t
 send "\r/system/xbin/su\r"
 send "reboot\r"
-expect "Hit \[ 0-9a-zA-Z]*:"
-send "\r"
-expect "OMAP\[ 0-9a-zA-Z]*#"
+expect "Restarting system"
+	set t [clock clicks -millisecond]
+	puts start:$t
+
+expect "Booting Linux on physical CPU 0"
      send "\r"
      sleep 1
      set t1 [clock clicks -millisecond]
      set r [expr $t1 - $t]
-     puts stdout "end_time:$t"
+     puts stdout "end_time:$t1"
      puts stdout "boot_time:$r"
      send "\r"
      send "\r"
