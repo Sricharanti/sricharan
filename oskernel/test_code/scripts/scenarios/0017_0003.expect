@@ -1,0 +1,38 @@
+#!/usr/bin/expect 
+set timeout 25
+spawn cu -l $env($CONSOLE_PORT) -s 115200 --parity=none --nostop
+expect "Connected."
+
+send "\r"
+sleep 1
+send "\r/system/xbin/su\r"
+send "reboot\r"
+sleep 4
+expect {
+	"EXT4-fs\[ 0-9a-zA-Z():]*mounted filesystem with ordered data mode." {
+	expect {
+		"init: " {
+		puts stdout "========================="
+		set t [clock clicks -millisecond]
+		puts stdout "====Start:$t====="
+		sleep 2
+		expect {
+			"mtp_open" {
+			set t1 [clock clicks -millisecond]
+			puts stdout "Start:$t \r End:$t1"
+			set r1 [expr $t1 - $t]
+			puts stdout "fs_time:$r1"
+			puts stdout "Ui is up"
+						
+				
+				    }
+			}
+			 }
+		}
+				    }
+	}
+     send "\r"
+     sleep 3
+     send "~."
+     expect eof
+
