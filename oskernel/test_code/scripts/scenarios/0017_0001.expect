@@ -1,0 +1,30 @@
+#!/usr/bin/expect
+set timeout 10
+spawn cu -l $env(CONSOLE_PORT) -s 115200 --parity=none --nostop
+expect "Connected."
+
+send "\r"
+sleep 1
+set t [clock clicks -millisecond]
+puts start:$t
+send "\r/system/xbin/su\r"
+send "reboot\r"
+expect "Hit \[ 0-9a-zA-Z]*:"
+send "\r"
+expect "OMAP\[ 0-9a-zA-Z]*#"
+     send "\r"
+     sleep 1
+     set t1 [clock clicks -millisecond]
+     set r [expr $t1 - $t]
+     puts stdout "end_time:$t"
+     puts stdout "boot_time:$r"
+     send "\r"
+     send "\r"
+     sleep 1
+     send "boot\r"
+     send "\r"
+     expect "booting kernel"
+     sleep 10
+     send "~."
+     expect eof
+
