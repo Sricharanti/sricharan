@@ -9,6 +9,10 @@
 
 01 set -x; handlerSmartReflex.sh enable all
 
-02 set -x; handlerCpuFreqScalGovernors.sh run "hotplug" "dmesg | grep CPU1; handlerSysFs.sh "set" $SYSFS_CPU1_ONLINE 1; dmesg | grep CPU1"
+02 set -x; handlerCpuFreqScalGovernors.sh get
+
+03 set -x; handlerCpuFreqScalGovernors.sh run "ondemand" "dmesg | grep CPU1; handlerSysFs.sh "set" $SYSFS_CPU1_ONLINE 1; dmesg | grep CPU1"
+
+04 set -x; handlerCpuFreqScalGovernors.sh restore
 
 # End L_DD_OSKERNEL_1005_0001
