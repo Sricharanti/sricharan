@@ -1,0 +1,14 @@
+###########################################################
+# Scenario : L_DD_OSKERNEL_1005_0001
+# Author: Mariia Nagul
+# Date: 7 Feb 2012
+# Testing: SMP & Hotplug governor
+##########################################################
+
+# Begin L_DD_OSKERNEL_1005_0001
+
+01 set -x; handlerSmartReflex.sh enable all
+
+02 set -x; handlerCpuFreqScalGovernors.sh run "hotplug" "dmesg | grep CPU1; handlerSysFs.sh "set" $SYSFS_CPU1_ONLINE 1; dmesg | grep CPU1"
+
+# End L_DD_OSKERNEL_1005_0001
