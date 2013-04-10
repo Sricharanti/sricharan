@@ -42,6 +42,17 @@ export USBHOST_DEVFS_ENTRY=/dev/sda
 export USBHOST_DEVFS_PARTITION=/dev/sda1
 export USBHOST_MOUNTPOINT_PATH=/mnt/mass_storage
 export USBHOST_HID_NODE=/dev/event2
+export USBHOST_TEST_FOLDER=/storage/usb0
+
+# Utils General Variables
+export UTILS_DIR=$USBHOST_ROOT/../../utils/
+export UTILS_DIR_BIN=$UTILS_DIR/bin
+export UTILS_DIR_HANDLERS=$UTILS_DIR/handlers
+export UTILS_DIR_SCRIPTS=$UTILS_DIR/scripts
+
+. $UTILS_DIR/configuration/general.configuration
+
+export PATH="$PATH:$UTILS_DIR_BIN:$UTILS_DIR_HANDLERS:$UTILS_DIR_SCRIPTS"
 
 # USB Keypad devfs node
 export USB_KEYBOARD_ITERATIONS=50
