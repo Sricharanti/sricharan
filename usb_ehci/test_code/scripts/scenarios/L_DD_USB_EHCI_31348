@@ -8,6 +8,7 @@
 
 # Begin L_DD_USB_EHCI_31348
 
+00  set -x; mount /dev/block/sda1 /storage/usb0
 01  set -x; $UTILS_DIR_HANDLERS/handlerProcessParallelism.sh "clean"
 02  set -x; $UTILS_DIR_HANDLERS/handlerProcessParallelism.sh "add" "dd if=/dev/urandom of=$USBHOST_TEST_FOLDER/tmp.01 bs=1M count=10"
 03  set -x; $UTILS_DIR_HANDLERS/handlerProcessParallelism.sh "add" "dd if=/dev/urandom of=$USBHOST_TEST_FOLDER/tmp.02 bs=1M count=10"
@@ -22,5 +23,6 @@
 12  set -x; $UTILS_DIR_HANDLERS/handlerProcessParallelism.sh "execute"
 
 13  set -x; rm $USBHOST_TEST_FOLDER/tmp.*
+14  set -x; umount /storage/usb0
 
 # End L_DD_USB_EHCI_31348
