@@ -129,8 +129,6 @@ obj-$(CONFIG_ARCH_OMAP3)		+= voltagedomains3xxx_data.o
 obj-$(CONFIG_ARCH_OMAP4)		+= $(voltagedomain-common)
 obj-$(CONFIG_ARCH_OMAP4)		+= voltagedomains44xx_data.o
 obj-$(CONFIG_SOC_AM33XX)		+= $(voltagedomain-common)
-obj-$(CONFIG_SOC_AM33XX)                += voltagedomains33xx_data.o
-obj-$(CONFIG_SOC_AM43XX)		+= $(voltagedomain-common)
 obj-$(CONFIG_SOC_OMAP5)			+= $(voltagedomain-common)
 obj-$(CONFIG_SOC_OMAP5)                += voltagedomains54xx_data.o
 
@@ -213,9 +211,6 @@ obj-$(CONFIG_SOC_OMAP5)			+= omap_hwmod_54xx_data.o
 # EMU peripherals
 obj-$(CONFIG_OMAP3_EMU)			+= emu.o
 obj-$(CONFIG_HW_PERF_EVENTS)		+= pmu.o
-
-obj-$(CONFIG_OMAP_MBOX_FWK)		+= mailbox_mach.o
-mailbox_mach-objs			:= mailbox.o
 
 iommu-$(CONFIG_OMAP_IOMMU)		:= omap-iommu.o
 obj-y					+= $(iommu-m) $(iommu-y)
