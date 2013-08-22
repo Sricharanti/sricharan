@@ -24,14 +24,12 @@
 #define ELM_LOCATION_STATUS_ECC_CORRECTABLE_MASK	(0x100)
 #define ELM_LOCATION_STATUS_ECC_NB_ERRORS_MASK		(0x1F)
 
+/* bch types */
+#define ECC_BCH4	0
+#define ECC_BCH8	1
+#define ECC_BCH16	2
+
 #ifndef __ASSEMBLY__
-
-enum bch_level {
-	BCH_4_BIT = 0,
-	BCH_8_BIT,
-	BCH_16_BIT
-};
-
 
 /* BCH syndrome registers */
 struct syndrome {
@@ -68,9 +66,9 @@ struct elm {
 	struct location  error_location[8];	/* 0x800 */
 };
 
-int elm_check_error(u8 *syndrome, u32 nibbles, u32 *error_count,
+int elm_check_error(u8 *syndrome, u32 bch_type, u32 *error_count,
 		u32 *error_locations);
-int elm_config(enum bch_level level);
+int elm_config(u32 bch_type);
 void elm_reset(void);
 void elm_init(void);
 #endif /* __ASSEMBLY__ */
