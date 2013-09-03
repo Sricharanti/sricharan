@@ -221,6 +221,45 @@ Platform specific options
 		8-bit BCH code with
 		- ecc calculation using GPMC hardware engine,
 		- error detection using ELM hardware engine.
+	OMAP_ECC_BCH16_CODE_HW
+		16-bit BCH code with
+		- ecc calculation using GPMC hardware engine,
+		- error detection using ELM hardware engine.
+
+	How to select correct ECC scheme for your device ?
+	--------------------------------------------------
+	Higher ECC scheme usually means better protection against bit-flips and
+	increased system lifetime. However, selection of ECC scheme is dependent
+	on various factors like;
+	(1) hardware engines present in SoC.
+		Some legacy OMAP SoC do not have ELM h/w engine thus such
+		SoC cannot support BCHx_HW ECC schemes. But they can support
+		ECC schemes with error detection using s/w library
+		(BCHx_HW_DETECTION_SW) with slight CPU performance panalty.
+	(2) device parameters like OOBSIZE
+		higher ECC schemes require more OOB/Spare area to store ECC.
+		So choice of ECC scheme is limited by NAND oobsize.
+		In general following expression help determine whether given
+		NAND device can accomodate ECC syndrome or not:
+		NAND_OOBSIZE >= 2 + (NAND_PAGESIZE / 512) * ECC_BYTES
+		where
+		NAND_OOBSIZE	number of bytes in OOB/spare area of NAND page
+		NAND_PAGESIZE	number of bytes in main-area of NAND page
+		ECC_BYTES	number of ECC bytes generated to protect
+				512 bytes of data, which is:
+					'3' for HAM1_xx ecc schemes
+					'7' for BCH4_xx ecc schemes
+					'14' for BCH8_xx ecc schemes
+					'26' for BCH16_xx ecc schemes
+		Example: when using BCH16 ECC scheme.
+		- ECC_BYTES = 26  for BCH16_xx ecc schemes (as per above table)
+		- if device has NAND_PAGESIZE = 2048 and NAND_OOBSIZE = 64, then
+		  (2 + (2048 / 512) * 26) = 106 > NAND_OOBSIZE, holds false.
+		  Thus BCH16 cannot be supported on 2K page NAND.
+		- if NAND_PAGESIZE = 4096 and NAND_OOBSIZE = 224, then
+		  (2 + (4096 / 512) * 26) = 210 < NAND_OOBSIZE, holds true.
+		  Thus BCH16 can be supported on 4K page NAND.
+
 
 NOTE:
 =====
