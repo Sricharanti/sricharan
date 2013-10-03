@@ -80,6 +80,27 @@ static struct module_pin_mux qspi_pin_mux[] = {
 	{-1},
 };
 
+#ifdef CONFIG_NAND
+static struct module_pin_mux nand_x8_pin_mux[] = {
+	{OFFSET(gpmc_ad0),	(MODE(0) | RXACTIVE)},	/* NAND AD0 */
+	{OFFSET(gpmc_ad1),	(MODE(0) | RXACTIVE)},	/* NAND AD1 */
+	{OFFSET(gpmc_ad2),	(MODE(0) | RXACTIVE)},	/* NAND AD2 */
+	{OFFSET(gpmc_ad3),	(MODE(0) | RXACTIVE)},	/* NAND AD3 */
+	{OFFSET(gpmc_ad4),	(MODE(0) | RXACTIVE)},	/* NAND AD4 */
+	{OFFSET(gpmc_ad5),	(MODE(0) | RXACTIVE)},	/* NAND AD5 */
+	{OFFSET(gpmc_ad6),	(MODE(0) | RXACTIVE)},	/* NAND AD6 */
+	{OFFSET(gpmc_ad7),	(MODE(0) | RXACTIVE)},	/* NAND AD7 */
+	{OFFSET(gpmc_wait0),	(MODE(0) | RXACTIVE | PULLUP_EN)}, /*NAND WAIT*/
+	{OFFSET(gpmc_wpn),	(MODE(7) | PULLUP_EN)},	/*NAND_WPN need pullup*/
+	{OFFSET(gpmc_csn0),	(MODE(0) | PULLUDDIS)},	/* NAND_CS0 */
+	{OFFSET(gpmc_wen),	(MODE(0) | PULLUDDIS)},	/* NAND_WEN */
+	{OFFSET(gpmc_oen_ren),	(MODE(0) | PULLUDDIS)},	/* NAND_OE */
+	{OFFSET(gpmc_advn_ale),	(MODE(0) | PULLUDDIS)},	/* NAND_ADV_ALE */
+	{OFFSET(gpmc_be0n_cle),	(MODE(0) | PULLUDDIS)},	/* NAND_BE_CLE */
+	{-1},
+};
+#endif
+
 void enable_uart0_pin_mux(void)
 {
 	configure_module_pin_mux(uart0_pin_mux);
@@ -96,6 +117,9 @@ void enable_board_pin_mux(void)
 		configure_module_pin_mux(rmii1_pin_mux);
 	else
 		configure_module_pin_mux(rgmii1_pin_mux);
+#if defined(CONFIG_NAND)
+	configure_module_pin_mux(nand_x8_pin_mux);
+#endif
 }
 
 void enable_i2c0_pin_mux(void)

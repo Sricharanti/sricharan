@@ -175,7 +175,8 @@
 
 #define CONFIG_BOOTCOMMAND \
 	"run findfdt; " \
-	"run mmcboot;"
+	"run mmcboot;" \
+	"run nandboot;"
 
 #endif
 
@@ -203,5 +204,105 @@
 #define CONFIG_SPL_ETH_SUPPORT
 #define CONFIG_SPL_NET_SUPPORT
 #define CONFIG_SYS_RX_ETH_BUFFER	64
+
+/* NAND support */
+#ifdef CONFIG_NAND
+/* NAND: device related configs */
+#define CONFIG_SYS_NAND_PAGE_SIZE		4096
+#define CONFIG_SYS_NAND_OOBSIZE			224
+#define CONFIG_SYS_NAND_BLOCK_SIZE		(256 * 1024)
+#define CONFIG_SYS_NAND_5_ADDR_CYCLE
+#define CONFIG_SYS_NAND_PAGE_COUNT		(CONFIG_SYS_NAND_BLOCK_SIZE / \
+						 CONFIG_SYS_NAND_PAGE_SIZE)
+/* NAND: driver related configs */
+#define CONFIG_NAND_OMAP_GPMC
+#define CONFIG_NAND_OMAP_ELM
+#define CONFIG_CMD_NAND
+#define CONFIG_SYS_NAND_BASE			0x8000000
+#define CONFIG_SYS_MAX_NAND_DEVICE		1
+#define CONFIG_SYS_NAND_ONFI_DETECTION
+#define CONFIG_SYS_NAND_BAD_BLOCK_POS		NAND_LARGE_BADBLOCK_POS
+#define CONFIG_SYS_NAND_ECCPOS	{ 2, 3, 4, 5, 6, 7, 8, 9, \
+				10, 11, 12, 13, 14, 15, 16, 17, 18, 19, \
+				20, 21, 22, 23, 24, 25, 26, 27, 28, 29, \
+				30, 31, 32, 33, 34, 35, 36, 37, 38, 39, \
+				40, 41, 42, 43, 44, 45, 46, 47, 48, 49, \
+				50, 51, 52, 53, 54, 55, 56, 57, 58, 59, \
+				60, 61, 62, 63, 64, 65, 66, 67, 68, 69, \
+				70, 71, 72, 73, 74, 75, 76, 77, 78, 79, \
+				80, 81, 82, 83, 84, 85, 86, 87, 88, 89, \
+				90, 91, 92, 93, 94, 95, 96, 97, 98, 99, \
+			100, 101, 102, 103, 104, 105, 106, 107, 108, 109, \
+			110, 111, 112, 113, 114, 115, 116, 117, 118, 119, \
+			120, 121, 122, 123, 124, 125, 126, 127, 128, 129, \
+			130, 131, 132, 133, 134, 135, 136, 137, 138, 139, \
+			140, 141, 142, 143, 144, 145, 146, 147, 148, 149, \
+			150, 151, 152, 153, 154, 155, 156, 157, 158, 159, \
+			160, 161, 162, 163, 164, 165, 166, 167, 168, 169, \
+			170, 171, 172, 173, 174, 175, 176, 177, 178, 179, \
+			180, 181, 182, 183, 184, 185, 186, 187, 188, 189, \
+			190, 191, 192, 193, 194, 195, 196, 197, 198, 199, \
+			200, 201, 202, 203, 204, 205, 206, 207, 208, 209, \
+			}
+#define CONFIG_SYS_NAND_ECCSIZE			512
+#define CONFIG_SYS_NAND_ECCBYTES		26
+#define CONFIG_NAND_OMAP_ECCSCHEME		OMAP_ECC_BCH16_CODE_HW
+#if !defined(CONFIG_SPI_BOOT) && !defined(CONFIG_NOR_BOOT) && \
+	!defined(CONFIG_EMMC_BOOT)
+  #define MTDIDS_DEFAULT			"nand0=nand.0"
+  #define MTDPARTS_DEFAULT			"mtdparts=nand.0:256k(SPL)," \
+						"256k(SPL.backup1)," \
+						"256k(SPL.backup2)," \
+						"256k(SPL.backup3)," \
+						"1m(u-boot)," \
+						"1m(u-boot.backup1)," \
+						"256k(u-boot-spl-os)," \
+						"256k(u-boot-spl-os.backup1)," \
+						"256k(u-boot-env)," \
+						"256k(u-boot-env.backup1)," \
+						"5m(kernel)," \
+						"-(rootfs)"
+  #undef CONFIG_ENV_IS_NOWHERE
+  #define CONFIG_ENV_IS_IN_NAND
+  #define CONFIG_ENV_OFFSET			0x380000
+  #define CONFIG_ENV_OFFSET_REDUND		0x3C0000
+  #define CONFIG_SYS_ENV_SECT_SIZE		(256 * 1024)
+#endif
+/* NAND: SPL related configs */
+#if !defined(CONFIG_SPI_BOOT) && !defined(CONFIG_NOR_BOOT) && \
+	!defined(CONFIG_EMMC_BOOT)
+  #define CONFIG_SPL_NAND_AM33XX_BCH
+  #define CONFIG_SPL_NAND_SUPPORT
+  #define CONFIG_SPL_NAND_BASE
+  #define CONFIG_SPL_NAND_DRIVERS
+  #define CONFIG_SPL_NAND_ECC
+  #define CONFIG_SYS_NAND_U_BOOT_START		CONFIG_SYS_TEXT_BASE
+  #define CONFIG_SYS_NAND_U_BOOT_OFFS		0x100000
+/* NAND: SPL falcon mode related configs */
+  #ifdef CONFIG_SPL_OS_BOOT
+    #define CONFIG_CMD_SPL_NAND_OFS		0x300000 /* os-boot parameters*/
+    #define CONFIG_SYS_NAND_SPL_KERNEL_OFFS	0x400000 /* kernel offset */
+    #define CONFIG_CMD_SPL_WRITE_SIZE		0x2000
+  #endif
+#endif
+/* NAND: u-boot configs */
+#define NANDARGS \
+	"mtdids=" MTDIDS_DEFAULT "\0" \
+	"mtdparts=" MTDPARTS_DEFAULT "\0" \
+	"nandargs=setenv bootargs console=${console} " \
+		"${optargs} " \
+		"root=${nandroot} " \
+		"rootfstype=${nandrootfstype}\0" \
+	"dfu_alt_info_nand=" DFU_ALT_INFO_NAND "\0" \
+	"nandroot=ubi0:rootfs rw ubi.mtd=11,4096\0" \
+	"nandrootfstype=ubifs rootwait=1\0" \
+	"nandboot=echo Booting from nand ...; " \
+		"run nandargs; " \
+		"nand read ${fdtaddr} u-boot-spl-os; " \
+		"nand read ${loadaddr} kernel; " \
+		"bootz ${loadaddr} - ${fdtaddr}\0"
+#else
+#define NANDARGS ""
+#endif /* !CONFIG_NAND */
 
 #endif	/* __CONFIG_AM43XX_EVM_H */

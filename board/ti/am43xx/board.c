@@ -292,6 +292,7 @@ void sdram_init(void)
 int board_init(void)
 {
 	gd->bd->bi_boot_params = CONFIG_SYS_SDRAM_BASE + 0x100;
+	gpmc_init();
 
 	return 0;
 }
