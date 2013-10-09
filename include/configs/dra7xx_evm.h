@@ -13,14 +13,18 @@
 #define __CONFIG_DRA7XX_EVM_H
 
 #define CONFIG_DRA7XX
+#define CONFIG_ENV_IS_NOWHERE
 
 /* MMC ENV related defines */
+#if defined(CONFIG_EMMC_BOOT)
+#undef CONFIG_ENV_IS_NOWHERE
 #define CONFIG_ENV_IS_IN_MMC
 #define CONFIG_SYS_MMC_ENV_DEV		1	/* SLOT2: eMMC(1) */
 #define CONFIG_ENV_OFFSET		0xE0000
 #define CONFIG_ENV_OFFSET_REDUND	(CONFIG_ENV_OFFSET + CONFIG_ENV_SIZE)
 #define CONFIG_SYS_REDUNDAND_ENVIRONMENT
 #define CONFIG_CMD_SAVEENV
+#endif
 
 #define CONSOLEDEV			"ttyO0"
 #define CONFIG_CONS_INDEX		1
@@ -89,5 +93,92 @@
 #define CONFIG_SYS_SCSI_MAX_LUN		1
 #define CONFIG_SYS_SCSI_MAX_DEVICE	(CONFIG_SYS_SCSI_MAX_SCSI_ID * \
 						CONFIG_SYS_SCSI_MAX_LUN)
+
+/* NAND support */
+#ifdef CONFIG_NAND
+/* NAND: device related configs */
+#define CONFIG_SYS_NAND_5_ADDR_CYCLE
+#define CONFIG_SYS_NAND_PAGE_COUNT		(CONFIG_SYS_NAND_BLOCK_SIZE / \
+						 CONFIG_SYS_NAND_PAGE_SIZE)
+#define CONFIG_SYS_NAND_PAGE_SIZE		2048
+#define CONFIG_SYS_NAND_OOBSIZE			64
+#define CONFIG_SYS_NAND_BLOCK_SIZE		(128*1024)
+/* NAND: driver related configs */
+#define CONFIG_NAND_OMAP_GPMC
+#define CONFIG_NAND_OMAP_ELM
+#define CONFIG_CMD_NAND
+#define CONFIG_SYS_NAND_BASE			0x8000000
+#define CONFIG_SYS_MAX_NAND_DEVICE		1
+#define CONFIG_SYS_NAND_ONFI_DETECTION
+#define CONFIG_SYS_NAND_BAD_BLOCK_POS		NAND_LARGE_BADBLOCK_POS
+#define CONFIG_SYS_NAND_ECCPOS		      { 2, 3, 4, 5, 6, 7, 8, 9, \
+					       10, 11, 12, 13, 14, 15, 16, 17, \
+					       18, 19, 20, 21, 22, 23, 24, 25, \
+					       26, 27, 28, 29, 30, 31, 32, 33, \
+					       34, 35, 36, 37, 38, 39, 40, 41, \
+					       42, 43, 44, 45, 46, 47, 48, 49, \
+					       50, 51, 52, 53, 54, 55, 56, 57, }
+#define CONFIG_SYS_NAND_ECCSIZE			512
+#define CONFIG_SYS_NAND_ECCBYTES		14
+#define CONFIG_NAND_OMAP_ECCSCHEME		OMAP_ECC_BCH8_CODE_HW
+#if !defined(CONFIG_SPI_BOOT) && !defined(CONFIG_NOR_BOOT) && \
+	!defined(CONFIG_EMMC_BOOT)
+  #define MTDIDS_DEFAULT			"nand0=nand.0"
+  #define MTDPARTS_DEFAULT			"mtdparts=nand.0:128k(SPL)," \
+						"128k(SPL.backup1)," \
+						"128k(SPL.backup2)," \
+						"640k(SPL.backup3)," \
+						"1m(u-boot)," \
+						"1m(u-boot.backup1)," \
+						"256k(u-boot-spl-os)," \
+						"256k(u-boot-spl-os.backup1)," \
+						"256k(u-boot-env)," \
+						"256k(u-boot-env.backup1)," \
+						"5m(kernel)," \
+						"-(rootfs)"
+  #undef CONFIG_ENV_IS_NOWHERE
+  #define CONFIG_ENV_IS_IN_NAND
+  #define CONFIG_ENV_OFFSET			0x380000
+  #define CONFIG_ENV_OFFSET_REDUND		0x3C0000
+  #define CONFIG_SYS_ENV_SECT_SIZE		256 * 1024 /* 256 KiB */
+#endif
+/* NAND: SPL related configs */
+#if !defined(CONFIG_SPI_BOOT) && !defined(CONFIG_NOR_BOOT) && \
+	!defined(CONFIG_EMMC_BOOT)
+  #define CONFIG_SPL_NAND_AM33XX_BCH
+  #define CONFIG_SPL_NAND_SUPPORT
+  #define CONFIG_SPL_NAND_BASE
+  #define CONFIG_SPL_NAND_DRIVERS
+  #define CONFIG_SPL_NAND_ECC
+  #define CONFIG_SYS_NAND_U_BOOT_START		CONFIG_SYS_TEXT_BASE
+  #define CONFIG_SYS_NAND_U_BOOT_OFFS		0x100000
+ /* NAND: SPL falcon mode related configs */
+  #ifdef CONFIG_SPL_OS_BOOT
+    #define CONFIG_CMD_SPL_NAND_OFS		0x300000 /* os-boot parameters*/
+    #define CONFIG_SYS_NAND_SPL_KERNEL_OFFS	0x400000 /* kernel offset */
+    #define CONFIG_CMD_SPL_WRITE_SIZE		0x2000
+  #endif
+#endif
+/* NAND: u-boot configs */
+#define NANDARGS \
+	"mtdids=" MTDIDS_DEFAULT "\0" \
+	"mtdparts=" MTDPARTS_DEFAULT "\0" \
+	"nandargs=setenv bootargs console=${console} " \
+		"${optargs} " \
+		"root=${nandroot} " \
+		"rootfstype=${nandrootfstype}\0" \
+	"dfu_alt_info_nand=" DFU_ALT_INFO_NAND "\0" \
+	"nandroot=ubi0:rootfs rw ubi.mtd=11,2048\0" \
+	"nandrootfstype=ubifs rootwait=1\0" \
+	"nandsrcaddr=0x400000\0" \
+		"nandboot=echo Booting from nand ...; " \
+		"run nandargs; " \
+		"nand read ${loadaddr} ${nandsrcaddr} ${nandimgsize}; " \
+		"bootm ${loadaddr}\0" \
+	"nandimgsize=0x500000\0"
+
+#else
+#define NANDARGS ""
+#endif /* !CONFIG_NAND */
 
 #endif /* __CONFIG_DRA7XX_EVM_H */
