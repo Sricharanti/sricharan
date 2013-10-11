@@ -358,7 +358,11 @@ else
 PLATFORM_LIBGCC = -L $(USE_PRIVATE_LIBGCC) -lgcc
 endif
 else
+ifneq ("$(ARCH_PLATFORM_LIBGCC)","")
+PLATFORM_LIBGCC := -L $(shell dirname $(ARCH_PLATFORM_LIBGCC)) -lgcc
+else
 PLATFORM_LIBGCC := -L $(shell dirname `$(CC) $(CFLAGS) -print-libgcc-file-name`) -lgcc
+endif
 endif
 PLATFORM_LIBS += $(PLATFORM_LIBGCC)
 export PLATFORM_LIBS

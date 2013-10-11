@@ -19,6 +19,17 @@ LDFLAGS_FINAL += --gc-sections
 PLATFORM_RELFLAGS += -ffunction-sections -fdata-sections \
 		     -fno-common -ffixed-r9 -msoft-float
 
+#
+# When we use a hardfp toolchain if there are both 'libgcc.a' (hardfp) and
+# 'arm-linux-gnueabi/libgcc.a' (softfp) we need to use the latter.  We
+# cannot always build with a hardfp-only toolchain.
+#
+ARCH_PLATFORM_LIBGCC := $(shell \
+	X=`$(CC) -print-file-name=arm-linux-gnueabi/libgcc.a`; \
+	if [ -f $$X ]; then echo $$X ; \
+	else $(CC) -print-file-name=libgcc.a ; \
+	fi)
+
 # Support generic board on ARM
 __HAVE_ARCH_GENERIC_BOARD := y
 
