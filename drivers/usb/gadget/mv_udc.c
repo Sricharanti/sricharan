@@ -107,6 +107,7 @@ static struct mv_drv controller = {
 	.gadget	= {
 		.name	= "mv_udc",
 		.ops	= &mv_udc_ops,
+		.is_dualspeed = 1,
 	},
 };
 
@@ -244,6 +245,9 @@ static int mv_ep_enable(struct usb_ep *ep,
 
 static int mv_ep_disable(struct usb_ep *ep)
 {
+	struct mv_ep *mv_ep = container_of(ep, struct mv_ep, ep);
+
+	mv_ep->desc = NULL;
 	return 0;
 }
 
@@ -334,20 +338,19 @@ static int mv_ep_queue(struct usb_ep *ep,
 	item->info = INFO_BYTES(len) | INFO_IOC | INFO_ACTIVE;
 	item->page0 = (uint32_t)mv_ep->b_buf;
 	item->page1 = ((uint32_t)mv_ep->b_buf & 0xfffff000) + 0x1000;
+	mv_flush_qtd(num);
 
 	head->next = (unsigned) item;
 	head->info = 0;
 
 	DBG("ept%d %s queue len %x, buffer %p\n",
 	    num, in ? "in" : "out", len, mv_ep->b_buf);
+	mv_flush_qh(num);
 
 	if (in)
 		bit = EPT_TX(num);
 	else
 		bit = EPT_RX(num);
-
-	mv_flush_qh(num);
-	mv_flush_qtd(num);
 
 	writel(bit, &udc->epprime);
 
@@ -366,8 +369,8 @@ static void handle_ep_complete(struct mv_ep *ep)
 	mv_invalidate_qtd(num);
 
 	if (item->info & 0xff)
-		printf("EP%d/%s FAIL nfo=%x pg0=%x\n",
-			num, in ? "in" : "out", item->info, item->page0);
+		printf("EP%d/%s FAIL info=%x pg0=%x\n",
+		       num, in ? "in" : "out", item->info, item->page0);
 
 	len = (item->info >> 16) & 0x7fff;
 
@@ -626,6 +629,7 @@ static int mvudc_probe(void)
 		free(controller.epts);
 		return -ENOMEM;
 	}
+	memset(controller.items_mem, 0, ilist_sz);
 
 	for (i = 0; i < 2 * NUM_ENDPOINTS; i++) {
 		/*
