@@ -40,7 +40,7 @@
 #define CONFIG_VERSION_VARIABLE
 
 /* set to negative value for no autoboot */
-#define CONFIG_BOOTDELAY		1
+#define CONFIG_BOOTDELAY		3
 #define CONFIG_ENV_VARS_UBOOT_CONFIG
 #define CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG
 

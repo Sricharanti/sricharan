@@ -42,7 +42,7 @@
 /*
  * Default to a quick boot delay.
  */
-#define CONFIG_BOOTDELAY		1
+#define CONFIG_BOOTDELAY		3
 
 /*
  * DDR information.  We say (for simplicity) that we have 1 bank,
