@@ -16,7 +16,9 @@
 	__raw_writel(value, (CTRL_BASE + offset));
 
 /* PAD Control Fields */
-#define SLEWCTRL	(0x1 << 19)
+#define DSPULLUDEN	(0x1 << 27) /* DS0 mode Pull-Up/Down enable */
+#define DSPULLUDDIS	(0x0 << 27) /* DS0 mode Pull-Up/Down Disable */
+#define SLEWCTRL	(0x1 << 19) /* Slow slew rate selection */
 #define RXACTIVE	(0x1 << 18)
 #define PULLDOWN_EN	(0x0 << 17) /* Pull Down Selection */
 #define PULLUP_EN	(0x1 << 17) /* Pull Up Selection */
