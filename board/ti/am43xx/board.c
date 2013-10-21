@@ -74,16 +74,29 @@ const struct dpll_params epos_evm_dpll_core = {
 const struct dpll_params epos_evm_dpll_per = {
 		960, 24, 5, -1, -1, -1, -1};
 
+const struct dpll_params gp_evm_dpll_ddr = {
+		400, 23, 1, -1, 1, -1, -1};
+const struct dpll_params gp_evm_dpll_mpu = {
+		600, 23, 1, -1, -1, -1, -1};
+const struct dpll_params gp_evm_dpll_core = {
+		1000, 23, -1, -1, 10, 8, 4};
+const struct dpll_params gp_evm_dpll_per = {
+		960, 23, 5, -1, -1, -1, -1};
+
 const struct dpll_params *get_dpll_ddr_params(void)
 {
 	if (board_is_eposevm())
 		return &epos_evm_dpll_ddr;
+	else
+		return &gp_evm_dpll_ddr;
 }
 
 const struct dpll_params *get_dpll_mpu_params(void)
 {
 	if (board_is_eposevm())
 		return &epos_evm_dpll_mpu;
+	else
+		return &gp_evm_dpll_mpu;
 }
 
 const struct dpll_params *get_dpll_core_params(void)
@@ -97,12 +110,16 @@ const struct dpll_params *get_dpll_core_params(void)
 
 	if (board_is_eposevm())
 		return &epos_evm_dpll_core;
+	else
+		return &gp_evm_dpll_core;
 }
 
 const struct dpll_params *get_dpll_per_params(void)
 {
 	if (board_is_eposevm())
 		return &epos_evm_dpll_per;
+	else
+		return &gp_evm_dpll_per;
 }
 
 void set_uart_mux_conf(void)
