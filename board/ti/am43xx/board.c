@@ -65,12 +65,44 @@ static int read_eeprom(struct am43xx_board_id *header)
 
 #ifdef CONFIG_SPL_BUILD
 
-const struct dpll_params dpll_ddr = {
-		-1, -1, -1, -1, -1, -1, -1};
+const struct dpll_params epos_evm_dpll_ddr = {
+		266, 24, 1, -1, 1, -1, -1};
+const struct dpll_params epos_evm_dpll_mpu = {
+		600, 24, 1, -1, -1, -1, -1};
+const struct dpll_params epos_evm_dpll_core = {
+		1000, 24, -1, -1, 10, 8, 4};
+const struct dpll_params epos_evm_dpll_per = {
+		960, 24, 5, -1, -1, -1, -1};
 
 const struct dpll_params *get_dpll_ddr_params(void)
 {
-	return &dpll_ddr;
+	if (board_is_eposevm())
+		return &epos_evm_dpll_ddr;
+}
+
+const struct dpll_params *get_dpll_mpu_params(void)
+{
+	if (board_is_eposevm())
+		return &epos_evm_dpll_mpu;
+}
+
+const struct dpll_params *get_dpll_core_params(void)
+{
+	struct am43xx_board_id header;
+
+	enable_i2c0_pin_mux();
+	i2c_init(CONFIG_SYS_I2C_SPEED, CONFIG_SYS_I2C_SLAVE);
+	if (read_eeprom(&header) < 0)
+		puts("Could not get board ID.\n");
+
+	if (board_is_eposevm())
+		return &epos_evm_dpll_core;
+}
+
+const struct dpll_params *get_dpll_per_params(void)
+{
+	if (board_is_eposevm())
+		return &epos_evm_dpll_per;
 }
 
 void set_uart_mux_conf(void)
