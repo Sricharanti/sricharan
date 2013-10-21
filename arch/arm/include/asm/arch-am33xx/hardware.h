@@ -38,7 +38,6 @@
 #define DM_TIMER7_BASE			0x4804A000
 
 /* GPIO Base address */
-#define GPIO0_BASE			0x48032000
 #define GPIO1_BASE			0x4804C000
 
 /* BCH Error Location Module */
@@ -47,13 +46,6 @@
 /* EMIF Base address */
 #define EMIF4_0_CFG_BASE		0x4C000000
 #define EMIF4_1_CFG_BASE		0x4D000000
-
-/* PLL related registers */
-#define CM_DPLL				0x44E00500
-#define CM_DEVICE			0x44E00700
-#define CM_RTC				0x44E00800
-#define CM_CEFUSE			0x44E00A00
-#define PRM_DEVICE			0x44E00F00
 
 /* DDR Base address */
 #define DDR_CTRL_ADDR			0x44E10E04
