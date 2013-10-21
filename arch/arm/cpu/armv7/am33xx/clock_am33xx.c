@@ -159,3 +159,19 @@ void enable_basic_clocks(void)
 	/* Select the Master osc 24 MHZ as Timer2 clock source */
 	writel(0x1, &cmdpll->clktimer2clk);
 }
+
+void rtc32k_enable(void)
+{
+	struct rtc_regs *rtc = (struct rtc_regs *)RTC_BASE;
+
+	/*
+	 * Unlock the RTC's registers.  For more details please see the
+	 * RTC_SS section of the TRM.  In order to unlock we need to
+	 * write these specific values (keys) in this order.
+	 */
+	writel(0x83e70b13, &rtc->kick0r);
+	writel(0x95a4f1e0, &rtc->kick1r);
+
+	/* Enable the RTC 32K OSC by setting bits 3 and 6. */
+	writel((1 << 3) | (1 << 6), &rtc->osc);
+}

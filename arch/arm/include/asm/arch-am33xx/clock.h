@@ -108,6 +108,7 @@ const struct dpll_params *get_dpll_ddr_params(void);
 void do_setup_dpll(const struct dpll_regs *, const struct dpll_params *);
 void prcm_init(void);
 void enable_basic_clocks(void);
+void rtc32k_enable(void);
 void do_enable_clocks(u32 *const *, u32 *const *, u8);
 
 #endif
