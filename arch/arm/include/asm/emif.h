@@ -690,6 +690,18 @@ struct emif_reg_struct {
 	u32 emif_ddr_ext_phy_ctrl_23_shdw;
 	u32 emif_ddr_ext_phy_ctrl_24;
 	u32 emif_ddr_ext_phy_ctrl_24_shdw;
+	u32 emif_ddr_ext_phy_ctrl_25;
+	u32 emif_ddr_ext_phy_ctrl_25_shdw;
+	u32 emif_ddr_ext_phy_ctrl_26;
+	u32 emif_ddr_ext_phy_ctrl_26_shdw;
+	u32 emif_ddr_ext_phy_ctrl_27;
+	u32 emif_ddr_ext_phy_ctrl_27_shdw;
+	u32 emif_ddr_ext_phy_ctrl_28;
+	u32 emif_ddr_ext_phy_ctrl_28_shdw;
+	u32 emif_ddr_ext_phy_ctrl_29;
+	u32 emif_ddr_ext_phy_ctrl_29_shdw;
+	u32 emif_ddr_ext_phy_ctrl_30;
+	u32 emif_ddr_ext_phy_ctrl_30_shdw;
 };
 
 struct dmm_lisa_map_regs {
