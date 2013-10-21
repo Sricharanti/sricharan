@@ -120,7 +120,7 @@ static void configure_mr(u32 base, u32 cs)
 
 void do_sdram_init(const struct ctrl_ioregs *ioregs,
 		   const struct emif_regs *regs,
-		   const u32 *ext_phy_ctrl_const_regs)
+		   const u32 *ext_phy_ctrl_const_regs, u32 sdram_type)
 {
 	struct emif_reg_struct *emif = (struct emif_reg_struct *)EMIF1_BASE;
 
@@ -178,6 +178,8 @@ void do_sdram_init(const struct ctrl_ioregs *ioregs,
 	writel(regs->sdram_config, &emif->emif_sdram_config);
 	writel(regs->ref_ctrl, &emif->emif_sdram_ref_ctrl);
 
-	configure_mr(EMIF1_BASE, 0);
-	configure_mr(EMIF1_BASE, 1);
+	if (sdram_type == EMIF_SDRAM_TYPE_LPDDR2) {
+		configure_mr(EMIF1_BASE, 0);
+		configure_mr(EMIF1_BASE, 1);
+	}
 }

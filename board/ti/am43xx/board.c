@@ -140,6 +140,57 @@ const u32 ext_phy_ctrl_const_base_lpddr2[EMIF_EXT_PHY_CTRL_CONST_REG] = {
 	0x08102040
 };
 
+const struct ctrl_ioregs ioregs_ddr3 = {
+	.cm0ioctl		= DDR3_ADDRCTRL_IOCTRL_VALUE,
+	.cm1ioctl		= DDR3_ADDRCTRL_WD0_IOCTRL_VALUE,
+	.cm2ioctl		= DDR3_ADDRCTRL_WD1_IOCTRL_VALUE,
+	.dt0ioctl		= DDR3_DATA0_IOCTRL_VALUE,
+	.dt1ioctl		= DDR3_DATA0_IOCTRL_VALUE,
+	.dt2ioctrl		= DDR3_DATA0_IOCTRL_VALUE,
+	.dt3ioctrl		= DDR3_DATA0_IOCTRL_VALUE,
+	.emif_sdram_config_ext	= 0x0043,
+};
+
+const struct emif_regs ddr3_emif_regs_400Mhz = {
+	.sdram_config			= 0x638413B2,
+	.ref_ctrl			= 0x00000C30,
+	.sdram_tim1			= 0xEAAAD4DB,
+	.sdram_tim2			= 0x266B7FDA,
+	.sdram_tim3			= 0x107F8678,
+	.read_idle_ctrl			= 0x00050000,
+	.zq_config			= 0x50074BE4,
+	.temp_alert_config		= 0x0,
+	.emif_ddr_phy_ctlr_1		= 0x0E084007,
+	.emif_ddr_ext_phy_ctrl_1	= 0x08020080,
+	.emif_ddr_ext_phy_ctrl_2	= 0x00400040,
+	.emif_ddr_ext_phy_ctrl_3	= 0x00400040,
+	.emif_ddr_ext_phy_ctrl_4	= 0x00400040,
+	.emif_ddr_ext_phy_ctrl_5	= 0x00400040
+};
+
+const u32 ext_phy_ctrl_const_base_ddr3[EMIF_EXT_PHY_CTRL_CONST_REG] = {
+	0x00400040,
+	0x00350035,
+	0x00350035,
+	0x00350035,
+	0x00350035,
+	0x00350035,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00000000,
+	0x00340034,
+	0x00340034,
+	0x00340034,
+	0x00340034,
+	0x00340034,
+	0x0,
+	0x0,
+	0x40000000,
+	0x08102040
+};
+
 const struct dpll_params *get_dpll_ddr_params(void)
 {
 	if (board_is_eposevm())
@@ -189,10 +240,44 @@ void set_mux_conf_regs(void)
 	enable_board_pin_mux();
 }
 
+static void enable_vtt_regulator(void)
+{
+	u32 temp;
+
+	/*GPIO_VTTEN - GPIO0_21 PINMUX Setup*/
+	writel(0x20009, CTRL_BASE + 0x0A60);
+
+	writel(0x40002, PRCM_BASE + 0x2B68);
+
+	/* Poll if module is functional */
+	while ((readl(PRCM_BASE + 0x2B68) & 0x30000) != 0x0)
+		;
+
+	while ((readl(PRCM_BASE + 0x2B00) & 0x100) != 0x100)
+		;
+
+	/* enable module */
+	writel(0x0, GPIO0_BASE + 0x0130);
+
+	/*enable output for GPIO0_21*/
+	writel((1 << 22), GPIO0_BASE + 0x0194);
+	temp = readl(GPIO0_BASE + 0x0134);
+	temp = temp & ~(1 << 22);
+	writel(temp, GPIO0_BASE + 0x0134);
+}
+
 void sdram_init(void)
 {
-	do_sdram_init(&ioregs_lpddr2, &emif_regs_lpddr2,
-		      ext_phy_ctrl_const_base_lpddr2);
+	if (board_is_eposevm()) {
+		do_sdram_init(&ioregs_lpddr2, &emif_regs_lpddr2,
+			      ext_phy_ctrl_const_base_lpddr2,
+			      EMIF_SDRAM_TYPE_LPDDR2);
+	} else {
+		enable_vtt_regulator();
+		do_sdram_init(&ioregs_ddr3, &ddr3_emif_regs_400Mhz,
+			      ext_phy_ctrl_const_base_ddr3,
+			      EMIF_SDRAM_TYPE_DDR3);
+	}
 }
 #endif
 

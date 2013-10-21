@@ -134,6 +134,14 @@
 #define  LPDDR2_DATA2_IOCTRL_VALUE   0x20000294
 #define  LPDDR2_DATA3_IOCTRL_VALUE   0x20000294
 
+#define  DDR3_ADDRCTRL_WD0_IOCTRL_VALUE 0x00000000
+#define  DDR3_ADDRCTRL_WD1_IOCTRL_VALUE 0x00000000
+#define  DDR3_ADDRCTRL_IOCTRL_VALUE   0x84
+#define  DDR3_DATA0_IOCTRL_VALUE   0x84
+#define  DDR3_DATA1_IOCTRL_VALUE   0x84
+#define  DDR3_DATA2_IOCTRL_VALUE   0x84
+#define  DDR3_DATA3_IOCTRL_VALUE   0x84
+
 /**
  * Configure DMM
  */
@@ -333,5 +341,5 @@ void config_ddr(unsigned int pll, unsigned int ioctrl,
 
 void do_sdram_init(const struct ctrl_ioregs *ioregs,
 		   const struct emif_regs *emif_regs,
-		   const u32 *ext_phy_ctrl_const_regs);
+		   const u32 *ext_phy_ctrl_const_regs, u32 ddr_type);
 #endif  /* _DDR_DEFS_H */
