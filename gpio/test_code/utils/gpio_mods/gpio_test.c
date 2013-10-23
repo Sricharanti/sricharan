@@ -14,8 +14,7 @@
  #include <mach/control.h>
  #include <mach/irqs.h>
 #elif LINUX_VERSION_CODE >= KERNEL_VERSION(2,6,32)
- #include <plat/hardware.h>
- #include <plat/irqs.h>
+#include </home/a0393807/kernel/linux_feature_tree/linux-omap/arch/arm/mach-omap2/soc.h>
 #else
  #include <asm/arch/hardware.h>
  #include <asm/arch/control.h>
@@ -191,7 +190,7 @@ static void gpio_test7(void)
 		bank_base_addr[3] = ioremap_nocache(0x48059000, SZ_4K);
 		bank_base_addr[4] = ioremap_nocache(0x4805B000, SZ_4K);
 		bank_base_addr[5] = ioremap_nocache(0x4805D000, SZ_4K);
-	} else if (cpu_is_omap54xx()) {
+	} else if (soc_is_omap54xx() || soc_is_dra7xx()) {
 		bank_base_addr[0] = ioremap_nocache(0x4ae10000, SZ_4K);
 		bank_base_addr[1] = ioremap_nocache(0x48055000, SZ_4K);
 		bank_base_addr[2] = ioremap_nocache(0x48057000, SZ_4K);
@@ -207,7 +206,7 @@ static void gpio_test7(void)
 		return;
 	}
 
-	if (cpu_is_omap54xx())
+	if (soc_is_omap54xx() || soc_is_dra7xx())
 		bank_count = 8;
 	else
 		bank_count = 6;
@@ -232,7 +231,7 @@ static void gpio_test7(void)
 		if (cpu_is_omap34xx()) {
 			mod_status = __raw_readl(bank_base_addr[i] + 0xc)
 						& 0x1;
-		} else if (cpu_is_omap44xx() || cpu_is_omap54xx()) {
+		} else if (cpu_is_omap44xx() || soc_is_omap54xx() || soc_is_dra7xx()) {
 			if (bank_status)
 				mod_status =
 				__raw_readl(bank_base_addr[i] + 0x130) & 0x1;
@@ -425,7 +424,7 @@ static int gpio_read_proc(char *buf, char **start, off_t offset,
  */
 void create_gpio_proc(char *proc_name)
 {
-	create_proc_read_entry(proc_name, 0, NULL, gpio_read_proc, NULL);
+	proc_create_data(proc_name, 0, NULL, gpio_read_proc, NULL);
 }
 
 /*
