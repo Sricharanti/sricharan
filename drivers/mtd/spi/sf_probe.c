@@ -68,6 +68,7 @@ static const struct spi_flash_params spi_flash_params_table[] = {
 	{"MX25L25635F",	   0xc22019, 0x0,	64 * 1024,   512,	             0},
 	{"MX25L51235F",	   0xc2201A, 0x0,	64 * 1024,  1024,	             0},
 	{"MX25L12855E",	   0xc22618, 0x0,	64 * 1024,   256,	             0},
+	{"MX66L51235F",    0xc2201a, 0x0,	64 * 1024,  1024,                    0},
 #endif
 #ifdef CONFIG_SPI_FLASH_SPANSION	/* SPANSION */
 	{"S25FL008A",	   0x010213, 0x0,	64 * 1024,    16,	             0},
@@ -207,6 +208,7 @@ static struct spi_flash *spi_flash_validate_params(struct spi_slave *spi,
 	flash->page_size = (ext_jedec == 0x4d00) ? 512 : 256;
 	flash->sector_size = params->sector_size;
 	flash->size = flash->sector_size * params->nr_sectors;
+	flash->memory_map = spi->memory_map;
 
 	/* Compute erase sector and command */
 	if (params->flags & SECT_4K) {
