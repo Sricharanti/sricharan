@@ -285,6 +285,9 @@ int spi_xfer(struct spi_slave *slave, unsigned int bitlen, const void *dout,
 		qslave->cmd |= QSPI_3_PIN;
 	qslave->cmd |= 0xfff;
 
+#ifdef CONFIG_AM43XX
+	udelay(100);
+#endif
 	while (words--) {
 		if (txp) {
 			debug("tx cmd %08x dc %08x data %02x\n",
