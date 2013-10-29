@@ -512,34 +512,6 @@ int board_late_init(void)
 	strncpy(safe_string, (char *)header.name, sizeof(header.name));
 	safe_string[sizeof(header.name)] = 0;
 	setenv("board_name", safe_string);
-	if (board_is_gp_evm(&header)) {
-		unsigned short profile = detect_daughter_board_profile();
-		switch (profile) {
-		case PROFILE_1:
-			setenv("profile_number", "1");
-			break;
-		case PROFILE_2:
-			setenv("profile_number", "2");
-			break;
-		case PROFILE_3:
-			setenv("profile_number", "3");
-			break;
-		case PROFILE_4:
-			setenv("profile_number", "4");
-			break;
-		case PROFILE_5:
-			setenv("profile_number", "5");
-			break;
-		case PROFILE_6:
-			setenv("profile_number", "6");
-			break;
-		case PROFILE_7:
-			setenv("profile_number", "7");
-			break;
-		default:
-			setenv("profile_number", "0");
-		}
-	}
 
 	strncpy(safe_string, (char *)header.version, sizeof(header.version));
 	safe_string[sizeof(header.version)] = 0;

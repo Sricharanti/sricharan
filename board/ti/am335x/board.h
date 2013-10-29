@@ -61,40 +61,6 @@ static inline int board_is_evm_15_or_later(struct am335x_baseboard_id *header)
 }
 
 /*
- * The AM335x GP EVM, if daughter card(s) are connected, can have 8
- * different profiles.  These profiles determine what peripherals are
- * valid and need pinmux to be configured.
- */
-#define PROFILE_NONE	0x0
-#define PROFILE_0	(1 << 0)
-#define PROFILE_1	(1 << 1)
-#define PROFILE_2	(1 << 2)
-#define PROFILE_3	(1 << 3)
-#define PROFILE_4	(1 << 4)
-#define PROFILE_5	(1 << 5)
-#define PROFILE_6	(1 << 6)
-#define PROFILE_7	(1 << 7)
-#define PROFILE_MASK	0x7
-#define PROFILE_ALL	0xFF
-
-/* CPLD registers */
-#define I2C_CPLD_ADDR	0x35
-#define CFG_REG		0x10
-
-static inline unsigned short detect_daughter_board_profile(void)
-{
-	unsigned short val;
-
-	if (i2c_probe(I2C_CPLD_ADDR))
-		return PROFILE_NONE;
-
-	if (i2c_read(I2C_CPLD_ADDR, CFG_REG, 1, (unsigned char *)(&val), 2))
-		return PROFILE_NONE;
-
-	return (1 << (val & PROFILE_MASK));
-}
-
-/*
  * We have three pin mux functions that must exist.  We must be able to enable
  * uart0, for initial output and i2c0 to read the main EEPROM.  We then have a
  * main pinmux function that can be overridden to enable all other pinmux that

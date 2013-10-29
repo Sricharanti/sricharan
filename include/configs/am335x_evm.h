@@ -158,10 +158,7 @@
 		"if test $board_name = A335BNLT; then " \
 			"setenv fdtfile am335x-boneblack.dtb; fi; " \
 		"if test $board_name = A33515BB; then " \
-			"setenv fdtfile am335x-evm.dtb; " \
-			"if test $profile_number != 0; then " \
-				"setenv fdtfile am335x-evm-profile${profile_number}.dtb; " \
-			"fi; fi; "\
+			"setenv fdtfile am335x-evm.dtb; fi; " \
 		"if test $board_name = A335X_SK; then " \
 			"setenv fdtfile am335x-evmsk.dtb; fi; " \
 		"if test $fdtfile = undefined; then " \
