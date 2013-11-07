@@ -581,7 +581,6 @@
 	(0xFF << EMIF_SYS_ADDR_SHIFT))
 
 #define EMIF_EXT_PHY_CTRL_TIMING_REG	0x5
-#define EMIF_EXT_PHY_CTRL_CONST_REG	0x14
 
 /* Reg mapping structure */
 struct emif_reg_struct {
@@ -702,6 +701,9 @@ struct emif_reg_struct {
 	u32 emif_ddr_ext_phy_ctrl_29_shdw;
 	u32 emif_ddr_ext_phy_ctrl_30;
 	u32 emif_ddr_ext_phy_ctrl_30_shdw;
+	u32 padding[10];
+	u32 emif_ddr_fifo_misaligned_clear_1;
+	u32 emif_ddr_fifo_misaligned_clear_2;
 };
 
 struct dmm_lisa_map_regs {
