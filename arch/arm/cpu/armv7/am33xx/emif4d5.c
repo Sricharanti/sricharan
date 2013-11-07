@@ -67,6 +67,8 @@ static void ext_phy_settings(const struct emif_regs *regs,
 		writel(*ext_phy_ctrl_base++, emif_ext_phy_ctrl_base++);
 	}
 
+	/* TODO: Reconcile with OMAP5/DRA7xx changes */
+#define EMIF_EXT_PHY_CTRL_CONST_REG	0x14
 	for (i = 0; i < EMIF_EXT_PHY_CTRL_CONST_REG; i++) {
 		writel(ext_phy_ctrl_const_regs[i],
 		       emif_ext_phy_ctrl_base++);

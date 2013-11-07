@@ -123,6 +123,9 @@ const struct emif_regs emif_regs_lpddr2 = {
 	.emif_ddr_ext_phy_ctrl_5	= 0x00500050
 };
 
+/* TODO: Reconcile with OMAP5/DRA7xx changes */
+#define EMIF_EXT_PHY_CTRL_CONST_REG	0x14
+
 const u32 ext_phy_ctrl_const_base_lpddr2[EMIF_EXT_PHY_CTRL_CONST_REG] = {
 	0x00500050,
 	0x00350035,
