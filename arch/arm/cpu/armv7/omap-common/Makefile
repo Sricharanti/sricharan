@@ -21,6 +21,10 @@ COBJS	+= vc.o
 COBJS	+= abb.o
 endif
 
+ifneq ($(CONFIG_OMAP54XX),)
+COBJS	+= pipe3-phy.o
+endif
+
 ifeq ($(CONFIG_OMAP34XX),)
 COBJS	+= boot-common.o
 SOBJS	+= lowlevel_init.o
