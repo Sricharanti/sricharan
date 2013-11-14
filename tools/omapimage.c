@@ -23,6 +23,12 @@
 #define OMAP_GP_HDR_SIZE (sizeof(struct gp_header))
 #define OMAP_FILE_HDR_SIZE (OMAP_CH_HDR_SIZE+OMAP_GP_HDR_SIZE)
 
+static const struct ch_qspi ch_qspi_48mhz_quad = {
+				0x13, 0x6B, 0x03, 0x02, 0x1, 0xFF,
+				{0x05, 0x35, 0x00, 0x00},
+				0x11, 0x01, 0x06, 0x01
+};
+
 static const struct ch_settings ch_settings_dummy = {0, {0, 0, 0, 0, 0} };
 
 static int do_swap32 = 0;
@@ -50,9 +56,9 @@ static int omapimage_check_image_types(uint8_t type)
 
 /*
  * Only the simplest image type is currently supported:
- * TOC pointing to CHSETTINGS
+ * TOC pointing to CHSETTINGS|CHQSPI
  * TOC terminator
- * CHSETTINGS
+ * CHSETTINGS|CHQSPI
  *
  * padding to OMAP_CH_HDR_SIZE bytes
  *
@@ -116,6 +122,8 @@ static void omapimage_print_section(struct ch_entry *entry)
 
 	if (entry->hdr.section_key == KEY_CHSETTINGS)
 		section_name = "CHSETTINGS";
+	else if (entry->hdr.section_key == KEY_CHQSPI)
+		section_name = "CHQSPI";
 	else
 		section_name = "UNKNOWNKEY";
 
@@ -199,12 +207,20 @@ static void omapimage_set_header(void *ptr, struct stat *sbuf, int ifd,
 	uint32_t ch_data_size;
 
 	toc->section_offset = toc_offset(ptr, entry);
-	strcpy((char *)toc->section_name, "CHSETTINGS");
-	entry->hdr.section_key = KEY_CHSETTINGS;
-	entry->hdr.valid = 0;
 
-	ch_src = (void *)&ch_settings_dummy;
-	ch_data_size = sizeof(struct ch_settings);
+	if (strncmp(params->imagename, "ch_qspi", 7) == 0) {
+		strcpy((char *)toc->section_name, "CHQSPI");
+		entry->hdr.section_key = KEY_CHQSPI;
+		entry->hdr.valid = 1;
+		ch_src = (void *)&ch_qspi_48mhz_quad;
+		ch_data_size = sizeof(struct ch_qspi);
+	} else {
+		strcpy((char *)toc->section_name, "CHSETTINGS");
+		entry->hdr.section_key = KEY_CHSETTINGS;
+		entry->hdr.valid = 0;
+		ch_src = (void *)&ch_settings_dummy;
+		ch_data_size = sizeof(struct ch_settings);
+	}
 	memcpy(&entry->ch_data[0], ch_src, ch_data_size);
 
 	entry->hdr.version = 1;

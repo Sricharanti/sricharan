@@ -25,6 +25,20 @@ struct ch_settings {
 	uint8_t reserved[5];
 };
 
+struct ch_qspi {
+	uint8_t clock;
+	uint8_t read_cmd;
+	uint8_t read_type;
+	uint8_t num_addr_bytes;
+	uint8_t num_dummy_bytes;
+	uint8_t qe_num_reg;
+	uint8_t qe_read_reg_cmd[4];
+	uint8_t qe_position;
+	uint8_t qe_enable;
+	uint8_t qe_write_enable_cmd;
+	uint8_t qe_write_reg_cmd;
+};
+
 struct ch_hdr {
 	uint32_t section_key;
 	uint8_t valid;
@@ -42,5 +56,6 @@ struct gp_header {
 	uint32_t load_addr;
 };
 
-#define KEY_CHSETTINGS 0xC0C0C0C1
+#define KEY_CHSETTINGS	0xC0C0C0C1
+#define KEY_CHQSPI	0xC0C0C0C6
 #endif /* _OMAPIMAGE_H_ */

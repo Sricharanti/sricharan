@@ -165,8 +165,13 @@ LDPPFLAGS += \
 	  sed -ne 's/GNU ld version \([0-9][0-9]*\)\.\([0-9][0-9]*\).*/-DLD_MAJOR=\1 -DLD_MINOR=\2/p')
 
 $(OBJTREE)/MLO:	$(obj)u-boot-spl.bin
+ifdef CONFIG_CH_QSPI
+	$(OBJTREE)/tools/mkimage -T omapimage -n ch_qspi\
+		-a $(CONFIG_SPL_TEXT_BASE) -d $< $@
+else
 	$(OBJTREE)/tools/mkimage -T omapimage \
 		-a $(CONFIG_SPL_TEXT_BASE) -d $< $@
+endif
 
 $(OBJTREE)/MLO.byteswap: $(obj)u-boot-spl.bin
 	$(OBJTREE)/tools/mkimage -T omapimage -n byteswap \
