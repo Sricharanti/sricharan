@@ -10,6 +10,9 @@
 #ifndef _OMAPIMAGE_H_
 #define _OMAPIMAGE_H_
 
+/* Maximum number of configuration elements for a CH */
+#define MAX_CH_DATA	204
+
 struct ch_toc {
 	uint32_t section_offset;
 	uint32_t section_size;
@@ -18,11 +21,20 @@ struct ch_toc {
 };
 
 struct ch_settings {
+	uint8_t flags;
+	uint8_t reserved[5];
+};
+
+struct ch_hdr {
 	uint32_t section_key;
 	uint8_t valid;
 	uint8_t version;
 	uint16_t reserved;
-	uint32_t flags;
+};
+
+struct ch_entry {
+	struct ch_hdr hdr;
+	uint8_t ch_data[MAX_CH_DATA];
 };
 
 struct gp_header {

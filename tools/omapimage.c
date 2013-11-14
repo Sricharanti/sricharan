@@ -23,6 +23,8 @@
 #define OMAP_GP_HDR_SIZE (sizeof(struct gp_header))
 #define OMAP_FILE_HDR_SIZE (OMAP_CH_HDR_SIZE+OMAP_GP_HDR_SIZE)
 
+static const struct ch_settings ch_settings_dummy = {0, {0, 0, 0, 0, 0} };
+
 static int do_swap32 = 0;
 
 static uint32_t omapimage_swap32(uint32_t data)
@@ -108,11 +110,11 @@ static int omapimage_verify_header(unsigned char *ptr, int image_size,
 	return 0;
 }
 
-static void omapimage_print_section(struct ch_settings *chs)
+static void omapimage_print_section(struct ch_entry *entry)
 {
 	const char *section_name;
 
-	if (chs->section_key)
+	if (entry->hdr.section_key == KEY_CHSETTINGS)
 		section_name = "CHSETTINGS";
 	else
 		section_name = "UNKNOWNKEY";
@@ -120,14 +122,13 @@ static void omapimage_print_section(struct ch_settings *chs)
 	printf("%s (%x) "
 		"valid:%x "
 		"version:%x "
-		"reserved:%x "
-		"flags:%x\n",
+		"reserved:%x\n",
 		section_name,
-		chs->section_key,
-		chs->valid,
-		chs->version,
-		chs->reserved,
-		chs->flags);
+		entry->hdr.section_key,
+		entry->hdr.valid,
+		entry->hdr.version,
+		entry->hdr.reserved);
+
 }
 
 static void omapimage_print_header(const void *ptr)
@@ -156,7 +157,7 @@ static void omapimage_print_header(const void *ptr)
 			toc->section_offset,
 			toc->section_size);
 
-		omapimage_print_section((struct ch_settings *)(ptr+offset));
+		omapimage_print_section((struct ch_entry *)(ptr+offset));
 		toc++;
 	}
 
@@ -191,19 +192,24 @@ static void omapimage_set_header(void *ptr, struct stat *sbuf, int ifd,
 				struct mkimage_params *params)
 {
 	struct ch_toc *toc = (struct ch_toc *)ptr;
-	struct ch_settings *chs = (struct ch_settings *)
+	struct ch_entry *entry = (struct ch_entry *)
 					(ptr + 2 * sizeof(*toc));
 	struct gp_header *gph = (struct gp_header *)(ptr + OMAP_CH_HDR_SIZE);
+	void *ch_src;
+	uint32_t ch_data_size;
 
-	toc->section_offset = toc_offset(ptr, chs);
-	toc->section_size = sizeof(struct ch_settings);
+	toc->section_offset = toc_offset(ptr, entry);
 	strcpy((char *)toc->section_name, "CHSETTINGS");
+	entry->hdr.section_key = KEY_CHSETTINGS;
+	entry->hdr.valid = 0;
 
-	chs->section_key = KEY_CHSETTINGS;
-	chs->valid = 0;
-	chs->version = 1;
-	chs->reserved = 0;
-	chs->flags = 0;
+	ch_src = (void *)&ch_settings_dummy;
+	ch_data_size = sizeof(struct ch_settings);
+	memcpy(&entry->ch_data[0], ch_src, ch_data_size);
+
+	entry->hdr.version = 1;
+	entry->hdr.reserved = 0;
+	toc->section_size = sizeof(struct ch_hdr) + ch_data_size;
 
 	toc++;
 	memset(toc, 0xff, sizeof(*toc));
