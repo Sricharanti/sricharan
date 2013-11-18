@@ -21,7 +21,6 @@ COBJS	+= sys_info.o
 COBJS	+= mem.o
 COBJS	+= board.o
 COBJS	+= mux.o
-COBJS-$(CONFIG_NAND_OMAP_GPMC)	+= elm.o
 
 ifeq ($(CONFIG_AM43XX),)
 COBJS	+= ddr.o
