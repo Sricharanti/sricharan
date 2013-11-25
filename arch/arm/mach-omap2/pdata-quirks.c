@@ -100,6 +100,20 @@ static void __init omap3_evm_legacy_init(void)
 	legacy_init_wl12xx(WL12XX_REFCLOCK_38, 0, 149);
 }
 
+/* Pass enable and backlight GPIO to DSS code */
+int __init ldp_twl_gpio_setup(struct device *dev, unsigned gpio, unsigned ngpio)
+{
+	omap3_ldp_display_init_of(gpio + 7, gpio + 15);
+	omap_ads7846_init(1, 54, 310, NULL);
+
+	return 0;
+}
+
+static void __init omap3_ldp_legacy_init(void)
+{
+	twl_gpio_auxdata.setup = ldp_twl_gpio_setup;
+}
+
 static void __init omap3_zoom_legacy_init(void)
 {
 	legacy_init_wl12xx(WL12XX_REFCLOCK_26, 0, 162);
@@ -191,6 +205,7 @@ static struct pdata_init pdata_quirks[] __initdata = {
 	{ "nokia,omap3-n950", hsmmc2_internal_input_clk, },
 	{ "isee,omap3-igep0020", omap3_igep0020_legacy_init, },
 	{ "ti,omap3-evm-37xx", omap3_evm_legacy_init, },
+	{ "ti,omap3-ldp", omap3_ldp_legacy_init, },
 	{ "ti,omap3-zoom3", omap3_zoom_legacy_init, },
 #endif
 #ifdef CONFIG_ARCH_OMAP4

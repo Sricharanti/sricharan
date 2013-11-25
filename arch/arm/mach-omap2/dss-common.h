@@ -9,5 +9,6 @@
 void __init omap4_panda_display_init_of(void);
 void __init omap_4430sdp_display_init_of(void);
 void __init omap3_igep2_display_init_of(void);
+void omap3_ldp_display_init_of(int gpio_bl, int gpio_en);
 
 #endif

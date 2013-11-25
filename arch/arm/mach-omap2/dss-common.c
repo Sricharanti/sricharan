@@ -257,3 +257,70 @@ void __init omap3_igep2_display_init_of(void)
 	platform_device_register(&omap3_igep2_tfp410_device);
 	platform_device_register(&omap3_igep2_dvi_connector_device);
 }
+
+/* Systems with DPI LCD */
+
+static struct panel_dpi_platform_data dpi_lcd = {
+	.name                   = "lcd",
+	.source                 = "dpi.0",
+	.enable_gpio		= -1,
+	.backlight_gpio		= -1,
+};
+
+static struct platform_device dpi_lcd_device = {
+	.name                   = "panel-dpi",
+	.id                     = 0,
+	.dev.platform_data      = &dpi_lcd,
+};
+
+static struct omap_dss_board_info dpi_dss_data = {
+	.default_display_name = "lcd",
+};
+
+static void dpi_display_init(void)
+{
+	platform_device_register(&dpi_lcd_device);
+	omap_display_init(&dpi_dss_data);
+}
+
+/* DPI on omap3 LDP */
+
+static const struct display_timing ldp_lcd_videomode = {
+	.pixelclock	= { 0, 5400000, 0 },
+
+	.hactive = { 0, 240, 0 },
+	.hfront_porch = { 0, 3, 0 },
+	.hback_porch = { 0, 39, 0 },
+	.hsync_len = { 0, 3, 0 },
+
+	.vactive = { 0, 320, 0 },
+	.vfront_porch = { 0, 2, 0 },
+	.vback_porch = { 0, 7, 0 },
+	.vsync_len = { 0, 1, 0 },
+
+	.flags = DISPLAY_FLAGS_HSYNC_LOW | DISPLAY_FLAGS_VSYNC_LOW |
+		DISPLAY_FLAGS_DE_HIGH | DISPLAY_FLAGS_PIXDATA_POSEDGE,
+};
+
+void __init omap3_ldp_display_init_of(int gpio_bl, int gpio_en)
+{
+	int r;
+
+	static struct gpio gpios[] = {
+		{ 55, GPIOF_OUT_INIT_HIGH, "LCD RESET" },
+		{ 56, GPIOF_OUT_INIT_HIGH, "LCD QVGA" },
+	};
+
+	r = gpio_request_array(gpios, ARRAY_SIZE(gpios));
+	if (r) {
+		pr_err("Cannot request LCD GPIOs, error %d\n", r);
+		return;
+	}
+
+	dpi_lcd.data_lines = 18;
+	dpi_lcd.display_timing = &ldp_lcd_videomode;
+	dpi_lcd.enable_gpio = gpio_en;
+	dpi_lcd.backlight_gpio = gpio_bl;
+
+	dpi_display_init();
+}
