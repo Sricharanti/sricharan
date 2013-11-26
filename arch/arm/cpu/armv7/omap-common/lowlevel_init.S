@@ -30,3 +30,16 @@ ENTRY(set_pl310_ctrl_reg)
 				@ call ROM Code API to set control register
 	POP	{r4-r11, pc}
 ENDPROC(set_pl310_ctrl_reg)
+
+ENTRY(get_l2_aux_ctrl_reg)
+	MRC     p15, 1, r0, c15, c0, 0
+ENDPROC(get_l2_aux_ctrl_reg)
+
+ENTRY(set_l2_aux_ctrl_reg)
+	PUSH	{r4-r11, lr}	@ save registers - ROM code may pollute
+				@ our registers
+	LDR	r12, =0x104	@ Set L2 Cache Aux ctrl register - value in R0
+	.word	0xe1600070	@ SMC #0 - hand assembled because -march=armv5
+				@ call ROM Code API to set control register
+	POP	{r4-r11, pc}
+ENDPROC(set_l2_aux_ctrl_reg)

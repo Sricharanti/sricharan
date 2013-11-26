@@ -381,3 +381,25 @@ void setup_warmreset_time(void)
 	rst_val |= rst_time;
 	writel(rst_val, (*prcm)->prm_rsttime);
 }
+
+void arm_errata_798870(void)
+{
+	u32 val;
+
+	val = cortex_rev();
+	val = (val >> 4);
+	val &= 0xf;
+	/*
+	* L2ACTLR[7]: Enable hazard detect timeout for A15.
+	*/
+	if (val == 0xf) {
+		val = get_l2_aux_ctrl_reg();
+		/*
+		* Set L2ACTLR[7] to reissue any memory transaction in the L2
+		* that has been stalled for 1024 cycles to verify that its
+		* hazard condition still exists.
+		*/
+		val |= (1 << 7);
+		set_l2_aux_ctrl_reg(val);
+	}
+}

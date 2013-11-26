@@ -129,6 +129,7 @@ void s_init(void)
 	 */
 #ifdef CONFIG_SPL_BUILD
 	save_omap_boot_params();
+	arm_errata_798870();
 #endif
 	init_omap_revision();
 	hw_data_init();
