@@ -160,7 +160,6 @@
 #include "prm44xx.h"
 #include "prm33xx.h"
 #include "prminst44xx.h"
-#include "mux.h"
 #include "pm.h"
 
 /* Name of the OMAP hwmod for the MPU */
@@ -204,9 +203,6 @@ static LIST_HEAD(omap_hwmod_list);
 
 /* mpu_oh: used to add/remove MPU initiator from sleepdep list */
 static struct omap_hwmod *mpu_oh;
-
-/* io_chain_lock: used to serialize reconfigurations of the I/O chain */
-static DEFINE_SPINLOCK(io_chain_lock);
 
 /*
  * linkspace: ptr to a buffer that struct omap_hwmod_link records are
@@ -536,51 +532,6 @@ static int _set_module_autoidle(struct omap_hwmod *oh, u8 autoidle,
 	*v |= autoidle << autoidle_shift;
 
 	return 0;
-}
-
-/**
- * _set_idle_ioring_wakeup - enable/disable IO pad wakeup on hwmod idle for mux
- * @oh: struct omap_hwmod *
- * @set_wake: bool value indicating to set (true) or clear (false) wakeup enable
- *
- * Set or clear the I/O pad wakeup flag in the mux entries for the
- * hwmod @oh.  This function changes the @oh->mux->pads_dynamic array
- * in memory.  If the hwmod is currently idled, and the new idle
- * values don't match the previous ones, this function will also
- * update the SCM PADCTRL registers.  Otherwise, if the hwmod is not
- * currently idled, this function won't touch the hardware: the new
- * mux settings are written to the SCM PADCTRL registers when the
- * hwmod is idled.  No return value.
- */
-static void _set_idle_ioring_wakeup(struct omap_hwmod *oh, bool set_wake)
-{
-	struct omap_device_pad *pad;
-	bool change = false;
-	u16 prev_idle;
-	int j;
-
-	if (!oh->mux || !oh->mux->enabled)
-		return;
-
-	for (j = 0; j < oh->mux->nr_pads_dynamic; j++) {
-		pad = oh->mux->pads_dynamic[j];
-
-		if (!(pad->flags & OMAP_DEVICE_PAD_WAKEUP))
-			continue;
-
-		prev_idle = pad->idle;
-
-		if (set_wake)
-			pad->idle |= OMAP_WAKEUP_EN;
-		else
-			pad->idle &= ~OMAP_WAKEUP_EN;
-
-		if (prev_idle != pad->idle)
-			change = true;
-	}
-
-	if (change && oh->_state == _HWMOD_STATE_IDLE)
-		omap_hwmod_mux(oh->mux, _HWMOD_STATE_IDLE);
 }
 
 /**
@@ -2006,32 +1957,6 @@ static int _reset(struct omap_hwmod *oh)
 }
 
 /**
- * _reconfigure_io_chain - clear any I/O chain wakeups and reconfigure chain
- *
- * Call the appropriate PRM function to clear any logged I/O chain
- * wakeups and to reconfigure the chain.  This apparently needs to be
- * done upon every mux change.  Since hwmods can be concurrently
- * enabled and idled, hold a spinlock around the I/O chain
- * reconfiguration sequence.  No return value.
- *
- * XXX When the PRM code is moved to drivers, this function can be removed,
- * as the PRM infrastructure should abstract this.
- */
-static void _reconfigure_io_chain(void)
-{
-	unsigned long flags;
-
-	spin_lock_irqsave(&io_chain_lock, flags);
-
-	if (cpu_is_omap34xx() && omap3_has_io_chain_ctrl())
-		omap3xxx_prm_reconfigure_io_chain();
-	else if (cpu_is_omap44xx())
-		omap44xx_prm_reconfigure_io_chain();
-
-	spin_unlock_irqrestore(&io_chain_lock, flags);
-}
-
-/**
  * _omap4_update_context_lost - increment hwmod context loss counter if
  * hwmod context was lost, and clear hardware context loss reg
  * @oh: hwmod to check for context loss
@@ -2101,18 +2026,9 @@ static int _enable(struct omap_hwmod *oh)
 
 	/*
 	 * hwmods with HWMOD_INIT_NO_IDLE flag set are left in enabled
-	 * state at init.  Now that someone is really trying to enable
-	 * them, just ensure that the hwmod mux is set.
+	 * state at init.
 	 */
 	if (oh->_int_flags & _HWMOD_SKIP_ENABLE) {
-		/*
-		 * If the caller has mux data populated, do the mux'ing
-		 * which wouldn't have been done as part of the _enable()
-		 * done during setup.
-		 */
-		if (oh->mux)
-			omap_hwmod_mux(oh->mux, _HWMOD_STATE_ENABLED);
-
 		oh->_int_flags &= ~_HWMOD_SKIP_ENABLE;
 		return 0;
 	}
@@ -2136,14 +2052,6 @@ static int _enable(struct omap_hwmod *oh)
 	 */
 	if (_are_all_hardreset_lines_asserted(oh))
 		return 0;
-
-	/* Mux pins for device runtime if populated */
-	if (oh->mux && (!oh->mux->enabled ||
-			((oh->_state == _HWMOD_STATE_IDLE) &&
-			 oh->mux->pads_dynamic))) {
-		omap_hwmod_mux(oh->mux, _HWMOD_STATE_ENABLED);
-		_reconfigure_io_chain();
-	}
 
 	_add_initiator_dep(oh, mpu_oh);
 
@@ -2245,12 +2153,6 @@ static int _idle(struct omap_hwmod *oh)
 	if (oh->clkdm)
 		clkdm_hwmod_disable(oh->clkdm, oh);
 
-	/* Mux pins for device idle if populated */
-	if (oh->mux && oh->mux->pads_dynamic) {
-		omap_hwmod_mux(oh->mux, _HWMOD_STATE_IDLE);
-		_reconfigure_io_chain();
-	}
-
 	oh->_state = _HWMOD_STATE_IDLE;
 
 	return 0;
@@ -2317,47 +2219,85 @@ static int _shutdown(struct omap_hwmod *oh)
 	for (i = 0; i < oh->rst_lines_cnt; i++)
 		_assert_hardreset(oh, oh->rst_lines[i].name);
 
-	/* Mux pins to safe mode or use populated off mode values */
-	if (oh->mux)
-		omap_hwmod_mux(oh->mux, _HWMOD_STATE_DISABLED);
-
 	oh->_state = _HWMOD_STATE_DISABLED;
 
 	return 0;
+}
+
+static int of_dev_find_hwmod(struct device_node *np,
+			     struct omap_hwmod *oh)
+{
+	int count, i, res;
+	const char *p;
+
+	count = of_property_count_strings(np, "ti,hwmods");
+	if (count < 1)
+		return -ENODEV;
+
+	for (i = 0; i < count; i++) {
+		res = of_property_read_string_index(np, "ti,hwmods",
+						    i, &p);
+		if (res)
+			continue;
+		if (!strcmp(p, oh->name)) {
+			pr_debug("omap_hwmod: dt %s[%i] uses hwmod %s\n",
+				 np->name, i, oh->name);
+			return i;
+		}
+	}
+
+	return -ENODEV;
 }
 
 /**
  * of_dev_hwmod_lookup - look up needed hwmod from dt blob
  * @np: struct device_node *
  * @oh: struct omap_hwmod *
+ * @index: index of the entry found
+ * @found: struct device_node * found or NULL
  *
  * Parse the dt blob and find out needed hwmod. Recursive function is
  * implemented to take care hierarchical dt blob parsing.
- * Return: The device node on success or NULL on failure.
+ * Return: Returns 0 on success, -ENODEV when not found.
  */
-static struct device_node *of_dev_hwmod_lookup(struct device_node *np,
-						struct omap_hwmod *oh)
+static int of_dev_hwmod_lookup(struct device_node *np,
+			       struct omap_hwmod *oh,
+			       int *index,
+			       struct device_node **found)
 {
-	struct device_node *np0 = NULL, *np1 = NULL;
-	const char *p;
+	struct device_node *np0 = NULL;
+	int res;
+
+	res = of_dev_find_hwmod(np, oh);
+	if (res >= 0) {
+		*found = np;
+		*index = res;
+		return 0;
+	}
 
 	for_each_child_of_node(np, np0) {
-		if (of_find_property(np0, "ti,hwmods", NULL)) {
-			p = of_get_property(np0, "ti,hwmods", NULL);
-			if (!strcmp(p, oh->name))
-				return np0;
-			np1 = of_dev_hwmod_lookup(np0, oh);
-			if (np1)
-				return np1;
+		struct device_node *fc;
+		int i;
+
+		res = of_dev_hwmod_lookup(np0, oh, &i, &fc);
+		if (res == 0) {
+			*found = fc;
+			*index = i;
+			return 0;
 		}
 	}
-	return NULL;
+
+	*found = NULL;
+	*index = 0;
+
+	return -ENODEV;
 }
 
 /**
  * _init_mpu_rt_base - populate the virtual address for a hwmod
  * @oh: struct omap_hwmod * to locate the virtual address
  * @data: (unused, caller should pass NULL)
+ * @index: index of the reg entry iospace in device tree
  * @np: struct device_node * of the IP block's device node in the DT data
  *
  * Cache the virtual address used by the MPU to access this IP block's
@@ -2368,7 +2308,7 @@ static struct device_node *of_dev_hwmod_lookup(struct device_node *np,
  * -ENXIO on absent or invalid register target address space.
  */
 static int __init _init_mpu_rt_base(struct omap_hwmod *oh, void *data,
-				    struct device_node *np)
+				    int index, struct device_node *np)
 {
 	struct omap_hwmod_addr_space *mem;
 	void __iomem *va_start = NULL;
@@ -2390,13 +2330,17 @@ static int __init _init_mpu_rt_base(struct omap_hwmod *oh, void *data,
 		if (!np)
 			return -ENXIO;
 
-		va_start = of_iomap(np, oh->mpu_rt_idx);
+		va_start = of_iomap(np, index + oh->mpu_rt_idx);
 	} else {
 		va_start = ioremap(mem->pa_start, mem->pa_end - mem->pa_start);
 	}
 
 	if (!va_start) {
-		pr_err("omap_hwmod: %s: Could not ioremap\n", oh->name);
+		if (mem)
+			pr_err("omap_hwmod: %s: Could not ioremap\n", oh->name);
+		else
+			pr_err("omap_hwmod: %s: Missing dt reg%i for %s\n",
+			       oh->name, index, np->full_name);
 		return -ENXIO;
 	}
 
@@ -2422,17 +2366,29 @@ static int __init _init_mpu_rt_base(struct omap_hwmod *oh, void *data,
  */
 static int __init _init(struct omap_hwmod *oh, void *data)
 {
-	int r;
+	int r, index;
 	struct device_node *np = NULL;
 
 	if (oh->_state != _HWMOD_STATE_REGISTERED)
 		return 0;
 
-	if (of_have_populated_dt())
-		np = of_dev_hwmod_lookup(of_find_node_by_name(NULL, "ocp"), oh);
+	if (of_have_populated_dt()) {
+		struct device_node *bus;
+
+		bus = of_find_node_by_name(NULL, "ocp");
+		if (!bus)
+			return -ENODEV;
+
+		r = of_dev_hwmod_lookup(bus, oh, &index, &np);
+		if (r)
+			pr_debug("omap_hwmod: %s missing dt data\n", oh->name);
+		else if (np && index)
+			pr_warn("omap_hwmod: %s using broken dt data from %s\n",
+				oh->name, np->name);
+	}
 
 	if (oh->class->sysc) {
-		r = _init_mpu_rt_base(oh, NULL, np);
+		r = _init_mpu_rt_base(oh, NULL, index, np);
 		if (r < 0) {
 			WARN(1, "omap_hwmod: %s: doesn't have mpu register target base\n",
 			     oh->name);
@@ -3806,7 +3762,6 @@ int omap_hwmod_enable_wakeup(struct omap_hwmod *oh)
 		_write_sysconfig(v, oh);
 	}
 
-	_set_idle_ioring_wakeup(oh, true);
 	spin_unlock_irqrestore(&oh->_lock, flags);
 
 	return 0;
@@ -3839,7 +3794,6 @@ int omap_hwmod_disable_wakeup(struct omap_hwmod *oh)
 		_write_sysconfig(v, oh);
 	}
 
-	_set_idle_ioring_wakeup(oh, false);
 	spin_unlock_irqrestore(&oh->_lock, flags);
 
 	return 0;
@@ -4057,60 +4011,6 @@ int omap_hwmod_no_setup_reset(struct omap_hwmod *oh)
 	}
 
 	oh->flags |= HWMOD_INIT_NO_RESET;
-
-	return 0;
-}
-
-/**
- * omap_hwmod_pad_route_irq - route an I/O pad wakeup to a particular MPU IRQ
- * @oh: struct omap_hwmod * containing hwmod mux entries
- * @pad_idx: array index in oh->mux of the hwmod mux entry to route wakeup
- * @irq_idx: the hwmod mpu_irqs array index of the IRQ to trigger on wakeup
- *
- * When an I/O pad wakeup arrives for the dynamic or wakeup hwmod mux
- * entry number @pad_idx for the hwmod @oh, trigger the interrupt
- * service routine for the hwmod's mpu_irqs array index @irq_idx.  If
- * this function is not called for a given pad_idx, then the ISR
- * associated with @oh's first MPU IRQ will be triggered when an I/O
- * pad wakeup occurs on that pad.  Note that @pad_idx is the index of
- * the _dynamic or wakeup_ entry: if there are other entries not
- * marked with OMAP_DEVICE_PAD_WAKEUP or OMAP_DEVICE_PAD_REMUX, these
- * entries are NOT COUNTED in the dynamic pad index.  This function
- * must be called separately for each pad that requires its interrupt
- * to be re-routed this way.  Returns -EINVAL if there is an argument
- * problem or if @oh does not have hwmod mux entries or MPU IRQs;
- * returns -ENOMEM if memory cannot be allocated; or 0 upon success.
- *
- * XXX This function interface is fragile.  Rather than using array
- * indexes, which are subject to unpredictable change, it should be
- * using hwmod IRQ names, and some other stable key for the hwmod mux
- * pad records.
- */
-int omap_hwmod_pad_route_irq(struct omap_hwmod *oh, int pad_idx, int irq_idx)
-{
-	int nr_irqs;
-
-	might_sleep();
-
-	if (!oh || !oh->mux || !oh->mpu_irqs || pad_idx < 0 ||
-	    pad_idx >= oh->mux->nr_pads_dynamic)
-		return -EINVAL;
-
-	/* Check the number of available mpu_irqs */
-	for (nr_irqs = 0; oh->mpu_irqs[nr_irqs].irq >= 0; nr_irqs++)
-		;
-
-	if (irq_idx >= nr_irqs)
-		return -EINVAL;
-
-	if (!oh->mux->irqs) {
-		/* XXX What frees this? */
-		oh->mux->irqs = kzalloc(sizeof(int) * oh->mux->nr_pads_dynamic,
-			GFP_KERNEL);
-		if (!oh->mux->irqs)
-			return -ENOMEM;
-	}
-	oh->mux->irqs[pad_idx] = irq_idx;
 
 	return 0;
 }

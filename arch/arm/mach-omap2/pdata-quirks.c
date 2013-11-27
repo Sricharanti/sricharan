@@ -26,6 +26,9 @@ struct pdata_init {
 	void (*fn)(void);
 };
 
+struct of_dev_auxdata omap_auxdata_lookup[];
+static struct twl4030_gpio_platform_data twl_gpio_auxdata;
+
 /*
  * Create alias for USB host PHY clock.
  * Remove this when clock phandle can be provided via DT
@@ -68,6 +71,15 @@ static inline void legacy_init_wl12xx(unsigned ref_clock,
 }
 #endif
 
+#ifdef CONFIG_MACH_NOKIA_N8X0
+static void __init omap2420_n8x0_legacy_init(void)
+{
+	omap_auxdata_lookup[0].platform_data = n8x0_legacy_init();
+}
+#else
+#define omap2420_n8x0_legacy_init	NULL
+#endif
+
 #ifdef CONFIG_ARCH_OMAP3
 static void __init hsmmc2_internal_input_clk(void)
 {
@@ -86,6 +98,20 @@ static void __init omap3_igep0020_legacy_init(void)
 static void __init omap3_evm_legacy_init(void)
 {
 	legacy_init_wl12xx(WL12XX_REFCLOCK_38, 0, 149);
+}
+
+/* Pass enable and backlight GPIO to DSS code */
+int __init ldp_twl_gpio_setup(struct device *dev, unsigned gpio, unsigned ngpio)
+{
+	omap3_ldp_display_init_of(gpio + 7, gpio + 15);
+	omap_ads7846_init(1, 54, 310, NULL);
+
+	return 0;
+}
+
+static void __init omap3_ldp_legacy_init(void)
+{
+	twl_gpio_auxdata.setup = ldp_twl_gpio_setup;
 }
 
 static void __init omap3_zoom_legacy_init(void)
@@ -125,7 +151,38 @@ void omap_pcs_legacy_init(int irq, void (*rearm)(void))
 	pcs_pdata.rearm = rearm;
 }
 
+/*
+ * GPIOs for TWL are initialized by the I2C bus and need custom
+ * handing until DSS has device tree bindings.
+ */
+void omap_auxdata_legacy_init(struct device *dev)
+{
+	if (dev->platform_data)
+		return;
+
+	if (strcmp("twl4030-gpio", dev_name(dev)))
+		return;
+
+	dev->platform_data = &twl_gpio_auxdata;
+}
+
+/*
+ * Few boards still need auxdata populated before we populate
+ * the dev entries in of_platform_populate().
+ */
+static struct pdata_init auxdata_quirks[] __initdata = {
+#ifdef CONFIG_SOC_OMAP2420
+	{ "nokia,n800", omap2420_n8x0_legacy_init, },
+	{ "nokia,n810", omap2420_n8x0_legacy_init, },
+	{ "nokia,n810-wimax", omap2420_n8x0_legacy_init, },
+#endif
+	{ /* sentinel */ },
+};
+
 struct of_dev_auxdata omap_auxdata_lookup[] __initdata = {
+#ifdef CONFIG_MACH_NOKIA_N8X0
+	OF_DEV_AUXDATA("ti,omap2420-mmc", 0x4809c000, "mmci-omap.0", NULL),
+#endif
 #ifdef CONFIG_ARCH_OMAP3
 	OF_DEV_AUXDATA("ti,omap3-padconf", 0x48002030, "48002030.pinmux", &pcs_pdata),
 	OF_DEV_AUXDATA("ti,omap3-padconf", 0x48002a00, "48002a00.pinmux", &pcs_pdata),
@@ -137,12 +194,18 @@ struct of_dev_auxdata omap_auxdata_lookup[] __initdata = {
 	{ /* sentinel */ },
 };
 
+/*
+ * Few boards still need to initialize some legacy devices with
+ * platform data until the drivers support device tree.
+ */
 static struct pdata_init pdata_quirks[] __initdata = {
 #ifdef CONFIG_ARCH_OMAP3
+	{ "nokia,omap3-n900", hsmmc2_internal_input_clk, },
 	{ "nokia,omap3-n9", hsmmc2_internal_input_clk, },
 	{ "nokia,omap3-n950", hsmmc2_internal_input_clk, },
 	{ "isee,omap3-igep0020", omap3_igep0020_legacy_init, },
 	{ "ti,omap3-evm-37xx", omap3_evm_legacy_init, },
+	{ "ti,omap3-ldp", omap3_ldp_legacy_init, },
 	{ "ti,omap3-zoom3", omap3_zoom_legacy_init, },
 #endif
 #ifdef CONFIG_ARCH_OMAP4
@@ -155,14 +218,8 @@ static struct pdata_init pdata_quirks[] __initdata = {
 	{ /* sentinel */ },
 };
 
-void __init pdata_quirks_init(struct of_device_id *omap_dt_match_table)
+static void pdata_quirks_check(struct pdata_init *quirks)
 {
-	struct pdata_init *quirks = pdata_quirks;
-
-	omap_sdrc_init(NULL, NULL);
-	of_platform_populate(NULL, omap_dt_match_table,
-			     omap_auxdata_lookup, NULL);
-
 	while (quirks->compatible) {
 		if (of_machine_is_compatible(quirks->compatible)) {
 			if (quirks->fn)
@@ -171,4 +228,13 @@ void __init pdata_quirks_init(struct of_device_id *omap_dt_match_table)
 		}
 		quirks++;
 	}
+}
+
+void __init pdata_quirks_init(struct of_device_id *omap_dt_match_table)
+{
+	omap_sdrc_init(NULL, NULL);
+	pdata_quirks_check(auxdata_quirks);
+	of_platform_populate(NULL, omap_dt_match_table,
+			     omap_auxdata_lookup, NULL);
+	pdata_quirks_check(pdata_quirks);
 }

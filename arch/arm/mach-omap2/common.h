@@ -69,15 +69,6 @@ static inline int omap4_pm_init(void)
 }
 #endif
 
-#ifdef CONFIG_OMAP_MUX
-int omap_mux_late_init(void);
-#else
-static inline int omap_mux_late_init(void)
-{
-	return 0;
-}
-#endif
-
 extern void omap2_init_common_infrastructure(void);
 
 extern void omap2_sync32k_timer_init(void);
@@ -293,13 +284,13 @@ static inline void omap4_cpu_resume(void)
 #endif
 
 void pdata_quirks_init(struct of_device_id *);
+void omap_auxdata_legacy_init(struct device *dev);
 void omap_pcs_legacy_init(int irq, void (*rearm)(void));
 
 struct omap_sdrc_params;
 extern void omap_sdrc_init(struct omap_sdrc_params *sdrc_cs0,
 				      struct omap_sdrc_params *sdrc_cs1);
 struct omap2_hsmmc_info;
-extern int omap4_twl6030_hsmmc_init(struct omap2_hsmmc_info *controllers);
 extern void omap_reserve(void);
 
 struct omap_hwmod;
