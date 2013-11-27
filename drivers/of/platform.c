@@ -141,7 +141,7 @@ struct platform_device *of_device_alloc(struct device_node *np,
 				  struct device *parent)
 {
 	struct platform_device *dev;
-	int rc, i, num_reg = 0, num_irq;
+	int num_reg = 0, num_irq;
 	struct resource *res, temp_res;
 
 	dev = platform_device_alloc("", -1);
@@ -154,7 +154,14 @@ struct platform_device *of_device_alloc(struct device_node *np,
 			num_reg++;
 	num_irq = of_irq_count(np);
 
-	/* Populate the resource table */
+	/*
+	 * Only allocate the resources for us to use later on. Note that bus
+	 * specific code may also add in additional legacy resources using
+	 * platform_device_add_resources(), and may even rely on us allocating
+	 * the basic resources here to do so. So we cannot allocate the
+	 * resources lazily until the legacy code has been fixed to not rely
+	 * on allocating resources here.
+	 */
 	if (num_irq || num_reg) {
 		res = kzalloc(sizeof(*res) * (num_irq + num_reg), GFP_KERNEL);
 		if (!res) {
@@ -164,11 +171,7 @@ struct platform_device *of_device_alloc(struct device_node *np,
 
 		dev->num_resources = num_reg + num_irq;
 		dev->resource = res;
-		for (i = 0; i < num_reg; i++, res++) {
-			rc = of_address_to_resource(np, i, res);
-			WARN_ON(rc);
-		}
-		WARN_ON(of_irq_to_resource_table(np, res, num_irq) != num_irq);
+		/* See of_device_resource_populate for populating the data */
 	}
 
 	dev->dev.of_node = of_node_get(np);
@@ -185,6 +188,50 @@ struct platform_device *of_device_alloc(struct device_node *np,
 	return dev;
 }
 EXPORT_SYMBOL(of_device_alloc);
+
+/**
+ * of_device_resource_populate - Populate device resources from device tree
+ * @dev: pointer to platform device
+ *
+ * The device interrupts are not necessarily available for all
+ * irqdomains initially so we need to populate them lazily at
+ * device probe time from of_platform_populate.
+ */
+static int of_device_resource_populate(struct platform_device *pdev)
+{
+	struct device_node *np = pdev->dev.of_node;
+	int rc, i, num_reg = 0, num_irq;
+	struct resource *res, temp_res;
+
+	res = pdev->resource;
+
+	/*
+	 * Count the io and irq resources again. Currently we cannot rely on
+	 * pdev->num_resources as bus specific code may have changed that
+	 * with platform_device_add_resources(). But the resources we allocated
+	 * earlier are still there and available for us to populate.
+	 */
+	if (of_can_translate_address(np))
+		while (of_address_to_resource(np, num_reg, &temp_res) == 0)
+			num_reg++;
+	num_irq = of_irq_count(np);
+
+	if (pdev->num_resources < num_reg + num_irq) {
+		dev_WARN(&pdev->dev, "not enough resources %i < %i\n",
+			 pdev->num_resources, num_reg + num_irq);
+		return -EINVAL;
+	}
+
+	for (i = 0; i < num_reg; i++, res++) {
+		rc = of_address_to_resource(np, i, res);
+		WARN_ON(rc);
+	}
+
+	if (num_irq)
+		WARN_ON(of_irq_to_resource_table(np, res, num_irq) != num_irq);
+
+	return 0;
+}
 
 /**
  * of_platform_device_create_pdata - Alloc, initialize and register an of_device
@@ -485,4 +532,35 @@ int of_platform_populate(struct device_node *root,
 	return rc;
 }
 EXPORT_SYMBOL_GPL(of_platform_populate);
+
+/**
+ * of_platform_probe() - OF specific initialization at probe time
+ * @pdev: pointer to a platform device
+ *
+ * This function is called by the driver core to perform devicetree-specific
+ * setup for a given platform device at probe time. If a device's resources
+ * as specified in the device tree are not available yet, this function can
+ * return -EPROBE_DEFER and cause the device to be probed again later, when
+ * other drivers that potentially provide the missing resources have been
+ * probed in turn.
+ *
+ * Note that because of the above, all code executed by this function must
+ * be prepared to be run multiple times on the same device (i.e. it must be
+ * idempotent).
+ *
+ * Returns 0 on success or a negative error code on failure.
+ */
+int of_platform_probe(struct platform_device *pdev)
+{
+	int ret;
+
+	if (!pdev->dev.of_node)
+		return 0;
+
+	ret = of_device_resource_populate(pdev);
+	if (ret < 0)
+		return ret;
+
+	return 0;
+}
 #endif /* CONFIG_OF_ADDRESS */
