@@ -169,12 +169,13 @@ const struct emif_regs ddr3_emif_regs_400Mhz = {
 	.read_idle_ctrl			= 0x00050000,
 	.zq_config			= 0x50074BE4,
 	.temp_alert_config		= 0x0,
-	.emif_ddr_phy_ctlr_1		= 0x0E084007,
+	.emif_ddr_phy_ctlr_1		= 0x0E004008,
 	.emif_ddr_ext_phy_ctrl_1	= 0x08020080,
 	.emif_ddr_ext_phy_ctrl_2	= 0x00400040,
 	.emif_ddr_ext_phy_ctrl_3	= 0x00400040,
 	.emif_ddr_ext_phy_ctrl_4	= 0x00400040,
-	.emif_ddr_ext_phy_ctrl_5	= 0x00400040
+	.emif_ddr_ext_phy_ctrl_5	= 0x00400040,
+	.emif_rd_wr_exec_thresh		= 0x00000405
 };
 
 const u32 ext_phy_ctrl_const_base_ddr3[EMIF_EXT_PHY_CTRL_CONST_REG] = {
