@@ -574,6 +574,8 @@ void do_scale_vcore(u32 vcore_reg, u32 volt_mv, struct pmic_data *pmic);
 void abb_setup(u32 fuse, u32 ldovbb, u32 setup, u32 control,
 	       u32 txdone, u32 txdone_mask, u32 opp);
 s8 abb_setup_ldovbb(u32 fuse, u32 ldovbb);
+u32 get_l2_aux_ctrl_reg(void);
+void set_l2_aux_ctrl_reg(u32 val);
 
 /* HW Init Context */
 #define OMAP_INIT_CONTEXT_SPL			0
