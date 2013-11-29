@@ -1380,7 +1380,8 @@ void sdram_init(void)
 			debug("get_ram_size() successful");
 	}
 
-	if (!in_sdram && !warm_reset()) {
+	if (sdram_type == EMIF_SDRAM_TYPE_DDR3 &&
+	    (!in_sdram && !warm_reset())) {
 		do_bug0039_workaround(EMIF1_BASE);
 		do_bug0039_workaround(EMIF2_BASE);
 	}
