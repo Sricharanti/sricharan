@@ -13,7 +13,6 @@ SOBJS	:= lowlevel_init.o
 
 COBJS	+= board.o
 COBJS	+= clock.o
-COBJS	+= mem.o
 COBJS	+= sys_info.o
 ifdef CONFIG_SPL_BUILD
 COBJS-$(CONFIG_SPL_OMAP3_ID_NAND)	+= spl_id_nand.o

@@ -18,7 +18,6 @@ endif
 
 COBJS-$(CONFIG_TI816X)	+= clock_ti816x.o
 COBJS	+= sys_info.o
-COBJS	+= mem.o
 COBJS	+= board.o
 COBJS	+= mux.o
 
