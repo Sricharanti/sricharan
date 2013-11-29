@@ -83,17 +83,6 @@
 #define CONFIG_CMD_GPIO
 
 /*
- * GPMC NAND block.  We support 1 device and the physical address to
- * access CS0 at is 0x8000000.
- */
-#ifdef CONFIG_NAND
-#define CONFIG_NAND_OMAP_GPMC
-#define CONFIG_SYS_NAND_BASE		0x8000000
-#define CONFIG_SYS_MAX_NAND_DEVICE	1
-#define CONFIG_CMD_NAND
-#endif
-
-/*
  * The following are general good-enough settings for U-Boot.  We set a
  * large malloc pool as we generally have a lot of DDR, and we opt for
  * function over binary size in the main portion of U-Boot as this is
@@ -213,13 +202,6 @@
 #define CONFIG_SYS_MMCSD_RAW_MODE_ARGS_SECTOR	0x80	/* address 0x10000 */
 #define CONFIG_SYS_MMCSD_RAW_MODE_ARGS_SECTORS	0x80	/* 64KiB */
 
-/* NAND */
-#ifdef CONFIG_NAND
-#define CONFIG_CMD_SPL_NAND_OFS			0x240000 /* end of u-boot */
-#define CONFIG_SYS_NAND_SPL_KERNEL_OFFS		0x280000
-#define CONFIG_CMD_SPL_WRITE_SIZE		0x2000
-#endif
-
 /* spl export command */
 #define CONFIG_CMD_SPL
 #endif
@@ -237,16 +219,6 @@
 #define CONFIG_SPL_SERIAL_SUPPORT
 #define CONFIG_SPL_GPIO_SUPPORT
 #define CONFIG_SPL_BOARD_INIT
-
-#ifdef CONFIG_NAND
-#define CONFIG_SPL_NAND_AM33XX_BCH	/* OMAP4 and later ELM support */
-#define CONFIG_SPL_NAND_SUPPORT
-#define CONFIG_SPL_NAND_BASE
-#define CONFIG_SPL_NAND_DRIVERS
-#define CONFIG_SPL_NAND_ECC
-#define CONFIG_SYS_NAND_U_BOOT_START	CONFIG_SYS_TEXT_BASE
-#define CONFIG_SYS_NAND_U_BOOT_OFFS	0x80000
-#endif
 #endif /* !CONFIG_NOR_BOOT */
 
 #endif	/* __CONFIG_TI_ARMV7_COMMON_H__ */
