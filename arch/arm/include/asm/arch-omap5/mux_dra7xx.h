@@ -12,38 +12,17 @@
 
 #include <asm/types.h>
 
-#define FSC	(1 << 19)
-#define SSC	(0 << 19)
-
-#define IEN	(1 << 18)
-#define IDIS	(0 << 18)
-
-#define PTU	(1 << 17)
-#define PTD	(0 << 17)
-#define PEN	(1 << 16)
-#define PDIS	(0 << 16)
-
-#define WKEN	(1 << 24)
-#define WKDIS	(0 << 24)
-
-#define M0	0
-#define M1	1
-#define M2	2
-#define M3	3
-#define M4	4
-#define M5	5
-#define M6	6
-#define M7	7
-#define M8	8
-#define M9	9
-#define M10	10
-#define M11	11
-#define M12	12
-#define M13	13
-#define M14	14
-#define M15	15
-
-#define SAFE_MODE	M15
+#define PIN_WKUP_EN		(1 << 24)
+#define PIN_FAST_SLEW		(0 << 19)
+#define PIN_SLOW_SLEW		(1 << 19)
+#define PIN_INPUT_NOPULL	(1 << 18) | (1 << 16)
+#define PIN_INPUT_PULLUP	(1 << 18) | (1 << 17) | (0 << 16)
+#define PIN_INPUT_PULLDOWN	(1 << 18) | (0 << 17) | (0 << 16)
+#define PIN_OUTPUT_NOPULL	(0 << 18) | (1 << 16)
+#define PIN_OUTPUT_PULLUP	(0 << 18) | (1 << 17) | (0 << 16)
+#define PIN_OUTPUT_PULLDOWN	(0 << 18) | (0 << 17) | (0 << 16)
+#define PIN_MUX_MODE(x)		(x & 0xf)
+#define SAFE_MODE		PIN_MUX_MODE(15)
 
 #define GPMC_AD0	0x000
 #define GPMC_AD1	0x004
