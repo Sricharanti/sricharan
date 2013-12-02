@@ -20,6 +20,7 @@
 #define BOOT_DEVICE_MMC2	8
 #define BOOT_DEVICE_SPI		10
 #define BOOT_DEVICE_UART	65
+#define BOOT_DEVICE_CPGMAC	71
 #else
 #define BOOT_DEVICE_XIP       	2
 #define BOOT_DEVICE_NAND	5
