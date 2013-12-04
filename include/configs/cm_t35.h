@@ -166,6 +166,7 @@
 							/* CS0 */
 #define CONFIG_SYS_MAX_NAND_DEVICE	1		/* Max number of NAND */
 							/* devices */
+#define CONFIG_SPL_NAND_DEVICE_WIDTH	8
 /* Environment information */
 #define CONFIG_BOOTDELAY		10
 #define CONFIG_ZERO_BOOTDELAY_CHECK

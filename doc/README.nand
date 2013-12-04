@@ -180,6 +180,15 @@ Configuration Options:
 	This is used by SoC platforms which do not have built-in ELM
 	hardware engine required for BCH ECC correction.
 
+   CONFIG_SPL_NAND_DEVICE_WIDTH
+	Specifies bus-width of the default NAND device connected to SoC.
+	This config is useful for driver which cannot self initialize or
+	parse ONFI parameter (like SPL drivers), or for supporting non-ONFI
+	compliant devices.
+	This config can take following values:
+	- 8: x8 NAND devices is connected
+	- 16: x16 NAND device is connected
+
 
 Platform specific options
 =========================

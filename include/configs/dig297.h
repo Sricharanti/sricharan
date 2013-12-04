@@ -143,6 +143,7 @@
 #define CONFIG_SYS_NAND_BASE		NAND_BASE	/* physical address */
 							/* to access nand at */
 							/* CS0 */
+#define CONFIG_SPL_NAND_DEVICE_WIDTH	16
 #define CONFIG_SYS_MAX_NAND_DEVICE	1		/* Max number of NAND */
 
 #if defined(CONFIG_CMD_NET)

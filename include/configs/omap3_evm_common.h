@@ -122,7 +122,7 @@
 
 /* Max number of NAND devices */
 #define CONFIG_SYS_MAX_NAND_DEVICE	1
-
+#define CONFIG_SPL_NAND_DEVICE_WIDTH	16
 /* Timeout values (in ticks) */
 #define CONFIG_SYS_FLASH_ERASE_TOUT	(100 * CONFIG_SYS_HZ)
 #define CONFIG_SYS_FLASH_WRITE_TOUT	(100 * CONFIG_SYS_HZ)

@@ -159,6 +159,7 @@
 							/* to access nand at */
 							/* CS0 */
 #define CONFIG_SYS_MAX_NAND_DEVICE	1
+#define CONFIG_SPL_NAND_DEVICE_WIDTH	16
 
 /* Environment information */
 #define CONFIG_BOOTDELAY		10
