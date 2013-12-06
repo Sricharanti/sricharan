@@ -372,7 +372,7 @@ static int omap_correct_data_bch(struct mtd_info *mtd, uint8_t *dat,
 	struct nand_bch_priv *bch = chip->priv;
 	uint32_t eccbytes = chip->ecc.bytes;
 	uint32_t error_count = 0, error_max;
-	uint32_t error_loc[8];
+	uint32_t error_loc[16];
 	uint32_t i, ecc_flag = 0;
 	uint8_t count, err = 0;
 	uint32_t byte_pos, bit_pos;
