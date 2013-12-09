@@ -193,7 +193,7 @@
 #define CONFIG_EXTRA_ENV_SETTINGS \
 	"loadaddr=0x80200000\0" \
 	"rdaddr=0x81000000\0" \
-	"fdt_high=0xffffffff\0" \
+	"fdt_high=0xa0000000\0" \
 	"fdtaddr=0x80f80000\0" \
 	"usbtty=cdc_acm\0" \
 	"bootfile=uImage\0" \

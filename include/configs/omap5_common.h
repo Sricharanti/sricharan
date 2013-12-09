@@ -72,7 +72,7 @@
 #define CONFIG_EXTRA_ENV_SETTINGS \
 	"loadaddr=0x80200000\0" \
 	"fdtaddr=0x80F80000\0" \
-	"fdt_high=0xffffffff\0" \
+	"fdt_high=0xa0000000\0" \
 	"rdaddr=0x81000000\0" \
 	"console=" CONSOLEDEV ",115200n8\0" \
 	"fdtfile=undefined\0" \
