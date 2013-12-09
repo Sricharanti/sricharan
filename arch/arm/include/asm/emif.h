@@ -1145,6 +1145,7 @@ struct emif_regs {
 	u32 emif_rd_wr_lvl_rmp_ctl;
 	u32 emif_rd_wr_lvl_ctl;
 	u32 emif_rd_wr_exec_thresh;
+	u32 int_config;
 };
 
 struct lpddr2_mr_regs {
