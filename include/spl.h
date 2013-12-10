@@ -16,6 +16,10 @@
 #define MMCSD_MODE_RAW		1
 #define MMCSD_MODE_FAT		2
 
+#define USB_MODE_UNDEFINED	0
+#define USB_MODE_RAW		1
+#define USB_MODE_FAT		2
+
 struct spl_image_info {
 	const char *name;
 	u8 os;
@@ -59,6 +63,9 @@ void spl_spi_load_image(void);
 
 /* Ethernet SPL functions */
 void spl_net_load_image(const char *device);
+
+/* USB SPL functions */
+void spl_usb_load_image(void);
 
 #ifdef CONFIG_SPL_BOARD_INIT
 void spl_board_init(void);

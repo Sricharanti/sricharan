@@ -201,6 +201,10 @@ COBJS-$(CONFIG_SPL_NET_SUPPORT) += miiphyutil.o
 COBJS-$(CONFIG_SPL_ENV_SUPPORT) += env_attr.o
 COBJS-$(CONFIG_SPL_ENV_SUPPORT) += env_flags.o
 COBJS-$(CONFIG_SPL_ENV_SUPPORT) += env_callback.o
+ifdef CONFIG_SPL_USB_HOST_SUPPORT
+COBJS-$(CONFIG_SPL_USB_SUPPORT) += usb.o usb_hub.o
+COBJS-$(CONFIG_USB_STORAGE) += usb_storage.o
+endif
 ifneq ($(CONFIG_SPL_NET_SUPPORT),y)
 COBJS-$(CONFIG_ENV_IS_NOWHERE) += env_nowhere.o
 COBJS-$(CONFIG_ENV_IS_IN_MMC) += env_mmc.o
