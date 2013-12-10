@@ -221,4 +221,79 @@
 #define CONFIG_SPL_BOARD_INIT
 #endif /* !CONFIG_NOR_BOOT */
 
+/* Boot defines */
+#define BOOTCMD_COMMON \
+	"rootpart=2\0" \
+	"script_boot=" \
+		"if load ${devtype} ${devnum}:${rootpart} ${loadaddr} ${bootdir}/${bootfile}; then " \
+			"run findfdt; " \
+			"load ${devtype} ${devnum}:${rootpart} ${fdtaddr} ${bootdir}/${fdtfile};" \
+			"bootz ${loadaddr} - ${fdtaddr}; " \
+		"fi;\0" \
+	\
+	"scan_boot=" \
+		"echo Scanning ${devtype} ${devnum}...; " \
+		"for prefix in ${bootdir}; do " \
+			"for script in ${bootfile}; do " \
+				"run script_boot; " \
+			"done; " \
+		"done;\0" \
+	"boot_targets=" \
+		BOOT_TARGETS_USB " " \
+		BOOT_TARGETS_MMC " " \
+		BOOT_TARGETS_NAND " " \
+		"\0"
+
+/* USB MSD Boot */
+#define BOOTCMD_INIT_USB "run usb_init; "
+#define BOOTCMD_USB \
+	"usb_init=" \
+		"usb start 0;\0 " \
+	"usb_boot=" \
+		"setenv devtype usb; " \
+		BOOTCMD_INIT_USB \
+		"if usb dev 0; then " \
+			"run usbargs;" \
+			"run scan_boot; " \
+		"fi\0" \
+	"bootcmd_usb=setenv devnum 0; run usb_boot;\0"
+
+/* MMC Boot */
+#define BOOTCMD_MMC \
+	"mmc_boot=" \
+		"setenv devtype mmc; " \
+		"if mmc dev ${devnum}; then " \
+			"run mmcargs;" \
+			"run scan_boot; " \
+		"fi\0" \
+	"bootcmd_mmc0=setenv devnum 0; setenv rootpart 2; run mmc_boot;\0" \
+
+/* NAND Boot */
+#define DFU_ALT_INFO_NAND ""
+#ifndef CONFIG_NAND
+#define MTDIDS_DEFAULT ""
+#define MTDPARTS_DEFAULT ""
+#endif
+
+#define BOOTCMD_NAND \
+	"mtdids=" MTDIDS_DEFAULT "\0" \
+	"mtdparts=" MTDPARTS_DEFAULT "\0" \
+	"nandargs=setenv bootargs console=${console} " \
+		"${optargs} " \
+		"root=${nandroot} " \
+		"rootfstype=${nandrootfstype}\0" \
+	"dfu_alt_info_nand=" DFU_ALT_INFO_NAND "\0" \
+	"nandroot=ubi0:rootfs rw ubi.mtd=7,2048\0" \
+	"nandrootfstype=ubifs rootwait=1\0" \
+	"nandsrcaddr=0x280000\0" \
+	"nandboot=echo Booting from nand ...; " \
+		"run nandargs; " \
+		"nand read ${loadaddr} ${nandsrcaddr} ${nandimgsize}; " \
+		"bootz ${loadaddr}\0" \
+	"nandimgsize=0x500000\0" \
+	"bootcmd_nand=run nandboot;\0"
+
+#define CONFIG_BOOTCOMMAND \
+	"for target in ${boot_targets}; do run bootcmd_${target}; done"
+
 #endif	/* __CONFIG_TI_ARMV7_COMMON_H__ */

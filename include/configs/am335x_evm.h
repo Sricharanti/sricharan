@@ -142,16 +142,10 @@
 			"setenv fdtfile am335x-evmsk.dtb; fi; " \
 		"if test $fdtfile = undefined; then " \
 			"echo WARNING: Could not determine device tree to use; fi; \0" \
-	NANDARGS
+	BOOTCMD_COMMON \
+	BOOTCMD_MMC \
+	BOOTCMD_NAND
 #endif
-
-#define CONFIG_BOOTCOMMAND \
-	"run findfdt; " \
-	"run mmcboot;" \
-	"setenv mmcdev 1; " \
-	"setenv bootpart 1:2; " \
-	"run mmcboot;" \
-	"run nandboot;"
 
 /* NS16550 Configuration */
 #define CONFIG_SYS_NS16550_COM1		0x44e09000	/* Base EVM has UART0 */
@@ -357,6 +351,10 @@
 	"uEnv.txt fat 0 1"
 #ifdef CONFIG_NAND
 #define CONFIG_DFU_NAND
+
+#ifdef DFU_ALT_INFO_NAND
+#undef DFU_ALT_INFO_NAND
+#endif
 #define DFU_ALT_INFO_NAND \
 	"SPL part 0 1;" \
 	"SPL.backup1 part 0 2;" \
@@ -389,7 +387,15 @@
 #define CONFIG_ENV_SECT_SIZE		(4 << 10) /* 4 KB sectors */
 #define CONFIG_ENV_OFFSET		(768 << 10) /* 768 KiB in */
 #define CONFIG_ENV_OFFSET_REDUND	(896 << 10) /* 896 KiB in */
+
+#ifdef MTDIDS_DEFAULT
+#undef MTDIDS_DEFAULT
+#endif
 #define MTDIDS_DEFAULT			"nor0=m25p80-flash.0"
+
+#ifdef MTDPARTS_DEFAULT
+#undef MTDPARTS_DEFAULT
+#endif
 #define MTDPARTS_DEFAULT		"mtdparts=m25p80-flash.0:128k(SPL)," \
 					"512k(u-boot),128k(u-boot-env1)," \
 					"128k(u-boot-env2),3464k(kernel)," \
@@ -445,7 +451,14 @@
 #define CONFIG_ENV_SECT_SIZE		(128 << 10)	/* 128 KiB */
 #define CONFIG_ENV_OFFSET		(512 << 10)	/* 512 KiB */
 #define CONFIG_ENV_OFFSET_REDUND	(768 << 10)	/* 768 KiB */
+#ifdef MTDIDS_DEFAULT
+#undef MTDIDS_DEFAULT
+#endif
 #define MTDIDS_DEFAULT			"nor0=physmap-flash.0"
+
+#ifdef MTDPARTS_DEFAULT
+#undef MTDPARTS_DEFAULT
+#endif
 #define MTDPARTS_DEFAULT		"mtdparts=physmap-flash.0:" \
 					"512k(u-boot)," \
 					"128k(u-boot-env1)," \
@@ -453,5 +466,23 @@
 					"4m(kernel),-(rootfs)"
 #endif
 #endif  /* NOR support */
+
+#ifdef CONFIG_MMC
+#define BOOT_TARGETS_MMC "mmc0"
+#else
+#define BOOT_TARGETS_MMC ""
+#endif
+
+#ifdef CONFIG_USB_HOST
+#define BOOT_TARGETS_USB "usb"
+#else
+#define BOOT_TARGETS_USB ""
+#endif
+
+#ifdef CONFIG_NAND
+#define BOOT_TARGETS_NAND "nand"
+#else
+#define BOOT_TARGETS_NAND ""
+#endif
 
 #endif	/* ! __CONFIG_AM335X_EVM_H */

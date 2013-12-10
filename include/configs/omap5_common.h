@@ -91,6 +91,11 @@
 		"vram=${vram} " \
 		"root=${mmcroot} " \
 		"rootfstype=${mmcrootfstype}\0" \
+	"usbargs=setenv bootargs console=${console} " \
+		"${optargs} " \
+		"vram=${vram}" \
+		"root=${mmcroot} " \
+		"rootfstype=${mmcrootfstype}\0" \
 	"loadbootscript=fatload mmc ${mmcdev} ${loadaddr} boot.scr\0" \
 	"bootscript=echo Running bootscript from mmc${mmcdev} ...; " \
 		"source ${loadaddr}\0" \
@@ -116,23 +121,11 @@
 				"bootz ${loadaddr} - ${fdtaddr}; " \
 			"fi;" \
 		"fi;\0" \
-	"findfdt="\
-		"if test $board_name = omap5_uevm; then " \
-			"setenv fdtfile omap5-uevm.dtb; fi; " \
-		"if test $board_name = dra7xx; then " \
-			"setenv fdtfile dra7-evm.dtb; fi;" \
-		"if test $fdtfile = undefined; then " \
-			"echo WARNING: Could not determine device tree to use; fi; \0" \
-	"loadfdt=load mmc ${bootpart} ${fdtaddr} ${bootdir}/${fdtfile};\0" \
-
-#define CONFIG_BOOTCOMMAND \
-	"run findfdt; " \
-	"run mmcboot;" \
-	"setenv mmcdev 1; " \
-	"setenv bootpart 1:2; " \
-	"setenv mmcroot /dev/mmcblk0p2 rw; " \
-	"run mmcboot;" \
-
+	"loadfdt=load ${devtype} ${bootpart} ${fdtaddr} ${bootdir}/${fdtfile};\0" \
+	FIND_FDT_FILE \
+	BOOTCMD_COMMON \
+	BOOTCMD_MMC \
+	BOOTCMD_USB
 
 /*
  * SPL related defines.  The Public RAM memory map the ROM defines the

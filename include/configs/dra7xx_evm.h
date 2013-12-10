@@ -180,4 +180,29 @@
 #define NANDARGS ""
 #endif /* !CONFIG_NAND */
 
+#define FIND_FDT_FILE \
+	"findfdt="\
+		"if test $board_name = dra7xx; then " \
+			"setenv fdtfile dra7-evm.dtb; fi;" \
+		"if test $fdtfile = undefined; then " \
+			"echo WARNING: Could not determine device tree to use; fi; \0" \
+
+#ifdef CONFIG_MMC
+#define BOOT_TARGETS_MMC "mmc0"
+#else
+#define BOOT_TARGETS_MMC ""
+#endif
+
+#ifdef CONFIG_USB_HOST
+#define BOOT_TARGETS_USB "usb"
+#else
+#define BOOT_TARGETS_USB ""
+#endif
+
+#ifdef CONFIG_NAND
+#define BOOT_TARGETS_NAND "nand"
+#else
+#define BOOT_TARGETS_NAND ""
+#endif
+
 #endif /* __CONFIG_DRA7XX_EVM_H */
