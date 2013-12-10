@@ -240,22 +240,25 @@ static struct module_pin_mux bone_norcape_pin_mux[] = {
 #endif
 
 #if defined(CONFIG_NOR_BOOT)
-static struct module_pin_mux norboot_pin_mux[] = {
-	{OFFSET(lcd_data1), MODE(1) | PULLUDDIS},
-	{OFFSET(lcd_data2), MODE(1) | PULLUDDIS},
-	{OFFSET(lcd_data3), MODE(1) | PULLUDDIS},
-	{OFFSET(lcd_data4), MODE(1) | PULLUDDIS},
-	{OFFSET(lcd_data5), MODE(1) | PULLUDDIS},
-	{OFFSET(lcd_data6), MODE(1) | PULLUDDIS},
-	{OFFSET(lcd_data7), MODE(1) | PULLUDDIS},
-	{OFFSET(lcd_data8), MODE(1) | PULLUDDIS},
-	{OFFSET(lcd_data9), MODE(1) | PULLUDDIS},
-	{-1},
-};
-
 void enable_norboot_pin_mux(void)
 {
-	configure_module_pin_mux(norboot_pin_mux);
+	/*
+	 * The ROM will only have set up sufficient pinmux to allow for the
+	 * first 4KiB NOR to be read, we must finish doing what we know of
+	 * the NOR mux in this space in order to continue.  We do this in
+	 * assembly to avoid having to play linker games to ensure that all
+	 * functions and data sections are in this special area.
+	 */
+	asm("stmfd      sp!, {r2 - r4}");
+	asm("movw       r4, #0x8A4");
+	asm("movw       r3, #0x44E1");
+	asm("orr        r4, r4, r3, lsl #16");
+	asm("mov        r2, #9");
+	asm("mov        r3, #8");
+	asm("gpmc_mux:  str     r2, [r4], #4");
+	asm("subs       r3, r3, #1");
+	asm("bne        gpmc_mux");
+	asm("ldmfd      sp!, {r2 - r4}");
 }
 #endif
 
