@@ -108,6 +108,33 @@
 #define CONFIG_SYS_SPI_U_BOOT_OFFS     0x20000
 
 #ifndef CONFIG_SPL_BUILD
+#ifdef CONFIG_MMC
+#define BOOT_TARGETS_MMC "mmc0"
+#else
+#define BOOT_TARGETS_MMC ""
+#endif
+
+#ifdef CONFIG_USB_HOST
+#define BOOT_TARGETS_USB "usb"
+#else
+#define BOOT_TARGETS_USB ""
+#endif
+
+#ifdef CONFIG_NAND
+#define BOOT_TARGETS_NAND "nand"
+#else
+#define BOOT_TARGETS_NAND ""
+#endif
+
+#define FIND_FDT_FILE \
+	"findfdt="\
+			"if test $board_name = AM43EPOS; then " \
+			"setenv fdtfile am43x-epos-evm.dtb; fi; " \
+		"if test $board_name = AM43__GP; then " \
+			"setenv fdtfile am437x-gp-evm.dtb; fi; " \
+		"if test $fdtfile = undefined; then " \
+			"echo WARNING: Could not determine device tree; fi; \0" \
+
 #define CONFIG_EXTRA_ENV_SETTINGS \
 	"loadaddr=0x80200000\0" \
 	"fdtaddr=0x80F80000\0" \
@@ -179,12 +206,12 @@
 		"if test $board_name = AM43__GP; then " \
 			"setenv fdtfile am437x-gp-evm.dtb; fi; " \
 		"if test $fdtfile = undefined; then " \
-			"echo WARNING: Could not determine device tree; fi; \0"
-
-#define CONFIG_BOOTCOMMAND \
-	"run findfdt; " \
-	"run mmcboot;" \
-	"run nandboot;"
+			"echo WARNING: Could not determine device tree; fi; \0" \
+		FIND_FDT_FILE \
+		BOOTCMD_COMMON \
+		BOOTCMD_USB \
+		BOOTCMD_MMC \
+		BOOTCMD_NAND
 
 #endif
 
