@@ -236,17 +236,15 @@
 						"128k(SPL.backup2)," \
 						"640k(SPL.backup3)," \
 						"1m(u-boot)," \
-						"1m(u-boot.backup1)," \
-						"256k(u-boot-spl-os)," \
-						"256k(u-boot-spl-os.backup1)," \
+						"512k(u-boot-spl-os)," \
 						"256k(u-boot-env)," \
 						"256k(u-boot-env.backup1)," \
 						"5m(kernel)," \
 						"-(rootfs)"
   #undef CONFIG_ENV_IS_NOWHERE
   #define CONFIG_ENV_IS_IN_NAND
-  #define CONFIG_ENV_OFFSET			0x380000
-  #define CONFIG_ENV_OFFSET_REDUND		0x3C0000
+  #define CONFIG_ENV_OFFSET			0x280000
+  #define CONFIG_ENV_OFFSET_REDUND		0x2C0000
   #define CONFIG_SYS_ENV_SECT_SIZE		256 * 1024
 #endif
 /* NAND: SPL related configs */
@@ -261,8 +259,8 @@
   #define CONFIG_SYS_NAND_U_BOOT_OFFS		0x100000
 /* NAND: SPL falcon mode related configs */
   #ifdef CONFIG_SPL_OS_BOOT
-    #define CONFIG_CMD_SPL_NAND_OFS		0x300000 /* os-boot parameters*/
-    #define CONFIG_SYS_NAND_SPL_KERNEL_OFFS	0x400000 /* kernel offset */
+    #define CONFIG_CMD_SPL_NAND_OFS		0x200000 /* os-boot parameters*/
+    #define CONFIG_SYS_NAND_SPL_KERNEL_OFFS	0x300000 /* kernel offset */
     #define CONFIG_CMD_SPL_WRITE_SIZE		0x2000
   #endif
 #endif
@@ -275,7 +273,7 @@
 		"root=${nandroot} " \
 		"rootfstype=${nandrootfstype}\0" \
 	"dfu_alt_info_nand=" DFU_ALT_INFO_NAND "\0" \
-	"nandroot=ubi0:rootfs rw ubi.mtd=11,2048\0" \
+	"nandroot=ubi0 rw ubi.mtd=9,2048\0" \
 	"nandrootfstype=ubifs rootwait=1\0" \
 	"nandboot=echo Booting from nand ...; " \
 		"run nandargs; " \
