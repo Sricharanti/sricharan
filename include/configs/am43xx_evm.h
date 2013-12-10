@@ -69,6 +69,14 @@
 
 #define CONFIG_SPL_LDSCRIPT		"$(CPUDIR)/omap-common/u-boot-spl.lds"
 
+#ifdef CONFIG_SPL
+/* SPL USB Support */
+#define CONFIG_SPL_USB_SUPPORT
+#define CONFIG_SPL_USB_HOST_SUPPORT
+#define CONFIG_SYS_USB_FAT_BOOT_PARTITION		1
+#define CONFIG_SYS_USB_MODE_U_BOOT_SECTOR 0x300
+#endif
+
 #define CONFIG_CMD_USB
 #define CONFIG_USB_HOST
 #define CONFIG_USB_XHCI
