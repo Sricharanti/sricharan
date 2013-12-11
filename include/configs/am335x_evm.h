@@ -258,22 +258,6 @@
     #define CONFIG_CMD_SPL_WRITE_SIZE		0x2000
   #endif
 #endif
-/* NAND: u-boot configs */
-#define NANDARGS \
-	"mtdids=" MTDIDS_DEFAULT "\0" \
-	"mtdparts=" MTDPARTS_DEFAULT "\0" \
-	"nandargs=setenv bootargs console=${console} " \
-		"${optargs} " \
-		"root=${nandroot} " \
-		"rootfstype=${nandrootfstype}\0" \
-	"dfu_alt_info_nand=" DFU_ALT_INFO_NAND "\0" \
-	"nandroot=ubi0 rw ubi.mtd=9,2048\0" \
-	"nandrootfstype=ubifs rootwait=1\0" \
-	"nandboot=echo Booting from nand ...; " \
-		"run nandargs; " \
-		"nand read ${fdtaddr} u-boot-spl-os; " \
-		"nand read ${loadaddr} kernel; " \
-		"bootz ${loadaddr} - ${fdtaddr}\0"
 #else
 #define NANDARGS ""
 #endif /* !CONFIG_NAND */

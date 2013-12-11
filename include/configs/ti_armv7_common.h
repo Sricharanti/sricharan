@@ -228,7 +228,6 @@
 		"if load ${devtype} ${devnum}:${rootpart} ${loadaddr} ${bootdir}/${bootfile}; then " \
 			"run findfdt; " \
 			"load ${devtype} ${devnum}:${rootpart} ${fdtaddr} ${bootdir}/${fdtfile};" \
-			"bootz ${loadaddr} - ${fdtaddr}; " \
 		"fi;\0" \
 	\
 	"scan_boot=" \
@@ -255,6 +254,7 @@
 		"if usb dev 0; then " \
 			"run usbargs;" \
 			"run scan_boot; " \
+			"bootz ${loadaddr} - ${fdtaddr}; " \
 		"fi\0" \
 	"bootcmd_usb=setenv devnum 0; run usb_boot;\0"
 
@@ -265,6 +265,10 @@
 		"if mmc dev ${devnum}; then " \
 			"run mmcargs;" \
 			"run scan_boot; " \
+			"run mmcboot;" \
+			"setenv mmcdev 1; " \
+			"setenv bootpart 1:2; " \
+			"run mmcboot;" \
 		"fi\0" \
 	"bootcmd_mmc0=setenv devnum 0; setenv rootpart 2; run mmc_boot;\0" \
 
@@ -283,14 +287,13 @@
 		"root=${nandroot} " \
 		"rootfstype=${nandrootfstype}\0" \
 	"dfu_alt_info_nand=" DFU_ALT_INFO_NAND "\0" \
-	"nandroot=ubi0:rootfs rw ubi.mtd=7,2048\0" \
+	"nandroot=ubi0:rootfs rw ubi.mtd=9,2048\0" \
 	"nandrootfstype=ubifs rootwait=1\0" \
-	"nandsrcaddr=0x280000\0" \
 	"nandboot=echo Booting from nand ...; " \
 		"run nandargs; " \
-		"nand read ${loadaddr} ${nandsrcaddr} ${nandimgsize}; " \
-		"bootz ${loadaddr}\0" \
-	"nandimgsize=0x500000\0" \
+		"nand read ${fdtaddr} u-boot-spl-os; " \
+		"nand read ${loadaddr} kernel; " \
+		"bootz ${loadaddr} - ${fdtaddr}\0" \
 	"bootcmd_nand=run nandboot;\0"
 
 #define CONFIG_BOOTCOMMAND \
