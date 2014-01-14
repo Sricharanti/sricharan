@@ -19,6 +19,7 @@
 /* GPIO Base address */
 #define GPIO0_BASE			0x44E07000
 #define GPIO2_BASE			0x481AC000
+#define GPIO5_BASE			0x48322000
 
 /* Watchdog Timer */
 #define WDT_BASE			0x44E35000

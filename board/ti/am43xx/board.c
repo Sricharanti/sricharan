@@ -252,26 +252,23 @@ static void enable_vtt_regulator(void)
 {
 	u32 temp;
 
-	/*GPIO_VTTEN - GPIO0_21 PINMUX Setup*/
-	writel(0x20009, CTRL_BASE + 0x0A60);
+	/*GPIO_VTTEN - GPIO5_7 PINMUX Setup*/
+	writel(0x7, CTRL_BASE + 0x0A5C);
 
-	writel(0x40002, PRCM_BASE + 0x2B68);
+	writel(0x102, PRCM_BASE + 0x8C98);
 
 	/* Poll if module is functional */
-	while ((readl(PRCM_BASE + 0x2B68) & 0x30000) != 0x0)
-		;
-
-	while ((readl(PRCM_BASE + 0x2B00) & 0x100) != 0x100)
+	while ((readl(PRCM_BASE + 0x8C98) & 0x30000) != 0x0)
 		;
 
 	/* enable module */
-	writel(0x0, GPIO0_BASE + 0x0130);
+	writel(0x0, GPIO5_BASE + 0x0130);
 
-	/*enable output for GPIO0_21*/
-	writel((1 << 22), GPIO0_BASE + 0x0194);
-	temp = readl(GPIO0_BASE + 0x0134);
-	temp = temp & ~(1 << 22);
-	writel(temp, GPIO0_BASE + 0x0134);
+	/*enable output for GPIO5_7*/
+	writel((1 << 7), GPIO5_BASE + 0x0194);
+	temp = readl(GPIO5_BASE + 0x0134);
+	temp = temp & ~(1 << 7);
+	writel(temp, GPIO5_BASE + 0x0134);
 }
 
 void sdram_init(void)
