@@ -436,7 +436,7 @@ static void setup_non_essential_dplls(void)
 #ifdef CONFIG_SYS_OMAP_ABE_SYSCK
 	abe_ref_clk = CM_ABE_PLL_REF_CLKSEL_CLKSEL_SYSCLK;
 
-	if (omap_revision() == DRA752_ES1_0)
+	if (is_dra7xx())
 		/* Select the sys clk for dpll_abe */
 		clrsetbits_le32((*prcm)->cm_abe_pll_sys_clksel,
 				CM_CLKSEL_ABE_PLL_SYS_CLKSEL_MASK,
