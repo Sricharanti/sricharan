@@ -80,12 +80,14 @@
 	"bootdir=/boot\0" \
 	"bootfile=zImage\0" \
 	"usbtty=cdc_acm\0" \
-	"vram=16M\0" \
+	"vram=16M \0" \
 	"partitions=" PARTS_DEFAULT "\0" \
 	"optargs=\0" \
 	"mmcdev=0\0" \
 	"mmcroot=/dev/mmcblk1p2 rw\0" \
 	"mmcrootfstype=ext4 rootwait\0" \
+	"usbroot=/dev/sda2 rw\0" \
+	"usbrootfstype=ext4 rootwait\0" \
 	"mmcargs=setenv bootargs console=${console} " \
 		"${optargs} " \
 		"vram=${vram} " \
@@ -94,8 +96,8 @@
 	"usbargs=setenv bootargs console=${console} " \
 		"${optargs} " \
 		"vram=${vram}" \
-		"root=${mmcroot} " \
-		"rootfstype=${mmcrootfstype}\0" \
+		"root=${usbroot} " \
+		"rootfstype=${usbrootfstype}\0" \
 	"loadbootscript=fatload mmc ${mmcdev} ${loadaddr} boot.scr\0" \
 	"bootscript=echo Running bootscript from mmc${mmcdev} ...; " \
 		"source ${loadaddr}\0" \
