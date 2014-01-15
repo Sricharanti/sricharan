@@ -23,47 +23,6 @@ DECLARE_GLOBAL_DATA_PTR;
 static int usb_stor_curr_dev = -1; /* current device */
 #endif
 
-static int usb_load_image_raw(block_dev_desc_t *stor_dev, unsigned long sector)
-{
-	unsigned long err;
-	u32 image_size_sectors;
-	struct image_header *header;
-
-	header = (struct image_header *)(CONFIG_SYS_TEXT_BASE -
-						sizeof(struct image_header));
-
-	/* read image header to find the image size & load address */
-	err = stor_dev->block_read(usb_stor_curr_dev, sector, 1, (ulong *)header);
-	if (err == 0)
-		goto end;
-
-	if (image_get_magic(header) != IH_MAGIC)
-		return -1;
-
-	spl_parse_image_header(header);
-
-	image_size_sectors = spl_image.size;
-
-	/* Read the header too to avoid extra memcpy */
-	err = stor_dev->block_read(usb_stor_curr_dev, sector,
-				image_size_sectors, (void *)spl_image.load_addr);
-
-end:
-#ifdef CONFIG_SPL_LIBCOMMON_SUPPORT
-	if (err == 0)
-		printf("spl: USB blk read err - %lu\n", err);
-#endif
-	return (err == 0);
-
-}
-
-#ifdef CONFIG_SPL_OS_BOOT
-static int usb_load_image_raw_os(struct usb_device *usb_dev)
-{
-	return -1;
-}
-#endif
-
 #ifdef CONFIG_SPL_FAT_SUPPORT
 static int usb_load_image_fat(const char *filename)
 {
@@ -109,14 +68,11 @@ static int usb_load_image_fat_os(struct usb_device *usb_dev)
 	return usb_load_image_fat(CONFIG_SPL_FAT_LOAD_KERNEL_NAME);
 }
 #endif
-
 #endif
-
 void spl_usb_load_image(void)
 {
 	struct usb_device *usb_dev;
 	int err;
-	u32 boot_mode;
 	block_dev_desc_t *stor_dev;
 
 	usb_stop();
@@ -134,43 +90,23 @@ void spl_usb_load_image(void)
 #endif
 	}
 
-	boot_mode = spl_boot_mode();
-	if (boot_mode == USB_MODE_RAW) {
-		debug("boot mode - RAW\n");
-#ifdef CONFIG_SPL_OS_BOOT
-		if (spl_start_uboot() || usb_load_image_raw_os(usb_dev))
-#endif
-		err = usb_load_image_raw(stor_dev,
-					 CONFIG_SYS_USB_MODE_U_BOOT_SECTOR);
-#ifdef CONFIG_SPL_FAT_SUPPORT
-	} else if (boot_mode == USB_MODE_FAT) {
-		debug("boot mode - FAT\n");
+	debug("boot mode - FAT\n");
 
-		err = fat_register_device(stor_dev,
-				CONFIG_SYS_USB_FAT_BOOT_PARTITION);
-		if (err) {
-	#ifdef CONFIG_SPL_LIBCOMMON_SUPPORT
-			printf("spl: fat register err - %d\n", err);
-	#endif
-			hang();
-		}
-
-#ifdef CONFIG_SPL_OS_BOOT
-		if (spl_start_uboot() || usb_load_image_fat_os(usb_dev))
-#endif
-		err = usb_load_image_fat(CONFIG_SPL_FAT_LOAD_PAYLOAD_NAME);
-		if (err) {
-			puts("Error loading USB device\n");
-			hang();
-		}
-#endif
-	} else {
+	err = fat_register_device(stor_dev,
+			CONFIG_SYS_USB_FAT_BOOT_PARTITION);
+	if (err) {
 #ifdef CONFIG_SPL_LIBCOMMON_SUPPORT
-		puts("spl: wrong USB boot mode\n");
+		printf("spl: fat register err - %d\n", err);
 #endif
 		hang();
 	}
 
-	if (err)
+#ifdef CONFIG_SPL_OS_BOOT
+	if (spl_start_uboot() || usb_load_image_fat_os(usb_dev))
+#endif
+	err = usb_load_image_fat(CONFIG_SPL_FAT_LOAD_PAYLOAD_NAME);
+	if (err) {
+		puts("Error loading USB device\n");
 		hang();
+	}
 }
