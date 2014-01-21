@@ -26,6 +26,16 @@
 #define CONFIG_CMD_SAVEENV
 #endif
 
+/* Enhance our eMMC support / experience. */
+#define CONFIG_CMD_GPT
+#define CONFIG_EFI_PARTITION
+#define CONFIG_PARTITION_UUIDS
+#define CONFIG_CMD_PART
+/* Define the default GPT table for eMMC */
+#define PARTS_DEFAULT \
+	"uuid_disk=${uuid_gpt_disk};" \
+	"name=rootfs,start=2MiB,size=-,uuid=${uuid_gpt_rootfs}"
+
 #define CONSOLEDEV			"ttyO0"
 #define CONFIG_CONS_INDEX		1
 #define CONFIG_SYS_NS16550_COM1		UART1_BASE
