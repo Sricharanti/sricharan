@@ -209,7 +209,7 @@ static void ddr3_leveling(u32 base, const struct emif_regs *regs)
 {
 	struct emif_reg_struct *emif = (struct emif_reg_struct *)base;
 
-	if (omap_revision() != DRA752_ES1_0)	{
+	if (!is_dra7xx())	{
 		/* keep sdram in self-refresh */
 		writel(((LP_MODE_SELF_REFRESH << EMIF_REG_LP_MODE_SHIFT)
 			& EMIF_REG_LP_MODE_MASK), &emif->emif_pwr_mgmt_ctrl);
@@ -1277,7 +1277,7 @@ static void do_bug0039_workaround(u32 base)
 	u32 *phy_status_base = &emif_base->emif_ddr_phy_status[0];
 	u32 *phy_ctrl_base = &emif_base->emif_ddr_ext_phy_ctrl_1;
 
-	if (omap_revision() == DRA752_ES1_0)
+	if (is_dra7xx())
 		phy_status_base++;
 
 	bug_00339_regs = get_bug_regs(&iterations);
