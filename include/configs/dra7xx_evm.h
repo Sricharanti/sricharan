@@ -74,6 +74,50 @@
 #define CONFIG_SF_DEFAULT_SPEED                48000000
 #define CONFIG_DEFAULT_SPI_MODE                SPI_MODE_3
 
+/*
+ * Default to using SPI for environment, etc.
+ * 0x000000 - 0x010000 : QSPI.SPL (64KiB)
+ * 0x010000 - 0x020000 : QSPI.SPL.backup1 (64KiB)
+ * 0x020000 - 0x030000 : QSPI.SPL.backup2 (64KiB)
+ * 0x030000 - 0x040000 : QSPI.SPL.backup3 (64KiB)
+ * 0x040000 - 0x1c0000 : QSPI.u-boot (1.5MiB)
+ * 0x1c0000 - 0x1d0000 : QSPI.u-boot-spl-os (64KiB)
+ * 0x1d0000 - 0x1e0000 : QSPI.u-boot-env (64KiB)
+ * 0x1e0000 - 0x1f0000 : QSPI.u-boot-env.backup1 (64KiB)
+ * 0x1f0000 - 0x6f0000 : QSPI.kernel (5MiB)
+ * 0x6f0000 - 0x2000000 : USERLAND
+ */
+#if defined(CONFIG_QSPI_BOOT)
+#define CONFIG_ENV_IS_IN_SPI_FLASH
+#define CONFIG_SYS_REDUNDAND_ENVIRONMENT
+#define CONFIG_ENV_SPI_MAX_HZ           CONFIG_SF_DEFAULT_SPEED
+#undef	CONFIG_SPL_MAX_SIZE
+#define CONFIG_SPL_MAX_SIZE             (64 << 10) /* 64 KiB */
+#undef CONFIG_ENV_IS_NOWHERE
+#define CONFIG_ENV_SECT_SIZE		(64 << 10) /* 64 KB sectors */
+#define CONFIG_ENV_OFFSET		0x1d0000
+#define CONFIG_ENV_OFFSET_REDUND	0x1e0000
+
+#ifdef MTDIDS_DEFAULT
+#undef MTDIDS_DEFAULT
+#endif
+#define MTDIDS_DEFAULT			"nor0=m25p80-flash.0"
+
+#ifdef MTDPARTS_DEFAULT
+#undef MTDPARTS_DEFAULT
+#endif
+#define MTDPARTS_DEFAULT			"mtdparts=qspi.0:64k(SPL)," \
+						"64k(QSPI.SPL.backup1)," \
+						"64k(QSPI.SPL.backup2)," \
+						"64k(QSPI.SPL.backup3)," \
+						"1.5m(QSPI.u-boot)," \
+						"64k(QSPI.u-boot-spl-os)," \
+						"64k(QSPI.u-boot-env)," \
+						"64k(QSPI.u-boot-env.backup1)," \
+						"5m(QSPI.kernel)," \
+						"-(QSPI.rootfs)"
+#endif
+
 /* SPI SPL */
 #define CONFIG_SPL_SPI_SUPPORT
 #define CONFIG_SPL_SPI_LOAD
