@@ -152,7 +152,7 @@
 #define CONFIG_SPL_SPI_FLASH_SUPPORT
 #define CONFIG_SPL_SPI_BUS             0
 #define CONFIG_SPL_SPI_CS              0
-#define CONFIG_SYS_SPI_U_BOOT_OFFS     0x20000
+#define CONFIG_SYS_SPI_U_BOOT_OFFS     0x40000
 
 #ifndef CONFIG_SPL_BUILD
 #ifdef CONFIG_MMC
