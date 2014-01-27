@@ -23,7 +23,9 @@
 
 DECLARE_GLOBAL_DATA_PTR;
 
+#ifdef CONFIG_DRIVER_TI_CPSW
 static struct ctrl_dev *cdev = (struct ctrl_dev *)CTRL_DEVICE_BASE;
+#endif
 
 /*
  * Read header information from EEPROM into global structure.
