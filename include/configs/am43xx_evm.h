@@ -114,8 +114,16 @@
  */
 #if defined(CONFIG_QSPI_BOOT)
 #ifdef CONFIG_SPL_BUILD
+/*
+ * QSPI flash block size is 64KiB in size. Hence, the SPL partition is
+ * limited to 64KiB. In order to fit within this constraint we need to
+ * disable MMC and USB host/gadget support in the SPL binary.
+ */
 #undef CONFIG_SPL_MMC_SUPPORT
+#undef CONFIG_SPL_USB_SUPPORT
+#undef CONFIG_SPL_USB_HOST_SUPPORT
 #endif
+
 #define CONFIG_ENV_IS_IN_SPI_FLASH
 #define CONFIG_SYS_REDUNDAND_ENVIRONMENT
 #define CONFIG_ENV_SPI_MAX_HZ           CONFIG_SF_DEFAULT_SPEED
@@ -270,8 +278,6 @@
 		BOOTCMD_NAND
 #endif
 
-#ifdef CONFIG_QSPI_BOOT
-#if !defined(CONFIG_SPL_BUILD)
 /* Enhance our eMMC support / experience. */
 #define CONFIG_CMD_GPT
 #define CONFIG_EFI_PARTITION
@@ -302,8 +308,6 @@
 #define CONFIG_SPL_ETH_SUPPORT
 #define CONFIG_SPL_NET_SUPPORT
 #define CONFIG_SYS_RX_ETH_BUFFER	64
-#endif
-#endif
 
 /* NAND support */
 #ifdef CONFIG_NAND
