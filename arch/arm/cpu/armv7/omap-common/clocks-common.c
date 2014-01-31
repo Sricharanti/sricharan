@@ -750,6 +750,16 @@ void do_enable_clocks(u32 const *clk_domains,
 	}
 }
 
+void recalibrate_io(struct vcores_data const *vcores)
+{
+	void (*recalib)(void);
+
+	if (vcores->core.pmic->recalib) {
+		recalib = vcores->core.pmic->recalib;
+		recalib();
+	}
+}
+
 void prcm_init(void)
 {
 	switch (omap_hw_init_context()) {
@@ -759,6 +769,7 @@ void prcm_init(void)
 		enable_basic_clocks();
 		timer_init();
 		scale_vcores(*omap_vcores);
+		recalibrate_io(*omap_vcores);
 		setup_dplls();
 #ifdef CONFIG_SYS_CLOCKS_ENABLE_ALL
 		setup_non_essential_dplls();

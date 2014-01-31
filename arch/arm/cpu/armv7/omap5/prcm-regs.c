@@ -450,6 +450,16 @@ struct omap_sys_ctrl_regs const dra7xx_ctrl = {
 	.control_efuse_3			= 0x4AE0C5C8,
 	.control_efuse_4			= 0x4AE0C5CC,
 	.control_efuse_13			= 0x4AE0C5F0,
+	.iodelay_config_reg_0			= 0x4844A00C,
+	.iodelay_config_reg_1			= 0x4844A010,
+	.iodelay_config_reg_2			= 0x4844A014,
+	.iodelay_config_reg_3			= 0x4844A018,
+	.iodelay_config_reg_4			= 0x4844A01C,
+	.iodelay_config_reg_5			= 0x4844A020,
+	.iodelay_config_reg_6			= 0x4844A024,
+	.iodelay_config_reg_7			= 0x4844A028,
+	.iodelay_config_reg_8			= 0x4844A02C,
+	.ctrl_core_sma_sw_0			= 0x4A0023FC,
 };
 
 struct prcm_regs const omap5_es2_prcm = {
@@ -964,6 +974,7 @@ struct prcm_regs const dra7xx_prcm = {
 	.prm_rstctrl				= 0x4ae07d00,
 	.prm_rstst				= 0x4ae07d04,
 	.prm_rsttime				= 0x4ae07d08,
+	.prm_io_pmctrl				= 0x4ae07d20,
 	.prm_vc_val_bypass			= 0x4ae07da0,
 	.prm_vc_cfg_i2c_mode			= 0x4ae07db4,
 	.prm_vc_cfg_i2c_clk			= 0x4ae07db8,

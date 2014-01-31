@@ -299,6 +299,72 @@ struct pmic_data palmas = {
 	.pmic_write	= omap_vc_bypass_send_value,
 };
 
+
+/**
+ * \brief   scale_iodelay function implements IODelay Recalibration.
+ *          IODelay calibration is required if changing to AVS0 voltage,
+ *          otherwise there will be some IO timing error versus datasheet.
+ *
+ * \param   None.
+ *
+ *
+ * \return  none.
+ *
+ **/
+void recalibrate_io_delay(void)
+{
+	int temp, period, mhz = 1000000;
+
+	/* Unlock the global lock to write to the MMRs */
+	writel(0x0000AAAA, (*ctrl)->iodelay_config_reg_8);
+
+	/* Unlock the MMR_LOCK1 */
+	writel(0x2FF1AC2B, (*ctrl)->control_core_mmr_lock1);
+
+	temp = readl((*ctrl)->iodelay_config_reg_2) & ~(0xFFFF);
+	period = get_sys_clk_freq();
+
+	/* period in ps */
+	period = mhz / (period/mhz);
+	writel(temp | period, (*ctrl)->iodelay_config_reg_2);
+
+	/*
+	 * Isolate all the IO. Do dummy read to
+	 * ensure t > 10ns between two steps
+	 */
+	clrsetbits_le32((*prcm)->prm_io_pmctrl, (1 << 0), 0x1);
+	readl((*prcm)->prm_io_pmctrl);
+
+	clrsetbits_le32((*ctrl)->ctrl_core_sma_sw_0, (1 << 3), (1 << 3));
+	readl((*ctrl)->ctrl_core_sma_sw_0);
+
+	clrsetbits_le32((*prcm)->prm_io_pmctrl, (1 << 0), 0x0);
+
+	/* Trigger the recalibration and update the delay values accordingly */
+	clrsetbits_le32((*ctrl)->iodelay_config_reg_0, (1 << 0), 0x1);
+	while (readl((*ctrl)->iodelay_config_reg_0) & 1)
+							;
+
+	/* wait for rom read to complete */
+	clrsetbits_le32((*ctrl)->iodelay_config_reg_0, (1 << 1), (1 << 1));
+	while (readl((*ctrl)->iodelay_config_reg_0) & 2)
+							;
+
+	clrsetbits_le32((*prcm)->prm_io_pmctrl, (1 << 0), 0x1);
+	readl((*prcm)->prm_io_pmctrl);
+
+	clrsetbits_le32((*ctrl)->ctrl_core_sma_sw_0, (1 << 3), 0x0);
+	readl((*ctrl)->ctrl_core_sma_sw_0);
+
+	clrsetbits_le32((*prcm)->prm_io_pmctrl, (1 << 0), 0x0);
+
+	/* Lock the MMR_LOCK1 */
+	writel(0x1A1C8144, (*ctrl)->control_core_mmr_lock1);
+
+	/* Lock the global lock to write to the MMRs */
+	writel(0x0000AAAB, (*ctrl)->iodelay_config_reg_8);
+}
+
 struct pmic_data tps659038 = {
 	.base_offset = PALMAS_SMPS_BASE_VOLT_UV,
 	.step = 10000, /* 10 mV represented in uV */
@@ -310,6 +376,7 @@ struct pmic_data tps659038 = {
 	.i2c_slave_addr	= TPS659038_I2C_SLAVE_ADDR,
 	.pmic_bus_init	= gpi2c_init,
 	.pmic_write	= palmas_i2c_write_u8,
+	.recalib	= recalibrate_io_delay,
 };
 
 struct vcores_data omap5430_volts = {

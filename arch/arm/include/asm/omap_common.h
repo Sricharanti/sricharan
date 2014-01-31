@@ -344,6 +344,7 @@ struct prcm_regs {
 	/* GMAC Clk Ctrl */
 	u32 cm_gmac_gmac_clkctrl;
 	u32 cm_gmac_clkstctrl;
+	u32 prm_io_pmctrl;
 };
 
 struct omap_sys_ctrl_regs {
@@ -451,6 +452,16 @@ struct omap_sys_ctrl_regs {
 	u32 control_efuse_12;
 	u32 control_efuse_13;
 	u32 control_padconf_wkup_base;
+	u32 iodelay_config_reg_0;
+	u32 iodelay_config_reg_1;
+	u32 iodelay_config_reg_2;
+	u32 iodelay_config_reg_3;
+	u32 iodelay_config_reg_4;
+	u32 iodelay_config_reg_5;
+	u32 iodelay_config_reg_6;
+	u32 iodelay_config_reg_7;
+	u32 iodelay_config_reg_8;
+	u32 ctrl_core_sma_sw_0;
 };
 
 struct dpll_params {
@@ -506,6 +517,7 @@ struct pmic_data {
 	u32 i2c_slave_addr;
 	void (*pmic_bus_init)(void);
 	int (*pmic_write)(u8 sa, u8 reg_addr, u8 reg_data);
+	void (*recalib)(void);
 };
 
 /**
