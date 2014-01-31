@@ -178,6 +178,7 @@ void do_sdram_init(const struct ctrl_ioregs *ioregs,
 	clrbits_le32(&emif->emif_sdram_ref_ctrl, EMIF_REG_INITREF_DIS_MASK);
 
 	writel(regs->sdram_config, &emif->emif_sdram_config);
+	writel(regs->sdram_config, &cstat->secure_emif_sdram_config);
 	writel(regs->ref_ctrl, &emif->emif_sdram_ref_ctrl);
 
 	if (sdram_type == EMIF_SDRAM_TYPE_LPDDR2) {
