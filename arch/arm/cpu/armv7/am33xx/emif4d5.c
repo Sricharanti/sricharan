@@ -160,8 +160,8 @@ void do_sdram_init(const struct ctrl_ioregs *ioregs,
 	writel(regs->sdram_tim3, &emif->emif_sdram_tim_3);
 	writel(regs->sdram_tim3, &emif->emif_sdram_tim_3_shdw);
 
-	writel(0x0, &emif->emif_pwr_mgmt_ctrl);
-	writel(0x0, &emif->emif_pwr_mgmt_ctrl_shdw);
+	writel(0xA0, &emif->emif_pwr_mgmt_ctrl);
+	writel(0xA0, &emif->emif_pwr_mgmt_ctrl_shdw);
 	writel(0x1, &emif->emif_iodft_tlgc);
 	writel(regs->zq_config, &emif->emif_zq_config);
 
