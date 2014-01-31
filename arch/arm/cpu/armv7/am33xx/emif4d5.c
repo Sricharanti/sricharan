@@ -142,7 +142,7 @@ void do_sdram_init(const struct ctrl_ioregs *ioregs,
 	writel(ioregs->dt3ioctrl, &ioctrl_reg->dt3ioctrl);
 	writel(ioregs->emif_sdram_config_ext,
 	       &ioctrl_reg->emif_sdram_config_ext);
-	writel(0x0, &ddrctrl->ddrioctrl);
+	writel(0x80000000, &ddrctrl->ddrioctrl);
 
 	/* Set CKE to be controlled by EMIF/DDR PHY */
 	writel(readl(&ddrctrl->ddrckectrl) | 0x3, &ddrctrl->ddrckectrl);
