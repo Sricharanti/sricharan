@@ -188,7 +188,7 @@
 						"256k(u-boot-env)," \
 						"256k(u-boot-env.backup1)," \
 						"5m(kernel)," \
-						"-(rootfs)"
+						"-(file-system)"
   #undef CONFIG_ENV_IS_NOWHERE
   #define CONFIG_ENV_IS_IN_NAND
   #define CONFIG_ENV_OFFSET			0x280000
