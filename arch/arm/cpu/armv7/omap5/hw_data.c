@@ -359,11 +359,10 @@ void recalibrate_io_delay(void)
 
 	clrsetbits_le32((*prcm)->prm_io_pmctrl, (1 << 0), 0x0);
 
-	/* Lock the MMR_LOCK1 */
-	writel(0x1A1C8144, (*ctrl)->control_core_mmr_lock1);
-
 	/* Lock the global lock to write to the MMRs */
 	writel(0x0000AAAB, (*ctrl)->iodelay_config_reg_8);
+
+	/* Leave the control module unlocked */
 }
 #endif /* CONFIG_SPL_BUILD */
 
