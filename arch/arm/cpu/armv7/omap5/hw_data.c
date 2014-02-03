@@ -300,6 +300,7 @@ struct pmic_data palmas = {
 };
 
 
+#ifdef CONFIG_SPL_BUILD
 /**
  * \brief   scale_iodelay function implements IODelay Recalibration.
  *          IODelay calibration is required if changing to AVS0 voltage,
@@ -364,6 +365,7 @@ void recalibrate_io_delay(void)
 	/* Lock the global lock to write to the MMRs */
 	writel(0x0000AAAB, (*ctrl)->iodelay_config_reg_8);
 }
+#endif /* CONFIG_SPL_BUILD */
 
 struct pmic_data tps659038 = {
 	.base_offset = PALMAS_SMPS_BASE_VOLT_UV,
@@ -376,7 +378,9 @@ struct pmic_data tps659038 = {
 	.i2c_slave_addr	= TPS659038_I2C_SLAVE_ADDR,
 	.pmic_bus_init	= gpi2c_init,
 	.pmic_write	= palmas_i2c_write_u8,
+#ifdef CONFIG_SPL_BUILD
 	.recalib	= recalibrate_io_delay,
+#endif
 };
 
 struct vcores_data omap5430_volts = {
