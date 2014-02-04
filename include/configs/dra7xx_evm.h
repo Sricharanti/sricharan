@@ -178,22 +178,23 @@
 #define CONFIG_NAND_OMAP_ECCSCHEME		OMAP_ECC_BCH8_CODE_HW
 #if !defined(CONFIG_SPI_BOOT) && !defined(CONFIG_NOR_BOOT) && \
 	!defined(CONFIG_EMMC_BOOT)
-  #define MTDIDS_DEFAULT			"nand0=nand.0"
-  #define MTDPARTS_DEFAULT			"mtdparts=nand.0:128k(SPL)," \
-						"128k(SPL.backup1)," \
-						"128k(SPL.backup2)," \
-						"640k(SPL.backup3)," \
-						"1m(u-boot)," \
-						"512k(u-boot-spl-os)," \
-						"256k(u-boot-env)," \
-						"256k(u-boot-env.backup1)," \
-						"5m(kernel)," \
-						"-(file-system)"
+   #define MTDIDS_DEFAULT			"nand0=nand.0"
+  #define MTDPARTS_DEFAULT		      "mtdparts=nand.0:" \
+					      "128k(NAND.SPL)," \
+					      "128k(NAND.SPL.backup1)," \
+					      "128k(NAND.SPL.backup2)," \
+					      "128k(NAND.SPL.backup3)," \
+					      "512k(NAND.u-boot-spl-os)," \
+					      "1m(NAND.u-boot)," \
+					      "128k(NAND.u-boot-env)," \
+					      "128k(NAND.u-boot-env.backup1)," \
+					      "8m(NAND.kernel)," \
+					      "-(NAND.rootfs)"
   #undef CONFIG_ENV_IS_NOWHERE
   #define CONFIG_ENV_IS_IN_NAND
-  #define CONFIG_ENV_OFFSET			0x280000
-  #define CONFIG_ENV_OFFSET_REDUND		0x2C0000
-  #define CONFIG_SYS_ENV_SECT_SIZE		256 * 1024 /* 256 KiB */
+  #define CONFIG_ENV_OFFSET			0x001C0000
+  #define CONFIG_ENV_OFFSET_REDUND		0x001E0000
+  #define CONFIG_SYS_ENV_SECT_SIZE		CONFIG_SYS_NAND_BLOCK_SIZE
 #endif
 /* NAND: SPL related configs */
 #if !defined(CONFIG_SPI_BOOT) && !defined(CONFIG_NOR_BOOT) && \
@@ -204,11 +205,11 @@
   #define CONFIG_SPL_NAND_DRIVERS
   #define CONFIG_SPL_NAND_ECC
   #define CONFIG_SYS_NAND_U_BOOT_START		CONFIG_SYS_TEXT_BASE
-  #define CONFIG_SYS_NAND_U_BOOT_OFFS		0x100000
+  #define CONFIG_SYS_NAND_U_BOOT_OFFS		0x000C0000
  /* NAND: SPL falcon mode related configs */
   #ifdef CONFIG_SPL_OS_BOOT
-    #define CONFIG_CMD_SPL_NAND_OFS		0x200000 /* os-boot parameters*/
-    #define CONFIG_SYS_NAND_SPL_KERNEL_OFFS	0x300000 /* kernel offset */
+    #define CONFIG_CMD_SPL_NAND_OFS		0x00080000 /* os parameters */
+    #define CONFIG_SYS_NAND_SPL_KERNEL_OFFS	0x00A00000 /* kernel offset */
     #define CONFIG_CMD_SPL_WRITE_SIZE		0x2000
   #endif
 #endif
