@@ -287,7 +287,7 @@
 		"root=${nandroot} " \
 		"rootfstype=${nandrootfstype}\0" \
 	"dfu_alt_info_nand=" DFU_ALT_INFO_NAND "\0" \
-	"nandroot=ubi0:rootfs rw ubi.mtd=file-system," \
+	"nandroot=ubi0:rootfs rw ubi.mtd=NAND.file-system," \
 		__stringify(CONFIG_SYS_NAND_PAGE_SIZE) "\0" \
 	"nandrootfstype=ubifs rootwait=1\0" \
 	"nandboot=echo Booting from nand ...; " \
