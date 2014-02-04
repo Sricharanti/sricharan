@@ -327,6 +327,7 @@ void recalibrate_io_delay(void)
 
 	/* period in ps */
 	period = mhz / (period/mhz);
+	period /= 5;
 	writel(temp | period, (*ctrl)->iodelay_config_reg_2);
 
 	/*
