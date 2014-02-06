@@ -184,7 +184,7 @@
 					      "128k(NAND.SPL.backup1)," \
 					      "128k(NAND.SPL.backup2)," \
 					      "128k(NAND.SPL.backup3)," \
-					      "512k(NAND.u-boot-spl-os)," \
+					      "256k(NAND.u-boot-spl-os)," \
 					      "1m(NAND.u-boot)," \
 					      "128k(NAND.u-boot-env)," \
 					      "128k(NAND.u-boot-env.backup1)," \
