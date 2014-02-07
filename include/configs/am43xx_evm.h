@@ -105,12 +105,12 @@
  * 0x010000 - 0x020000 : QSPI.SPL.backup1 (64KiB)
  * 0x020000 - 0x030000 : QSPI.SPL.backup2 (64KiB)
  * 0x030000 - 0x040000 : QSPI.SPL.backup3 (64KiB)
- * 0x040000 - 0x1c0000 : QSPI.u-boot (1.5MiB)
- * 0x1c0000 - 0x1d0000 : QSPI.u-boot-spl-os (64KiB)
- * 0x1d0000 - 0x1e0000 : QSPI.u-boot-env (64KiB)
- * 0x1e0000 - 0x1f0000 : QSPI.u-boot-env.backup1 (64KiB)
- * 0x1f0000 - 0x6f0000 : QSPI.kernel (5MiB)
- * 0x6f0000 - 0x4000000 : USERLAND
+ * 0x040000 - 0x140000 : QSPI.u-boot (1MiB)
+ * 0x140000 - 0x150000 : QSPI.u-boot-spl-os (64KiB)
+ * 0x150000 - 0x160000 : QSPI.u-boot-env (64KiB)
+ * 0x160000 - 0x170000 : QSPI.u-boot-env.backup1 (64KiB)
+ * 0x170000 - 0x970000 : QSPI.kernel (5MiB)
+ * 0x970000 - 0x4000000 : USERLAND
  */
 #if defined(CONFIG_QSPI_BOOT)
 #ifdef CONFIG_SPL_BUILD
@@ -146,11 +146,11 @@
 						"64k(QSPI.SPL.backup1)," \
 						"64k(QSPI.SPL.backup2)," \
 						"64k(QSPI.SPL.backup3)," \
-						"1.5m(QSPI.u-boot)," \
+						"1m(QSPI.u-boot)," \
 						"64k(QSPI.u-boot-spl-os)," \
 						"64k(QSPI.u-boot-env)," \
 						"64k(QSPI.u-boot-env.backup1)," \
-						"5m(QSPI.kernel)," \
+						"8m(QSPI.kernel)," \
 						"-(QSPI.rootfs)"
 #endif
 
