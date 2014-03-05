@@ -449,7 +449,7 @@ void board_init_f(ulong bootflag)
 	dram_init_banksize();
 	display_dram_config();	/* and display it */
 
-#ifdef CONFIG_AM43XX
+#if defined(CONFIG_AM43XX) && !defined(CONFIG_QSPI_BOOT)
 	enable_caches();
 #endif
 	gd->relocaddr = addr;
@@ -522,7 +522,7 @@ void board_init_r(gd_t *id, ulong dest_addr)
 	monitor_flash_len = _end_ofs;
 
 	/* Enable caches */
-#ifndef CONFIG_AM43XX
+#if !defined(CONFIG_AM43XX) || defined(CONFIG_QSPI_BOOT)
 	enable_caches();
 #endif
 
