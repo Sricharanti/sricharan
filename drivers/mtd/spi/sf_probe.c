@@ -348,6 +348,10 @@ struct spi_flash *spi_flash_probe(unsigned int bus, unsigned int cs,
 	}
 #endif
 
+#ifdef CONFIG_SF_QUAD
+	spi_flash_set_qeb_mxic(flash);
+#endif
+
 	/* Release spi bus */
 	spi_release_bus(spi);
 

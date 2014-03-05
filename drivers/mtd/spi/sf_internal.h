@@ -12,6 +12,8 @@
 
 #define SPI_FLASH_16MB_BOUN		0x1000000
 
+#define STATUS_QEB_MXIC			(1 << 6)
+
 /* SECT flags */
 #define SECT_4K				(1 << 1)
 #define SECT_32K			(1 << 2)
@@ -90,7 +92,7 @@ int spi_flash_cmd_write_status(struct spi_flash *flash, u8 sr);
 
 /* Set quad enbale bit */
 int spi_flash_set_qeb(struct spi_flash *flash);
-
+int spi_flash_set_qeb_mxic(struct spi_flash *flash);
 /* Enable writing on the SPI flash */
 static inline int spi_flash_cmd_write_enable(struct spi_flash *flash)
 {

@@ -321,6 +321,36 @@ int spi_flash_cmd_read_ops(struct spi_flash *flash, u32 offset,
 	return ret;
 }
 
+int spi_flash_set_qeb_mxic(struct spi_flash *flash)
+{
+	u8 qeb_status;
+	u8 cmd;
+	int ret;
+
+	cmd = CMD_READ_STATUS;
+	ret = spi_flash_read_common(flash, &cmd, 1, &qeb_status, 1);
+	if (ret < 0) {
+		debug("SF: fail to read status register\n");
+		return ret;
+	}
+
+	if (qeb_status & STATUS_QEB_MXIC) {
+		printf("SF: Quad enable bit is already set\n");
+	} else {
+		ret = spi_flash_cmd_write_status(flash, STATUS_QEB_MXIC);
+		if (ret < 0)
+			return ret;
+	}
+
+	ret = spi_flash_read_common(flash, &cmd, 1, &qeb_status, 1);
+	if (ret < 0) {
+		debug("SF: fail to read status register\n");
+		return ret;
+	}
+
+	return ret;
+}
+
 #ifdef CONFIG_SPI_FLASH_SST
 static int sst_byte_write(struct spi_flash *flash, u32 offset, const void *buf)
 {
