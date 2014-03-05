@@ -46,7 +46,7 @@
  * Since SPL did pll and ddr initialization for us,
  * we don't need to do it twice.
  */
-#if !defined(CONFIG_SPL_BUILD) && !defined(CONFIG_NOR_BOOT)
+#if !defined(CONFIG_SPL_BUILD) && !defined(CONFIG_QSPI_BOOT)
 #define CONFIG_SKIP_LOWLEVEL_INIT
 #endif
 
@@ -64,8 +64,6 @@
 
 /* NS16550 Configuration */
 #define CONFIG_SYS_NS16550_COM1		0x44e09000	/* Base EVM has UART0 */
-
-#define CONFIG_ENV_IS_NOWHERE
 
 #define CONFIG_SPL_LDSCRIPT		"$(CPUDIR)/omap-common/u-boot-spl.lds"
 
@@ -103,38 +101,24 @@
 
 /*
  * Default to using SPI for environment, etc.
- * 0x000000 - 0x010000 : QSPI.SPL (64KiB)
- * 0x010000 - 0x020000 : QSPI.SPL.backup1 (64KiB)
- * 0x020000 - 0x030000 : QSPI.SPL.backup2 (64KiB)
- * 0x030000 - 0x040000 : QSPI.SPL.backup3 (64KiB)
- * 0x040000 - 0x140000 : QSPI.u-boot (1MiB)
- * 0x140000 - 0x150000 : QSPI.u-boot-spl-os (64KiB)
- * 0x150000 - 0x160000 : QSPI.u-boot-env (64KiB)
- * 0x160000 - 0x170000 : QSPI.u-boot-env.backup1 (64KiB)
- * 0x170000 - 0x970000 : QSPI.kernel (5MiB)
- * 0x970000 - 0x4000000 : USERLAND
+ * 0x000000 - 0x080000 : QSPI.u-boot (512KiB)
+ * 0x080000 - 0x100000 : QSPI.u-boot.backup (512KiB)
+ * 0x100000 - 0x110000 : QSPI.u-boot-spl-os (64KiB)
+ * 0x110000 - 0x120000 : QSPI.u-boot-env (64KiB)
+ * 0x120000 - 0x130000 : QSPI.u-boot-env.backup (64KiB)
+ * 0x130000 - 0x930000 : QSPI.kernel (8MiB)
+ * 0x930000 - 0x4000000 : QSPI.file-system (54MiB)
  */
-#if defined(CONFIG_QSPI_BOOT)
-#ifdef CONFIG_SPL_BUILD
-/*
- * QSPI flash block size is 64KiB in size. Hence, the SPL partition is
- * limited to 64KiB. In order to fit within this constraint we need to
- * disable MMC and USB host/gadget support in the SPL binary.
- */
-#undef CONFIG_SPL_MMC_SUPPORT
-#undef CONFIG_SPL_USB_SUPPORT
-#undef CONFIG_SPL_USB_HOST_SUPPORT
+#ifdef CONFIG_QSPI_BOOT
+#define CONFIG_SYS_TEXT_BASE           0x30000000
 #endif
-
+#ifdef CONFIG_QSPI
 #define CONFIG_ENV_IS_IN_SPI_FLASH
 #define CONFIG_SYS_REDUNDAND_ENVIRONMENT
 #define CONFIG_ENV_SPI_MAX_HZ           CONFIG_SF_DEFAULT_SPEED
-#undef	CONFIG_SPL_MAX_SIZE
-#define	CONFIG_SPL_MAX_SIZE		(64 << 10)  /* 64 KiB */
-#undef CONFIG_ENV_IS_NOWHERE
 #define CONFIG_ENV_SECT_SIZE		(64 << 10) /* 64 KB sectors */
-#define CONFIG_ENV_OFFSET		0x1d0000
-#define CONFIG_ENV_OFFSET_REDUND	0x1e0000
+#define CONFIG_ENV_OFFSET		0x110000
+#define CONFIG_ENV_OFFSET_REDUND	0x120000
 
 #ifdef MTDIDS_DEFAULT
 #undef MTDIDS_DEFAULT
@@ -144,25 +128,15 @@
 #ifdef MTDPARTS_DEFAULT
 #undef MTDPARTS_DEFAULT
 #endif
-#define MTDPARTS_DEFAULT			"mtdparts=qspi.0:64k(SPL)," \
-						"64k(QSPI.SPL.backup1)," \
-						"64k(QSPI.SPL.backup2)," \
-						"64k(QSPI.SPL.backup3)," \
-						"1m(QSPI.u-boot)," \
+#define MTDPARTS_DEFAULT			"mtdparts=qspi.0:512k(QSPI.u-boot)," \
+						"512k(QSPI.u-boot.backup)," \
 						"64k(QSPI.u-boot-spl-os)," \
 						"64k(QSPI.u-boot-env)," \
-						"64k(QSPI.u-boot-env.backup1)," \
+						"64k(QSPI.u-boot-env.backup)," \
 						"8m(QSPI.kernel)," \
-						"-(QSPI.rootfs)"
+						"-(QSPI.file-system)"
 #endif
 
-/* SPI SPL */
-#define CONFIG_SPL_SPI_SUPPORT
-#define CONFIG_SPL_SPI_LOAD
-#define CONFIG_SPL_SPI_FLASH_SUPPORT
-#define CONFIG_SPL_SPI_BUS             0
-#define CONFIG_SPL_SPI_CS              0
-#define CONFIG_SYS_SPI_U_BOOT_OFFS     0x40000
 
 #ifndef CONFIG_SPL_BUILD
 #ifdef CONFIG_MMC
@@ -354,7 +328,7 @@
 #define CONFIG_SYS_NAND_ECCSIZE			512
 #define CONFIG_SYS_NAND_ECCBYTES		26
 #define CONFIG_NAND_OMAP_ECCSCHEME		OMAP_ECC_BCH16_CODE_HW
-#if !defined(CONFIG_SPI_BOOT) && !defined(CONFIG_NOR_BOOT) && \
+#if !defined(CONFIG_QSPI) && !defined(CONFIG_NOR_BOOT) && \
 	!defined(CONFIG_EMMC_BOOT)
   #define MTDIDS_DEFAULT		      "nand0=nand.0"
   #define MTDPARTS_DEFAULT		      "mtdparts=nand.0:" \
@@ -368,14 +342,13 @@
 					      "256k(NAND.u-boot-env.backup1)," \
 					      "7m(NAND.kernel)," \
 					      "-(NAND.file-system)"
-  #undef CONFIG_ENV_IS_NOWHERE
   #define CONFIG_ENV_IS_IN_NAND
   #define CONFIG_ENV_OFFSET			0x00280000
   #define CONFIG_ENV_OFFSET_REDUND		0x002C0000
   #define CONFIG_SYS_ENV_SECT_SIZE		CONFIG_SYS_NAND_BLOCK_SIZE
 #endif
 /* NAND: SPL related configs */
-#if !defined(CONFIG_SPI_BOOT) && !defined(CONFIG_NOR_BOOT) && \
+#if !defined(CONFIG_QSPI) && !defined(CONFIG_NOR_BOOT) && \
 	!defined(CONFIG_EMMC_BOOT)
   #define CONFIG_SPL_NAND_AM33XX_BCH
   #define CONFIG_SPL_NAND_SUPPORT

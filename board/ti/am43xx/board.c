@@ -17,6 +17,8 @@
 #include <asm/arch/mux.h>
 #include <asm/arch/ddr_defs.h>
 #include <asm/emif.h>
+#include <asm/gpio.h>
+#include <asm/omap_gpio.h>
 #include "board.h"
 #include <miiphy.h>
 #include <cpsw.h>
@@ -71,7 +73,7 @@ static int read_eeprom(struct am43xx_board_id *header)
 	return 0;
 }
 
-#ifdef CONFIG_SPL_BUILD
+#if defined(CONFIG_SPL_BUILD) || defined(CONFIG_QSPI_BOOT)
 
 const struct dpll_params epos_evm_dpll_ddr = {
 		266, 24, 1, -1, 1, -1, -1};
@@ -315,6 +317,10 @@ int board_late_init(void)
 	safe_string[sizeof(header.version)] = 0;
 	setenv("board_rev", safe_string);
 #endif
+	if (board_is_eposevm()) {
+		gpio_request(CONFIG_QSPI_SEL_GPIO, "qspi_gpio");
+		gpio_direction_output(CONFIG_QSPI_SEL_GPIO, 0);
+	}
 	return 0;
 }
 #endif

@@ -70,6 +70,7 @@ static struct module_pin_mux i2c0_pin_mux[] = {
 	{-1},
 };
 
+#ifdef CONFIG_QSPI
 static struct module_pin_mux qspi_pin_mux[] = {
 	{OFFSET(gpmc_csn0), (MODE(3) | PULLUP_EN | RXACTIVE)},	/* QSPI_CS0 */
 	{OFFSET(gpmc_csn3), (MODE(2) | PULLUP_EN | RXACTIVE)},	/* QSPI_CLK */
@@ -79,6 +80,7 @@ static struct module_pin_mux qspi_pin_mux[] = {
 	{OFFSET(gpmc_be0n_cle), (MODE(3) | PULLUP_EN | RXACTIVE)},	/* QSPI_D3 */
 	{-1},
 };
+#endif
 
 #ifdef CONFIG_NAND
 static struct module_pin_mux nand_x8_pin_mux[] = {
@@ -110,12 +112,14 @@ void enable_board_pin_mux(void)
 {
 	configure_module_pin_mux(mmc0_pin_mux);
 	configure_module_pin_mux(i2c0_pin_mux);
-	configure_module_pin_mux(qspi_pin_mux);
 	configure_module_pin_mux(mdio_pin_mux);
 
-	if (board_is_eposevm())
+	if (board_is_eposevm()) {
 		configure_module_pin_mux(rmii1_pin_mux);
-	else
+#ifdef CONFIG_QSPI
+		configure_module_pin_mux(qspi_pin_mux);
+#endif
+	} else
 		configure_module_pin_mux(rgmii1_pin_mux);
 #if defined(CONFIG_NAND)
 	configure_module_pin_mux(nand_x8_pin_mux);

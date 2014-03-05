@@ -137,7 +137,8 @@ int arch_misc_init(void)
 	return 0;
 }
 
-#if defined(CONFIG_SPL_BUILD) || defined(CONFIG_NOR_BOOT)
+#if defined(CONFIG_SPL_BUILD) || defined(CONFIG_NOR_BOOT) || \
+		defined(CONFIG_QSPI_BOOT)
 /*
  * This function is the place to do per-board things such as ramp up the
  * MPU clock frequency.
@@ -183,7 +184,8 @@ static void watchdog_disable(void)
 }
 #endif
 
-#if defined(CONFIG_SPL_BUILD) || defined(CONFIG_NOR_BOOT)
+#if defined(CONFIG_SPL_BUILD) || defined(CONFIG_NOR_BOOT) || \
+		defined(CONFIG_QSPI_BOOT)
 void s_init(void)
 {
 	/*
@@ -207,6 +209,7 @@ void s_init(void)
 	set_uart_mux_conf();
 	setup_clocks_for_console();
 	uart_soft_reset();
+
 #ifdef CONFIG_NOR_BOOT
 	gd->baudrate = CONFIG_BAUDRATE;
 	serial_init();
@@ -215,6 +218,7 @@ void s_init(void)
 	gd = &gdata;
 	preloader_console_init();
 #endif
+
 	prcm_init();
 	set_mux_conf_regs();
 	/* Enable RTC32K clock */
