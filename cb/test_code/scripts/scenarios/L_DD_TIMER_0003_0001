@@ -1,0 +1,21 @@
+###############################################################################
+# Scenario: L_DD_TIMER_0003_0001
+# Author  : Tarun Kanti DebBarma
+# Date    : July 13, 2010
+# Modif.  : Taras Koroliuk
+# Mod. date: Mar 01, 2012
+###############################################################################
+
+# Begin L_DD_TIMER_0003_0001
+
+# Exercise gptimer[2,10] by:
+# 1) applying different clock inputs (32khz, sys clk)
+# 2) installing interrupts and handling the same in ISR
+
+#by default the module uses gptimer_id=2
+01 set -x; insmod $MODDIR/dmtimer_test_all.ko
+02 set -x; rmmod dmtimer_test_all
+03 set -x; insmod $MODDIR/dmtimer_test_all.ko gptimer_id=10
+04 set -x; rmmod dmtimer_test_all
+
+# End L_DD_TIMER_0003_0001

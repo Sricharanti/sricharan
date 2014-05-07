@@ -1,0 +1,12 @@
+###############################################################################
+# Scenario: L_DD_TIMER_0001_0005
+# Author  : Taras Koroliuk
+# Date    : Feb 03 , 2012
+# Descr.  : Timer resolution should be 1 nanosec.
+###############################################################################
+
+# Begin L_DD_TIMER_0001_0005
+
+01 set -x;$TESTSCRIPT/requestTimerResolution.sh
+
+# End L_DD_TIMER_0001_0005

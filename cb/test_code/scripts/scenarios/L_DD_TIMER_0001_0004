@@ -1,0 +1,13 @@
+###############################################################################
+# Scenario: L_DD_TIMER_0001_0005
+# Author  : Taras Koroliuk
+# Date    : 02/22/2012
+# Descr.  : GPTimer: Interrupt Latency
+###############################################################################
+
+# Begin L_DD_TIMER_0001_0004
+
+01 set -x; insmod $MODDIR/timer32value.ko delay=6 check=1
+02 set -x; rmmod timer32value
+
+# End L_DD_TIMER_0001_0004

@@ -1,0 +1,1 @@
+cmd_/home/a0393807/kernel/DDT/omap-ddt/cb/test_code/utils/timer/built-in.o :=  rm -f /home/a0393807/kernel/DDT/omap-ddt/cb/test_code/utils/timer/built-in.o; arm-none-linux-gnueabi-ar rcsD /home/a0393807/kernel/DDT/omap-ddt/cb/test_code/utils/timer/built-in.o

@@ -1,0 +1,13 @@
+###############################################################################
+# Scenario: L_DD_TIMER_0001_0003
+# Author  : Andrii Danylov
+# Date    : 31 Jan 2013
+###############################################################################
+
+# Begin L_DD_TIMER_0001_0003
+
+0001 set -x; $UTILS_DIR_SCRIPTS/system_message_buffer.sh "system.log" && exit 0 || exit
+0002 set -x; cat "system.log" | grep -i "GPTIMER1" && exit 0 || exit 1
+0003 set -x; rm "system.log" && exit 0 || exit 1
+
+# End L_DD_TIMER_0001_0003
