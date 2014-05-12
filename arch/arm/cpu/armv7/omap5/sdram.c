@@ -288,6 +288,7 @@ static void emif_get_dmm_regs_sdp(const struct dmm_lisa_map_regs
 	case DRA752_ES1_0:
 	case DRA752_ES1_1:
 		*dmm_lisa_regs = &lisa_map_2G_x_2_x_2_2G_x_1_x_2;
+		break;
 	case DRA722_ES1_0:
 	default:
 		*dmm_lisa_regs = &lisa_map_2G_x_2;
