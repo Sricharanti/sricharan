@@ -217,8 +217,11 @@
 #define NANDARGS ""
 #endif /* !CONFIG_NAND */
 
+#define CONFIG_ENV_VARS_UBOOT_RUNTIME_CONFIG
 #define FIND_FDT_FILE \
 	"findfdt="\
+		"if test $board_name = dra72x; then " \
+			"setenv fdtfile dra72-evm.dtb; fi;" \
 		"if test $board_name = dra7xx; then " \
 			"setenv fdtfile dra7-evm.dtb; fi;" \
 		"if test $fdtfile = undefined; then " \
