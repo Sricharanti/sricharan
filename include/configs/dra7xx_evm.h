@@ -245,4 +245,6 @@
 #define BOOT_TARGETS_NAND ""
 #endif
 
+#define CONFIG_DDR_666MHZ
+
 #endif /* __CONFIG_DRA7XX_EVM_H */

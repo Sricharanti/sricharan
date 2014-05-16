@@ -227,6 +227,17 @@ static const struct dpll_params usb_dpll_params_1920mhz[NUM_SYS_CLKS] = {
 	{400, 15, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1},	/* 38.4 MHz */
 };
 
+#ifdef CONFIG_DDR_666MHZ
+static const struct dpll_params ddr_dpll_params_2664mhz[NUM_SYS_CLKS] = {
+	{111, 0, 2, 1, 8, -1, -1, -1, -1, -1, -1, -1},		/* 12 MHz   */
+	{333, 4, 2, 1, 8, -1, -1, -1, -1, -1, -1, -1},		/* 20 MHz   */
+	{555, 6, 2, 1, 8, -1, -1, -1, -1, -1, -1, -1},		/* 16.8 MHz */
+	{555, 7, 2, 1, 8, -1, -1, -1, -1, -1, -1, -1},		/* 19.2 MHz */
+	{666, 12, 2, 1, 8, -1, -1, -1, -1, -1, -1, -1},		/* 26 MHz   */
+	{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},	/* 27 MHz   */
+	{555, 15, 2, 1, 8, -1, -1, -1, -1, -1, -1, -1},		/* 38.4 MHz */
+};
+#else  /* DDR at 532MHZ */
 static const struct dpll_params ddr_dpll_params_2128mhz[NUM_SYS_CLKS] = {
 	{266, 2, 2, 1, 8, -1, -1, -1, -1, -1, -1, -1},		/* 12 MHz   */
 	{266, 4, 2, 1, 8, -1, -1, -1, -1, -1, -1, -1},		/* 20 MHz   */
@@ -236,6 +247,7 @@ static const struct dpll_params ddr_dpll_params_2128mhz[NUM_SYS_CLKS] = {
 	{-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},	/* 27 MHz   */
 	{665, 23, 2, 1, 8, -1, -1, -1, -1, -1, -1, -1},		/* 38.4 MHz */
 };
+#endif
 
 static const struct dpll_params gmac_dpll_params_2000mhz[NUM_SYS_CLKS] = {
 	{250, 2, 4, 10, 40, 8, 10, -1, -1, -1, -1, -1},		/* 12 MHz   */
@@ -282,7 +294,11 @@ struct dplls dra7xx_dplls = {
 	.abe = abe_dpll_params_sysclk2_361267khz,
 	.iva = iva_dpll_params_2330mhz_dra7xx,
 	.usb = usb_dpll_params_1920mhz,
+#ifdef CONFIG_DDR_666MHZ
+	.ddr =	ddr_dpll_params_2664mhz,
+#else
 	.ddr = ddr_dpll_params_2128mhz,
+#endif
 	.gmac = gmac_dpll_params_2000mhz,
 };
 
@@ -710,12 +726,16 @@ const struct ctrl_ioregs ioregs_omap5432_es2 = {
 const struct ctrl_ioregs ioregs_dra7xx_es1 = {
 	.ctrl_ddrch = 0x40404040,
 	.ctrl_lpddr2ch = 0x40404040,
+#ifdef CONFIG_DDR_666MHZ
+	.ctrl_ddr3ch = 0x60606080,
+#else
 	.ctrl_ddr3ch = 0x80808080,
+#endif
 	.ctrl_ddrio_0 = 0xA2084210,
 	.ctrl_ddrio_1 = 0x84210840,
 	.ctrl_ddrio_2 = 0x84210000,
 	.ctrl_emif_sdram_config_ext = 0x0001C1A7,
-	.ctrl_emif_sdram_config_ext_final = 0x000101A7,
+	.ctrl_emif_sdram_config_ext_final = 0x0001C1A7,
 	.ctrl_ddr_ctrl_ext_0 = 0xA2000000,
 };
 
