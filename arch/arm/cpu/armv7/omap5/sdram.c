@@ -283,11 +283,7 @@ static void emif_get_reg_dump_sdp(u32 emif_nr, const struct emif_regs **regs)
 	case DRA752_ES1_1:
 		switch (emif_nr) {
 		case 1:
-#ifdef CONFIG_DDR_666MHZ
-			*regs = &emif_1_regs_ddr3_666_mhz_1cs_dra_es1;
-#else
 			*regs = &emif_1_regs_ddr3_532_mhz_1cs_dra_es1;
-#endif
 			break;
 		case 2:
 			*regs = &emif_2_regs_ddr3_532_mhz_1cs_dra_es1;
@@ -295,6 +291,8 @@ static void emif_get_reg_dump_sdp(u32 emif_nr, const struct emif_regs **regs)
 		}
 		break;
 	case DRA722_ES1_0:
+		*regs = &emif_1_regs_ddr3_666_mhz_1cs_dra_es1;
+		break;
 	default:
 		*regs = &emif_1_regs_ddr3_532_mhz_1cs_dra_es1;
 	}
@@ -535,22 +533,19 @@ static void emif_get_ext_phy_ctrl_const_regs(u32 emif_nr,
 		break;
 	case DRA752_ES1_0:
 	case DRA752_ES1_1:
-	case DRA722_ES1_0:
 		if (emif_nr == 1) {
-#ifdef CONFIG_DDR_666MHZ
-			*regs = dra_ddr3_ext_phy_ctrl_const_base_666MHz;
-			*size =
-			ARRAY_SIZE(dra_ddr3_ext_phy_ctrl_const_base_666MHz);
-#else
 			*regs = dra_ddr3_ext_phy_ctrl_const_base_es1_emif1;
 			*size =
 			ARRAY_SIZE(dra_ddr3_ext_phy_ctrl_const_base_es1_emif1);
-#endif
 		} else {
 			*regs = dra_ddr3_ext_phy_ctrl_const_base_es1_emif2;
 			*size =
 			ARRAY_SIZE(dra_ddr3_ext_phy_ctrl_const_base_es1_emif2);
 		}
+		break;
+	case DRA722_ES1_0:
+		*regs = dra_ddr3_ext_phy_ctrl_const_base_666MHz;
+		*size = ARRAY_SIZE(dra_ddr3_ext_phy_ctrl_const_base_666MHz);
 		break;
 	default:
 		*regs = ddr3_ext_phy_ctrl_const_base_es2;
