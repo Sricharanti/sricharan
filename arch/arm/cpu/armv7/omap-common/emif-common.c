@@ -314,11 +314,6 @@ static void ddr3_init(u32 base, const struct emif_regs *regs)
 		writel(regs->sdram_config_init, &emif->emif_sdram_config);
 		do_ext_phy_settings(base, regs);
 	}
-
-	/* enable leveling */
-	writel(regs->emif_rd_wr_lvl_rmp_ctl, &emif->emif_rd_wr_lvl_rmp_ctl);
-
-	ddr3_leveling(base, regs);
 }
 
 #ifndef CONFIG_SYS_EMIF_PRECALCULATED_TIMING_REGS
@@ -1377,14 +1372,6 @@ void sdram_init(void)
 				size_prog);
 		} else
 			debug("get_ram_size() successful");
-	}
-
-	if (sdram_type == EMIF_SDRAM_TYPE_DDR3 &&
-	    (!in_sdram && !warm_reset())) {
-		if (emif1_enabled)
-			do_bug0039_workaround(EMIF1_BASE);
-		if (emif2_enabled)
-			do_bug0039_workaround(EMIF2_BASE);
 	}
 
 	debug("<<sdram_init()\n");
